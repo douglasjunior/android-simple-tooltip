@@ -1,4 +1,4 @@
-# Android Simple Tooltip
+# Android Simple Tooltip [![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip)
 
 Uma simples biblioteca baseada no [PopupWindow](http://developer.android.com/intl/pt-br/reference/android/widget/PopupWindow.html) para criação de Tooltips em Android.
 
@@ -34,7 +34,7 @@ new SimpleTooltip.Builder(this)
     .show();
 ```
 
-### *Resources*
+### Resources
 ```xml
 <color name="simpletooltip_background">@color/colorAccent</color>
 <color name="simpletooltip_text">@android:color/primary_text_light</color>
@@ -59,7 +59,8 @@ new SimpleTooltip.Builder(this)
 ```
 
 
-Confira o [projeto de exemplo](https://github.com/douglasjunior/android-simple-tooltip/blob/master/sample/src/main/java/io/github/douglasjunior/androidSimpleTooltip/sample/MainActivity.java).
+Confira o [projeto de exemplo](https://github.com/douglasjunior/android-simple-tooltip/blob/master/sample/src/main/java/io/github/douglasjunior/androidSimpleTooltip/sample/MainActivity.java) e o
+ [javadoc](https://jitpack.io/com/github/douglasjunior/android-simple-tooltip/master-SNAPSHOT/javadoc/) para mais informações.
 
 ## Download
 ### Gradle
@@ -105,6 +106,24 @@ Confira o [projeto de exemplo](https://github.com/douglasjunior/android-simple-t
         <version>0.0.1</version>
     </dependency>
     ```
+
+### Snapshot
+
+```javascript
+dependencies {
+    compile 'com.github.douglasjunior:android-simple-tooltip:master-SNAPSHOT'
+}
+```
+
+ou
+
+```xml
+    <dependency>
+        <groupId>com.github.douglasjunior</groupId>
+        <artifactId>android-simple-tooltip</artifactId>
+        <version>master-SNAPSHOT</version>
+    </dependency>
+```
 
 ## Licença
 
