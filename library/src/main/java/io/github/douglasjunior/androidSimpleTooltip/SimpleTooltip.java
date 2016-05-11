@@ -57,7 +57,11 @@ import android.widget.TextView;
 
 
 /**
- * Created by douglas on 05/05/16.
+ * <div class="pt">Um tooltip que pode ser utilizado para exibição de dicas..</div>
+ * <div class="en">A tooltip that can be used to display tips on the screen.</div>
+ *
+ * @author Created by douglas on 05/05/16.
+ * @see android.widget.PopupWindow
  */
 public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
@@ -77,9 +81,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final Context mContext;
     private final OnDismissListener mOnDismissListener;
     private final OnShowListener mOnShowListener;
-
     private AppCompatPopupWindow mPopupWindow;
-
     private final int mGravity;
     private final boolean mDismissOnInsideTouch;
     private final boolean mDismissOnOutsideTouch;
@@ -104,6 +106,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final long mAnimationDuration;
     private final float mArrowWidth;
     private final float mArrowHeight;
+    private boolean dismissed = false;
 
     private SimpleTooltip(Builder builder) {
         mContext = builder.context;
@@ -150,6 +153,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
 
     public void show() {
+        verifyDismissed();
         final ViewGroup rootView = (ViewGroup) mAnchorView.getRootView();
 
         createOverlay(rootView);
@@ -162,6 +166,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 mPopupWindow.showAtLocation(rootView, Gravity.NO_GRAVITY, rootView.getWidth(), rootView.getHeight());
             }
         });
+    }
+
+    private void verifyDismissed() {
+        if (dismissed) {
+            throw new IllegalArgumentException("Tooltip has ben dismissed.");
+        }
     }
 
     private void createOverlay(final ViewGroup rootView) {
@@ -199,7 +209,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 location.y = anchorRect.bottom + mMargin;
                 break;
             default:
-                throw new IllegalArgumentException("SimpleTooltip gravity must have be LEFT, RIGHT, TOP or BOTTOM.");
+                throw new IllegalArgumentException("Gravity must have be LEFT, RIGHT, TOP or BOTTOM.");
         }
 
         return location;
@@ -254,12 +264,19 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     public void dismiss() {
+        dismissed = true;
         if (mPopupWindow != null) {
             mPopupWindow.dismiss();
         }
-        mPopupWindow = null;
     }
 
+    /**
+     * <div class="pt">Indica se o tooltip está sendo exibido na tela.</div>
+     * <div class=en">Indicate whether this tooltip is showing on screen.</div>
+     *
+     * @return <div class="pt"><tt>true</tt> se o tooltip estiver sendo exibido, <tt>false</tt> caso contrário</div>
+     * <div class="en"><tt>true</tt> if the popup is showing, <tt>false</tt> otherwise</div>
+     */
     public boolean isShowing() {
         return mPopupWindow != null && mPopupWindow.isShowing();
     }
@@ -270,6 +287,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
     @Override
     public void onDismiss() {
+        dismissed = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             if (mAnimator != null)
                 mAnimator.cancel();
@@ -280,6 +298,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         if (mOnDismissListener != null)
             mOnDismissListener.onDismiss(this);
+
+        mPopupWindow = null;
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -429,9 +449,15 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         public void onShow(SimpleTooltip tooltip);
     }
 
+    /**
+     * <div class="pt">Classe responsável por facilitar a criação do objeto <tt>SimpleTooltip</tt>.</div>
+     * <div class="en">Class responsible for making it easier to build the object <tt>SimpleTooltip</tt>.</div>
+     *
+     * @author Created by douglas on 05/05/16.
+     */
     public static class Builder {
 
-        private Context context;
+        private final Context context;
         private boolean dismissOnInsideTouch = true;
         private boolean dismissOnOutsideTouch = true;
         private boolean modal = false;
@@ -462,7 +488,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             this.context = context;
         }
 
-        public SimpleTooltip build() {
+        public SimpleTooltip build() throws IllegalArgumentException {
             validateArguments();
             if (backgroundColor == 0) {
                 backgroundColor = ContextCompat.getColor(context, mDefaultBackgroundColorRes);
@@ -508,7 +534,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return new SimpleTooltip(this);
         }
 
-        private void validateArguments() {
+        private void validateArguments() throws IllegalArgumentException {
             if (context == null) {
                 throw new IllegalArgumentException("Context not specified.");
             }
@@ -517,18 +543,44 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             }
         }
 
+        /**
+         * <div class="pt">Define um novo conteúdo customizado para o tooltip.</div>
+         *
+         * @param textView <div class="pt">novo conteúdo para o tooltip.</div>
+         * @return
+         * @see Builder#contentView(int, int)
+         * @see Builder#contentView(View, int)
+         */
         public Builder contentView(TextView textView) {
             this.contentView = textView;
             this.textViewId = 0;
             return this;
         }
 
+        /**
+         * <div class="pt">Define um novo conteúdo customizado para o tooltip.</div>
+         *
+         * @param contentView <div class="pt">novo conteúdo para o tooltip, pode ser um <tt>ViewGroup</tt> ou qualquer componente customizado.</div>
+         * @param textViewId  <div class="pt">resId para o <tt>TextView</tt> existente dentro do <tt>contentView</tt>.</div>
+         * @return
+         * @see Builder#contentView(int, int)
+         * @see Builder#contentView(TextView)
+         */
         public Builder contentView(View contentView, @IdRes int textViewId) {
             this.contentView = contentView;
             this.textViewId = textViewId;
             return this;
         }
 
+        /**
+         * <div class="pt">Define um novo conteúdo customizado para o tooltip.</div>
+         *
+         * @param contentViewId <div class="pt">layoutId que será inflado como o novo conteúdo para o tooltip.</div>
+         * @param textViewId    <div class="pt">resId para o <tt>TextView</tt> existente dentro do <tt>contentView</tt>.</div>
+         * @return
+         * @see Builder#contentView(View, int)
+         * @see Builder#contentView(TextView)
+         */
         public Builder contentView(@LayoutRes int contentViewId, @IdRes int textViewId) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.contentView = inflater.inflate(contentViewId, null, false);
@@ -536,41 +588,86 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
-        public Builder context(Context context) {
-            this.context = context;
-            return this;
-        }
-
+        /**
+         * <div class="pt">Define se o tooltip será fechado quando receber um clique dentro de sua área. Padrão é <tt>true</tt>.</div>
+         *
+         * @param dismissOnInsideTouch <div class="pt"><tt>true</tt> para fechar quando receber o click dentro, <tt>false</tt> caso contrário.</div>
+         * @return
+         * @see Builder#dismissOnOutsideTouch(boolean)
+         */
         public Builder dismissOnInsideTouch(boolean dismissOnInsideTouch) {
             this.dismissOnInsideTouch = dismissOnInsideTouch;
             return this;
         }
 
+        /**
+         * <div class="pt">Define se o tooltip será fechado quando receber um clique fora de sua área. Padrão é <tt>true</tt>.</div>
+         *
+         * @param dismissOnOutsideTouch <div class="pt"><tt>true</tt> para fechar quando receber o click fora, <tt>false</tt> caso contrário.</div>
+         * @return
+         * @see Builder#dismissOnInsideTouch(boolean)
+         */
         public Builder dismissOnOutsideTouch(boolean dismissOnOutsideTouch) {
             this.dismissOnOutsideTouch = dismissOnOutsideTouch;
             return this;
         }
 
+        /**
+         * <div class="pt">Define se a tela fiacrá bloqueada enquanto o tooltip estiver aberto.
+         * Esse parâmetro deve ser combinado com <tt>Builder#dismissOnInsideTouch(boolean)</tt> e <tt>Builder#dismissOnOutsideTouch(boolean)</tt>.
+         * Padrão é <tt>false</tt>.</div>
+         *
+         * @param modal <div class="pt"><tt>true</tt> para bloquear a tela, <tt>false</tt> caso contrário.</div>
+         * @return
+         * @see Builder#dismissOnInsideTouch(boolean)
+         * @see Builder#dismissOnOutsideTouch(boolean)
+         */
         public Builder modal(boolean modal) {
             this.modal = modal;
             return this;
         }
 
+        /**
+         * <div class="pt">Define o texto que sera exibido no <tt>TextView</tt> dentro do tooltip.</div>
+         *
+         * @param text <div class="pt">texto que sera exibido.</div>
+         * @return
+         */
         public Builder text(String text) {
             this.text = text;
             return this;
         }
 
+        /**
+         * <div class="pt">Define para qual <tt>View</tt> o tooltip deve apontar. Importante ter certeza que esta <tt>View</tt> já esteja pronta e exibida na tela.</div>
+         *
+         * @param anchorView <div class="pt"><tt>View</tt> para qual o tooltip deve apontar</div>
+         * @return
+         */
         public Builder anchorView(View anchorView) {
             this.anchorView = anchorView;
             return this;
         }
 
+        /**
+         * <div class="pt">Define a para qual lado o tooltip será posicionado em relação ao <tt>anchorView</tt>.
+         * As opções existentes são <tt>Gravity.LEFT</tt>, <tt>Gravity.RIGHT</tt>, <tt>Gravity.TOP</tt> e <tt>Gravity.BOTTOM</tt>.
+         * O padrão é <tt>Gravity.BOTTOM</tt>.</div>
+         *
+         * @param gravity <div class="pt">lado para qual o tooltip será posicionado.</div>
+         * @return
+         */
         public Builder gravity(int gravity) {
             this.gravity = gravity;
             return this;
         }
 
+        /**
+         * <div class="pt">Define se o fundo da tela será escurecido ou transparente enquanto o tooltip estiver aberto. Padrão é <tt>true</tt>.</div>
+         *
+         * @param transparentOverlay <div class="pt"><tt>true</tt> para o fundo transparente, <tt>false</tt> para escurecido.</div>
+         * @return
+         */
         public Builder transparentOverlay(boolean transparentOverlay) {
             this.transparentOverlay = transparentOverlay;
             return this;
@@ -586,11 +683,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
-        public Builder showArrow(boolean showArrow) {
-            this.showArrow = showArrow;
-            return this;
-        }
-
+        /**
+         * <div class="pt">Define se o tooltip será animado enquanto estiver aberto. Disponível a partir do Android API 11. Padrão é <tt>false</tt>.</div>
+         *
+         * @param animated <div class="pt"><tt>true</tt> para tooltip animado, <tt>false</tt> caso contrário.</div>
+         * @return
+         */
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         public Builder animated(boolean animated) {
             this.animated = animated;
@@ -609,16 +707,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
-        public Builder arrowDrawable(Drawable arrowDrawable) {
-            this.arrowDrawable = arrowDrawable;
-            return this;
-        }
-
-        public Builder arrowDrawable(@DrawableRes int drawableRes) {
-            this.arrowDrawable = ContextCompat.getDrawable(context, drawableRes);
-            return this;
-        }
-
         public Builder padding(int padding) {
             this.padding = padding;
             return this;
@@ -629,13 +717,70 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
-        public Builder arrowColor(@ColorInt int arrowColor) {
-            this.arrowColor = arrowColor;
+        public Builder textColor(int textColor) {
+            this.textColor = textColor;
             return this;
         }
 
         public Builder backgroundColor(@ColorInt int backgroundColor) {
             this.backgroundColor = backgroundColor;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Indica se deve ser gerada a seta indicativa. Padrão é <tt>true</tt>.</div>
+         * <div class="en">Indicates whether to be generated indicative arrow. Default is <tt>true</tt>.</div>
+         *
+         * @param showArrow <div class="pt"><tt>true</tt> para exibir a seta, <tt>false</tt> caso contrário.</div>
+         *                  <div class="en"><tt>true</tt> to show arrow, <tt>false</tt> otherwise.</div>
+         * @return
+         */
+        public Builder showArrow(boolean showArrow) {
+            this.showArrow = showArrow;
+            return this;
+        }
+
+        public Builder arrowDrawable(Drawable arrowDrawable) {
+            this.arrowDrawable = arrowDrawable;
+            return this;
+        }
+
+        public Builder arrowDrawable(@DrawableRes int drawableRes) {
+            this.arrowDrawable = ContextCompat.getDrawable(context, drawableRes);
+            return this;
+        }
+
+        public Builder arrowColor(@ColorInt int arrowColor) {
+            this.arrowColor = arrowColor;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Altura da seta indicativa. Esse valor é automaticamente definido em Largura ou Altura conforme a <tt>Gravity</tt> configurada.
+         * Este valor sobrescreve <tt>R.dimen.simpletooltip_arrow_height</tt></div>
+         * <div class="en">Height of the arrow. This value is automatically set in the Width or Height as the <tt>Gravity</tt>.</div>
+         *
+         * @param arrowHeight <div class="pt">Altura em pixels.</div>
+         *                    <div class="en">Height in pixels.</div>
+         * @return
+         * @see Builder#arrowWidth(float)
+         */
+        public Builder arrowHeight(float arrowHeight) {
+            this.arrowHeight = arrowHeight;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Largura da seta indicativa. Esse valor é automaticamente definido em Largura ou Altura conforme a <tt>Gravity</tt> configurada.
+         * Este valor sobrescreve <tt>R.dimen.simpletooltip_arrow_width</tt></div>
+         * <div class="en">Width of the arrow. This value is automatically set in the Width or Height as the <tt>Gravity</tt>.</div>
+         *
+         * @param arrowWidth <div class="pt">Largura em pixels.</div>
+         *                   <div class="en">Width in pixels.</div>
+         * @return
+         */
+        public Builder arrowWidth(float arrowWidth) {
+            this.arrowWidth = arrowWidth;
             return this;
         }
 
@@ -646,21 +791,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         public Builder onShowListener(OnShowListener onShowListener) {
             this.onShowListener = onShowListener;
-            return this;
-        }
-
-        public Builder textColor(int textColor) {
-            this.textColor = textColor;
-            return this;
-        }
-
-        public Builder arrowHeight(float arrowHeight) {
-            this.arrowHeight = arrowHeight;
-            return this;
-        }
-
-        public Builder arrowWidth(float arrowWidth) {
-            this.arrowWidth = arrowWidth;
             return this;
         }
     }
