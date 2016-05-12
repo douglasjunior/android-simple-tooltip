@@ -1,27 +1,27 @@
 # Android Simple Tooltip [![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip)
 
-[PT](https://github.com/douglasjunior/android-simple-tooltip/blob/master/README.pt.md)
+[EN](https://github.com/douglasjunior/android-simple-tooltip/blob/master/README.md)
 
-A simple library based on [PopupWindow](http://developer.android.com/intl/pt-br/reference/android/widget/PopupWindow.html) to create Tooltips on Android.
+Uma simples biblioteca baseada no [PopupWindow](http://developer.android.com/intl/pt-br/reference/android/widget/PopupWindow.html) para criação de Tooltips em Android.
 
-## Features
+## Funcionalidades
 
- - Working from Android 2.3 (API 10) *Note: animation above 3.0 (API 11)*
- - Simple to use: few parameters in a single line of code
- - Animation with speed and size control
- - Option to close with touch inside or outside of the tooltip.
- - Modal mode (prevents touch in the background)
- - Overlay (darkens the background highlighting the anchor)
- - Customizable arrow
- - Inflatable content from a `View` or `XML` layout.
- - Colors and dimensions customized by `Builder` or `XML` resources
+ - Trabalha a partir do Android 2.3 (API 10) *Obs: animação acima do 3.0 (API 11)*
+ - Uso simplificado: poucos parâmetros em uma única linha de código
+ - Animação com controle de velocidade e tamanho
+ - Opção para fechar com toque dentro ou fora do *tooltip*
+ - Modo modal (impede o toque nos componentes do background)
+ - Overlay (escurece o fundo dando destaque no componente âncora)
+ - Personalização da seta (*arrow*)
+ - Conteúdo inflável a partir de uma `View` ou um `XML` de *layout*
+ - Cores e dimenções customizadas via `Builder` ou `XMLs` de *resources*
 
-## Demo
+## Demonstração 
 
-![Demo](https://raw.githubusercontent.com/douglasjunior/android-simple-tooltip/master/screenshots/demo.gif)
+![Demonstração](https://raw.githubusercontent.com/douglasjunior/android-simple-tooltip/master/screenshots/demo.gif)
 
-## Usege
-### Basic
+## Uso
+### Básico
 
 ```java
 View yourView = findViewById(R.id.your_view);
@@ -37,6 +37,7 @@ new SimpleTooltip.Builder(this)
 ```
 
 ### Resources
+
 ```xml
 <color name="simpletooltip_background">@color/colorAccent</color>
 <color name="simpletooltip_text">@android:color/primary_text_light</color>
@@ -60,12 +61,12 @@ new SimpleTooltip.Builder(this)
 <style name="simpletooltip_default" parent="@android:style/TextAppearance.Medium"></style>
 ```
 
-More info on the [sample project](https://github.com/douglasjunior/android-simple-tooltip/blob/master/sample/src/main/java/io/github/douglasjunior/androidSimpleTooltip/sample/MainActivity.java) and [javadoc](https://jitpack.io/com/github/douglasjunior/android-simple-tooltip/master-SNAPSHOT/javadoc/).
+Para mais informações, confira o [projeto de exemplo](https://github.com/douglasjunior/android-simple-tooltip/blob/master/sample/src/main/java/io/github/douglasjunior/androidSimpleTooltip/sample/MainActivity.java) e o [javadoc](https://jitpack.io/com/github/douglasjunior/android-simple-tooltip/master-SNAPSHOT/javadoc/).
 
 ## Download
 ### Gradle
 
-1. Add it in your root `build.gradle` at the end of repositories:
+1. Adicione em seu arquivo raiz `build.gradle` ao final dos repositórios:
 
     ```javascript
     allprojects {
@@ -76,7 +77,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
     }
     ```
 
-2. Add the dependency
+2. Adicione a dependência
 
     ```javascript
     dependencies {
@@ -86,7 +87,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
 
 ### Maven
 
-1. Add it in your `pom.xml` at the end of repositories:
+1. Adicione em seu arquivo `pom.xml` ao final dos repositórios:
 
     ```xml
     <repositories>
@@ -98,7 +99,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
     </repositories>
     ```
 
-2. Add the dependency
+2. Adicione a dependência
 
     ```xml
     <dependency>
@@ -116,7 +117,7 @@ dependencies {
 }
 ```
 
-or
+ou
 
 ```xml
 <dependency>
@@ -126,11 +127,11 @@ or
 </dependency>
 ```
 
-## Contributions
+## Contribuições
 
-New features, bug fixes and improvements in the translation are welcome! For questions and suggestions use the [issues](https://github.com/douglasjunior/android-simple-tooltip/issues).
+Novas funcionalidades, correções de bug e melhorias na tradução serão bem vindas! Para dúvidas e sugestões utilize as [issues](https://github.com/douglasjunior/android-simple-tooltip/issues).
 
-## Licence
+## Licença
 
 ```
 The MIT License (MIT)
@@ -138,4 +139,4 @@ The MIT License (MIT)
 Copyright (c) 2016 Douglas Nassif Roma Junior
 ```
 
-See complete on [licence file](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE).
+Veja o [arquivo de licença](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE) completo.
