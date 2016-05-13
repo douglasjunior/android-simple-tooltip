@@ -9,8 +9,6 @@ android:
     - build-tools-23.0.3
     - android-23
     - extra-android-m2repository
-
-android:
   licenses:
     - android-sdk-license-.+
 
