@@ -57,8 +57,8 @@ import android.widget.TextView;
 
 
 /**
- * <div class="pt">Um tooltip que pode ser utilizado para exibição de dicas..</div>
- * <div class="en">A tooltip that can be used to display tips on the screen.</div>
+ * <p class='pt'>Um tooltip que pode ser utilizado para exibição de dicas.</p>
+ * <p class='en'>A tooltip that can be used to display tips on the screen.</p>
  *
  * @author Created by douglas on 05/05/16.
  * @see android.widget.PopupWindow
@@ -330,8 +330,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mAnimator.start();
     }
 
-
     private final View.OnTouchListener mPopupWindowsTouchListener = new View.OnTouchListener() {
+
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getX() > 0 && event.getX() < v.getWidth() &&
@@ -345,6 +345,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             } else {
                 System.out.println("FORA: " + event.toString());
             }
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                v.performClick();
+            }
             return mModal;
         }
     };
@@ -356,6 +359,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             System.out.println("OVERLAY");
             if (mDismissOnOutsideTouch) {
                 dismiss();
+            }
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                v.performClick();
             }
             return mModal;
         }
