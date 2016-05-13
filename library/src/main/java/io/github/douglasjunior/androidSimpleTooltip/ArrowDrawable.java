@@ -44,7 +44,7 @@ public class ArrowDrawable extends ColorDrawable {
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final int mBackgroundColor;
     private Path mPath;
-    private int mDirection;
+    private final int mDirection;
 
     ArrowDrawable(@ColorInt int foregroundColor, int direction) {
         this.mBackgroundColor = Color.TRANSPARENT;

@@ -86,7 +86,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final boolean mDismissOnInsideTouch;
     private final boolean mDismissOnOutsideTouch;
     private final boolean mModal;
-    private View mContentView;
+    private final View mContentView;
     private View mContentLayout;
     @IdRes
     private final int mTextViewId;
@@ -97,7 +97,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private View mOverlay;
     private final boolean mShowArrow;
     private ImageView mArrowView;
-    private Drawable mArrowDrawable;
+    private final Drawable mArrowDrawable;
     private final boolean mAnimated;
     private AnimatorSet mAnimator;
     private final int mMargin;
@@ -282,6 +282,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     public <T extends View> T findViewById(int id) {
+        //noinspection unchecked
         return (T) mContentLayout.findViewById(id);
     }
 
@@ -329,7 +330,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
 
-    private View.OnTouchListener mPopupWindowsTouchListener = new View.OnTouchListener() {
+    private final View.OnTouchListener mPopupWindowsTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event.getX() > 0 && event.getX() < v.getWidth() &&
@@ -347,7 +348,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
     };
 
-    private View.OnTouchListener mOverlayTouchListener = new View.OnTouchListener() {
+    private final View.OnTouchListener mOverlayTouchListener = new View.OnTouchListener() {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -359,7 +360,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
     };
 
-    private ViewTreeObserver.OnGlobalLayoutListener mLocationLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    private final ViewTreeObserver.OnGlobalLayoutListener mLocationLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
             if (dismissed)
@@ -380,7 +381,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
     };
 
-    private ViewTreeObserver.OnGlobalLayoutListener mArrowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    private final ViewTreeObserver.OnGlobalLayoutListener mArrowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
             if (dismissed)
@@ -427,7 +428,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
     };
 
-    private ViewTreeObserver.OnGlobalLayoutListener mShowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    private final ViewTreeObserver.OnGlobalLayoutListener mShowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
             if (dismissed)
@@ -440,7 +441,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
     };
 
-    private ViewTreeObserver.OnGlobalLayoutListener mAnimationLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+    private final ViewTreeObserver.OnGlobalLayoutListener mAnimationLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
             if (dismissed)
@@ -454,11 +455,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
     };
 
-    public static interface OnDismissListener {
+    public interface OnDismissListener {
         public void onDismiss(SimpleTooltip tooltip);
     }
 
-    public static interface OnShowListener {
+    public interface OnShowListener {
         public void onShow(SimpleTooltip tooltip);
     }
 
@@ -560,7 +561,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="pt">Define um novo conteúdo customizado para o tooltip.</div>
          *
          * @param textView <div class="pt">novo conteúdo para o tooltip.</div>
-         * @return
+         * @return this
          * @see Builder#contentView(int, int)
          * @see Builder#contentView(View, int)
          */
@@ -575,7 +576,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          *
          * @param contentView <div class="pt">novo conteúdo para o tooltip, pode ser um <tt>ViewGroup</tt> ou qualquer componente customizado.</div>
          * @param textViewId  <div class="pt">resId para o <tt>TextView</tt> existente dentro do <tt>contentView</tt>.</div>
-         * @return
+         * @return this
          * @see Builder#contentView(int, int)
          * @see Builder#contentView(TextView)
          */
@@ -590,7 +591,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          *
          * @param contentViewId <div class="pt">layoutId que será inflado como o novo conteúdo para o tooltip.</div>
          * @param textViewId    <div class="pt">resId para o <tt>TextView</tt> existente dentro do <tt>contentView</tt>.</div>
-         * @return
+         * @return this
          * @see Builder#contentView(View, int)
          * @see Builder#contentView(TextView)
          */
@@ -605,7 +606,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="pt">Define se o tooltip será fechado quando receber um clique dentro de sua área. Padrão é <tt>true</tt>.</div>
          *
          * @param dismissOnInsideTouch <div class="pt"><tt>true</tt> para fechar quando receber o click dentro, <tt>false</tt> caso contrário.</div>
-         * @return
+         * @return this
          * @see Builder#dismissOnOutsideTouch(boolean)
          */
         public Builder dismissOnInsideTouch(boolean dismissOnInsideTouch) {
@@ -617,7 +618,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="pt">Define se o tooltip será fechado quando receber um clique fora de sua área. Padrão é <tt>true</tt>.</div>
          *
          * @param dismissOnOutsideTouch <div class="pt"><tt>true</tt> para fechar quando receber o click fora, <tt>false</tt> caso contrário.</div>
-         * @return
+         * @return this
          * @see Builder#dismissOnInsideTouch(boolean)
          */
         public Builder dismissOnOutsideTouch(boolean dismissOnOutsideTouch) {
@@ -631,7 +632,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * Padrão é <tt>false</tt>.</div>
          *
          * @param modal <div class="pt"><tt>true</tt> para bloquear a tela, <tt>false</tt> caso contrário.</div>
-         * @return
+         * @return this
          * @see Builder#dismissOnInsideTouch(boolean)
          * @see Builder#dismissOnOutsideTouch(boolean)
          */
@@ -644,7 +645,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="pt">Define o texto que sera exibido no <tt>TextView</tt> dentro do tooltip.</div>
          *
          * @param text <div class="pt">texto que sera exibido.</div>
-         * @return
+         * @return this
          */
         public Builder text(String text) {
             this.text = text;
@@ -655,7 +656,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="pt">Define para qual <tt>View</tt> o tooltip deve apontar. Importante ter certeza que esta <tt>View</tt> já esteja pronta e exibida na tela.</div>
          *
          * @param anchorView <div class="pt"><tt>View</tt> para qual o tooltip deve apontar</div>
-         * @return
+         * @return this
          */
         public Builder anchorView(View anchorView) {
             this.anchorView = anchorView;
@@ -668,7 +669,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * O padrão é <tt>Gravity.BOTTOM</tt>.</div>
          *
          * @param gravity <div class="pt">lado para qual o tooltip será posicionado.</div>
-         * @return
+         * @return this
          */
         public Builder gravity(int gravity) {
             this.gravity = gravity;
@@ -679,7 +680,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="pt">Define se o fundo da tela será escurecido ou transparente enquanto o tooltip estiver aberto. Padrão é <tt>true</tt>.</div>
          *
          * @param transparentOverlay <div class="pt"><tt>true</tt> para o fundo transparente, <tt>false</tt> para escurecido.</div>
-         * @return
+         * @return this
          */
         public Builder transparentOverlay(boolean transparentOverlay) {
             this.transparentOverlay = transparentOverlay;
@@ -700,7 +701,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="pt">Define se o tooltip será animado enquanto estiver aberto. Disponível a partir do Android API 11. Padrão é <tt>false</tt>.</div>
          *
          * @param animated <div class="pt"><tt>true</tt> para tooltip animado, <tt>false</tt> caso contrário.</div>
-         * @return
+         * @return this
          */
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         public Builder animated(boolean animated) {
@@ -746,7 +747,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          *
          * @param showArrow <div class="pt"><tt>true</tt> para exibir a seta, <tt>false</tt> caso contrário.</div>
          *                  <div class="en"><tt>true</tt> to show arrow, <tt>false</tt> otherwise.</div>
-         * @return
+         * @return this
          */
         public Builder showArrow(boolean showArrow) {
             this.showArrow = showArrow;
@@ -775,7 +776,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          *
          * @param arrowHeight <div class="pt">Altura em pixels.</div>
          *                    <div class="en">Height in pixels.</div>
-         * @return
+         * @return this
          * @see Builder#arrowWidth(float)
          */
         public Builder arrowHeight(float arrowHeight) {
@@ -790,7 +791,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          *
          * @param arrowWidth <div class="pt">Largura em pixels.</div>
          *                   <div class="en">Width in pixels.</div>
-         * @return
+         * @return this
          */
         public Builder arrowWidth(float arrowWidth) {
             this.arrowWidth = arrowWidth;

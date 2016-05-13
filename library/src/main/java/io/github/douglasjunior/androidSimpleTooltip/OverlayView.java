@@ -24,6 +24,7 @@
 
 package io.github.douglasjunior.androidSimpleTooltip;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -40,6 +41,7 @@ import android.view.View;
  * <p/>
  * Created by douglas on 09/05/16.
  */
+@SuppressLint("ViewConstructor")
 public class OverlayView extends View {
 
     private static final int mDefaultOverlayCircleOffsetRes = R.dimen.simpletooltip_overlay_circle_offset;
