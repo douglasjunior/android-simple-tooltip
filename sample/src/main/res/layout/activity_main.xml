@@ -33,7 +33,7 @@
                 android:id="@+id/btn_simple"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:text="@string/btn_simple" />
 
             <Button
@@ -47,14 +47,14 @@
                 android:id="@+id/btn_overlay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:text="@string/btn_overlay" />
 
             <Button
                 android:id="@+id/btn_maxwidth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:text="@string/btn_maxwidth" />
 
             <Button
@@ -68,14 +68,14 @@
                 android:id="@+id/btn_inside"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:text="@string/btn_inside" />
 
             <Button
                 android:id="@+id/btn_inside_modal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:text="@string/btn_inside_modal" />
 
             <Button
@@ -89,14 +89,14 @@
                 android:id="@+id/btn_no_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="end"
                 android:text="@string/btn_no_arrow" />
 
             <Button
                 android:id="@+id/btn_custom_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="start"
                 android:text="@string/btn_custom_arrow" />
         </LinearLayout>
     </ScrollView>

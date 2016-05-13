@@ -35,8 +35,10 @@ import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
 
 /**
+ * MainActivity
  * Created by douglas on 09/05/16.
  */
+@SuppressWarnings("ConstantConditions")
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
@@ -67,7 +69,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text("Floating Action Button")
-                    .gravity(Gravity.LEFT)
+                    .gravity(Gravity.START)
+                    .onDismissListener(new SimpleTooltip.OnDismissListener() {
+                        @Override
+                        public void onDismiss(SimpleTooltip tooltip) {
+                            System.out.println("dismiss " + tooltip);
+                        }
+                    })
+                    .onShowListener(new SimpleTooltip.OnShowListener() {
+                        @Override
+                        public void onShow(SimpleTooltip tooltip) {
+                            System.out.println("show " + tooltip);
+                        }
+                    })
                     .build()
                     .show();
 
@@ -75,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text(getString(R.string.btn_simple))
-                    .gravity(Gravity.RIGHT)
+                    .gravity(Gravity.END)
                     .build()
                     .show();
 
@@ -92,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text(getString(R.string.btn_overlay))
-                    .gravity(Gravity.LEFT)
+                    .gravity(Gravity.START)
                     .animated(true)
                     .transparentOverlay(false)
                     .build()
@@ -102,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text(getString(R.string.btn_maxwidth) + getString(R.string.btn_maxwidth) + getString(R.string.btn_maxwidth) + getString(R.string.btn_maxwidth) + getString(R.string.btn_maxwidth))
-                    .gravity(Gravity.RIGHT)
+                    .gravity(Gravity.END)
                     .maxWidth(R.dimen.simpletooltip_max_width)
                     .build()
                     .show();
@@ -121,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text(getString(R.string.btn_inside))
-                    .gravity(Gravity.LEFT)
+                    .gravity(Gravity.START)
                     .dismissOnOutsideTouch(false)
                     .dismissOnInsideTouch(true)
                     .build()
@@ -131,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text(getString(R.string.btn_inside_modal))
-                    .gravity(Gravity.RIGHT)
+                    .gravity(Gravity.END)
                     .dismissOnOutsideTouch(false)
                     .dismissOnInsideTouch(true)
                     .modal(true)
@@ -155,7 +169,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             tooltip.findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v2) {
-                    tooltip.dismiss();
+                    if (tooltip.isShowing())
+                        tooltip.dismiss();
                     new SimpleTooltip.Builder(v.getContext())
                             .anchorView(v)
                             .text(getString(R.string.btn_next))
@@ -170,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text(getString(R.string.btn_no_arrow))
-                    .gravity(Gravity.LEFT)
+                    .gravity(Gravity.START)
                     .showArrow(false)
                     .modal(true)
                     .build()
@@ -180,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
                     .text(getString(R.string.btn_custom_arrow))
-                    .gravity(Gravity.RIGHT)
+                    .gravity(Gravity.END)
                     .modal(true)
                     .arrowDrawable(android.R.drawable.ic_media_previous)
                     .arrowHeight((int) SimpleTooltipUtils.pxFromDp(50))

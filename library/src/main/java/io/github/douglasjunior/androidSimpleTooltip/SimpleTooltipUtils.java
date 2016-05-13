@@ -35,8 +35,10 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 /**
+ * SimpleTooltipUtils
  * Created by douglas on 09/05/16.
  */
+@SuppressWarnings({"SameParameterValue", "unused"})
 public final class SimpleTooltipUtils {
 
     private SimpleTooltipUtils() {
@@ -46,8 +48,7 @@ public final class SimpleTooltipUtils {
     public static RectF calculeRectOnScreen(View view) {
         int[] location = new int[2];
         view.getLocationOnScreen(location);
-        RectF anchorRect = new RectF(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
-        return anchorRect;
+        return new RectF(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
     }
 
     public static float dpFromPx(float px) {
@@ -70,9 +71,9 @@ public final class SimpleTooltipUtils {
 
     public static int tooltipGravityToArrowDirection(int tooltipGravity) {
         switch (tooltipGravity) {
-            case Gravity.LEFT:
+            case Gravity.START:
                 return ArrowDrawable.RIGHT;
-            case Gravity.RIGHT:
+            case Gravity.END:
                 return ArrowDrawable.LEFT;
             case Gravity.TOP:
                 return ArrowDrawable.BOTTOM;

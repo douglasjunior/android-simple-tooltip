@@ -63,6 +63,7 @@ import android.widget.TextView;
  * @author Created by douglas on 05/05/16.
  * @see android.widget.PopupWindow
  */
+@SuppressWarnings("SameParameterValue")
 public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
     // Default Resources
@@ -192,11 +193,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         final PointF anchorCenter = new PointF(anchorRect.centerX(), anchorRect.centerY());
 
         switch (mGravity) {
-            case Gravity.LEFT:
+            case Gravity.START:
                 location.x = anchorRect.left - mPopupWindow.getContentView().getWidth() - mMargin;
                 location.y = anchorCenter.y - mPopupWindow.getContentView().getHeight() / 2f;
                 break;
-            case Gravity.RIGHT:
+            case Gravity.END:
                 location.x = anchorRect.right + mMargin;
                 location.y = anchorCenter.y - mPopupWindow.getContentView().getHeight() / 2f;
                 break;
@@ -209,7 +210,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 location.y = anchorRect.bottom + mMargin;
                 break;
             default:
-                throw new IllegalArgumentException("Gravity must have be LEFT, RIGHT, TOP or BOTTOM.");
+                throw new IllegalArgumentException("Gravity must have be START, END, TOP or BOTTOM.");
         }
 
         return location;
@@ -238,11 +239,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             mArrowView.setLayoutParams(arrowLayoutParams);
             LinearLayoutCompat linearLayout = new LinearLayoutCompat(mContext);
             linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            linearLayout.setOrientation(mGravity == Gravity.LEFT || mGravity == Gravity.RIGHT ? LinearLayoutCompat.HORIZONTAL : LinearLayoutCompat.VERTICAL);
+            linearLayout.setOrientation(mGravity == Gravity.START || mGravity == Gravity.END ? LinearLayoutCompat.HORIZONTAL : LinearLayoutCompat.VERTICAL);
             int padding = mAnimated ? mAnimationPadding : (int) SimpleTooltipUtils.pxFromDp(4);
             linearLayout.setPadding(padding, padding, padding, padding);
 
-            if (mGravity == Gravity.TOP || mGravity == Gravity.LEFT) {
+            if (mGravity == Gravity.TOP || mGravity == Gravity.START) {
                 linearLayout.addView(mContentView);
                 linearLayout.addView(mArrowView);
             } else {
@@ -419,7 +420,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                         }
                     }
                     x = mArrowView.getLeft();
-                    x = x + (mGravity == Gravity.LEFT ? -1 : +1);
+                    x = x + (mGravity == Gravity.START ? -1 : +1);
                 }
                 SimpleTooltipUtils.setX(mArrowView, (int) x);
                 SimpleTooltipUtils.setY(mArrowView, (int) y);
@@ -456,11 +457,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     };
 
     public interface OnDismissListener {
-        public void onDismiss(SimpleTooltip tooltip);
+        void onDismiss(SimpleTooltip tooltip);
     }
 
     public interface OnShowListener {
-        public void onShow(SimpleTooltip tooltip);
+        void onShow(SimpleTooltip tooltip);
     }
 
     /**
@@ -469,6 +470,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
      *
      * @author Created by douglas on 05/05/16.
      */
+    @SuppressWarnings({"SameParameterValue", "unused"})
     public static class Builder {
 
         private final Context context;
@@ -665,7 +667,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         /**
          * <div class="pt">Define a para qual lado o tooltip será posicionado em relação ao <tt>anchorView</tt>.
-         * As opções existentes são <tt>Gravity.LEFT</tt>, <tt>Gravity.RIGHT</tt>, <tt>Gravity.TOP</tt> e <tt>Gravity.BOTTOM</tt>.
+         * As opções existentes são <tt>Gravity.START</tt>, <tt>Gravity.END</tt>, <tt>Gravity.TOP</tt> e <tt>Gravity.BOTTOM</tt>.
          * O padrão é <tt>Gravity.BOTTOM</tt>.</div>
          *
          * @param gravity <div class="pt">lado para qual o tooltip será posicionado.</div>

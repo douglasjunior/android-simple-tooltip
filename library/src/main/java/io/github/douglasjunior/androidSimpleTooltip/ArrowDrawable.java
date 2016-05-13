@@ -35,9 +35,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
 
 /**
+ * ArrowDrawable
  * Created by douglas on 09/05/16.
  */
-public class ArrowDrawable extends ColorDrawable {
+class ArrowDrawable extends ColorDrawable {
 
     public static final int LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3;
 

@@ -29,7 +29,7 @@ View yourView = findViewById(R.id.your_view);
 new SimpleTooltip.Builder(this)
     .anchorView(yourView)
     .text("Texto do Tooltip")
-    .gravity(Gravity.RIGHT)
+    .gravity(Gravity.END)
     .animated(true)
     .transparentOverlay(false)
     .build()

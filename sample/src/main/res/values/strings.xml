@@ -12,4 +12,5 @@
     <string name="btn_custom_arrow">Arrow custom.</string>
     <string name="btn_next">PRÓXIMO</string>
     <string name="btn_maxwidth">Largura max.</string>
+    <string name="demo">Demo</string>
 </resources>
