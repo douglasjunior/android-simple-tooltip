@@ -259,7 +259,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             mContentLayout = mContentView;
             mContentView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
-
+        mContentLayout.setVisibility(View.INVISIBLE);
         mPopupWindow.setContentView(mContentLayout);
     }
 
@@ -362,6 +362,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private ViewTreeObserver.OnGlobalLayoutListener mLocationLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
+            if (dismissed)
+                return;
+
             if (mMaxWidth > 0 && mContentView.getWidth() > mMaxWidth) {
                 SimpleTooltipUtils.setWidth(mContentView, mMaxWidth);
                 mPopupWindow.update(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -377,18 +380,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
     };
 
-    private ViewTreeObserver.OnGlobalLayoutListener mShowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-            SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
-            if (mOnShowListener != null)
-                mOnShowListener.onShow(SimpleTooltip.this);
-        }
-    };
-
     private ViewTreeObserver.OnGlobalLayoutListener mArrowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
+            if (dismissed)
+                return;
+
             SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
             mPopupWindow.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mAnimationLayoutListener);
             mPopupWindow.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mShowLayoutListener);
@@ -430,9 +427,25 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
     };
 
+    private ViewTreeObserver.OnGlobalLayoutListener mShowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            if (dismissed)
+                return;
+
+            SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
+            if (mOnShowListener != null)
+                mOnShowListener.onShow(SimpleTooltip.this);
+            mContentLayout.setVisibility(View.VISIBLE);
+        }
+    };
+
     private ViewTreeObserver.OnGlobalLayoutListener mAnimationLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
+            if (dismissed)
+                return;
+
             SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
             if (mAnimated) {
                 startFloatingAnimation();
