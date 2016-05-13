@@ -16,7 +16,7 @@ notifications:
     email:
         - nassifrroma@gmail.com
 
-cache: false
+#cache: false
 sudo: false
 
 install:
