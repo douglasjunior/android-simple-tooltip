@@ -1,4 +1,4 @@
-# Android Simple Tooltip [![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip)
+# Android Simple Tooltip [![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Simple%20Tooltip-yellow.svg?style=flat)](http://android-arsenal.com/details/1/3578)
 
 [PT](https://github.com/douglasjunior/android-simple-tooltip/blob/master/README.pt.md)
 
@@ -6,7 +6,7 @@ A simple library based on [PopupWindow](http://developer.android.com/intl/pt-br/
 
 ## Features
 
- - Working from Android 2.3 (API 10) *Note: animation above 3.0 (API 11)*
+ - Working from Android 2.1 (API 7) *Note: animation above 3.0 (API 11)*
  - Simple to use: few parameters in a single line of code
  - Animation with speed and size control
  - Option to close with touch inside or outside of the tooltip.
