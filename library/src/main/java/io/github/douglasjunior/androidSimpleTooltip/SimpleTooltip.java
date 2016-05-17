@@ -217,13 +217,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void configContentView() {
-        TextView tv;
         if (mContentView instanceof TextView) {
-            tv = (TextView) mContentView;
+            TextView tv = (TextView) mContentView;
+            tv.setText(mText);
         } else {
-            tv = (TextView) mContentView.findViewById(mTextViewId);
+            TextView tv = (TextView) mContentView.findViewById(mTextViewId);
+            if (tv != null)
+                tv.setText(mText);
         }
-        tv.setText(mText);
 
         mContentView.setPadding(mPadding, mPadding, mPadding, mPadding);
 
@@ -572,6 +573,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * @return this
          * @see Builder#contentView(int, int)
          * @see Builder#contentView(View, int)
+         * @see Builder#contentView(int)
          */
         public Builder contentView(TextView textView) {
             this.contentView = textView;
@@ -587,6 +589,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * @return this
          * @see Builder#contentView(int, int)
          * @see Builder#contentView(TextView)
+         * @see Builder#contentView(int)
          */
         public Builder contentView(View contentView, @IdRes int textViewId) {
             this.contentView = contentView;
@@ -602,11 +605,28 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * @return this
          * @see Builder#contentView(View, int)
          * @see Builder#contentView(TextView)
+         * @see Builder#contentView(int)
          */
         public Builder contentView(@LayoutRes int contentViewId, @IdRes int textViewId) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             this.contentView = inflater.inflate(contentViewId, null, false);
             this.textViewId = textViewId;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Define um novo conteúdo customizado para o tooltip.</div>
+         *
+         * @param contentViewId <div class="pt">layoutId que será inflado como o novo conteúdo para o tooltip.</div>
+         * @return this
+         * @see Builder#contentView(View, int)
+         * @see Builder#contentView(TextView)
+         * @see Builder#contentView(int, int)
+         */
+        public Builder contentView(@LayoutRes int contentViewId) {
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            this.contentView = inflater.inflate(contentViewId, null, false);
+            this.textViewId = 0;
             return this;
         }
 
