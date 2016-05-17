@@ -117,7 +117,9 @@ Para mais informações, confira o [projeto de exemplo](https://github.com/dougl
 
 ```javascript
 dependencies {
-    compile 'com.github.douglasjunior:android-simple-tooltip:master-SNAPSHOT'
+    compile('com.github.douglasjunior:android-simple-tooltip:master-SNAPSHOT') {
+        changing = true // Gradle irá checar por atualizações a cada 24 horas
+    }
 }
 ```
 
