@@ -1,6 +1,11 @@
-# Android Simple Tooltip [![Build Status](https://travis-ci.org/douglasjunior/android-simple-tooltip.svg?branch=master)](https://travis-ci.org/douglasjunior/android-simple-tooltip) [![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip) [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Simple%20Tooltip-yellow.svg?style=flat)](http://android-arsenal.com/details/1/3578)
+# Android Simple Tooltip
 
 [PT](https://github.com/douglasjunior/android-simple-tooltip/blob/master/README.pt.md)
+
+[![Licence MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE)
+[![Build Status](https://travis-ci.org/douglasjunior/android-simple-tooltip.svg?branch=master)](https://travis-ci.org/douglasjunior/android-simple-tooltip)
+[![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip)
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Simple%20Tooltip-yellow.svg?style=flat)](http://android-arsenal.com/details/1/3578)
 
 A simple library based on [PopupWindow](http://developer.android.com/intl/pt-br/reference/android/widget/PopupWindow.html) to create Tooltips on Android.
 
@@ -79,7 +84,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
 
     ```javascript
     dependencies {
-        compile 'com.github.douglasjunior:android-simple-tooltip:0.0.1'
+        compile 'com.github.douglasjunior:android-simple-tooltip:0.1.0'
     }
     ```
 
@@ -103,7 +108,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
     <dependency>
         <groupId>com.github.douglasjunior</groupId>
         <artifactId>android-simple-tooltip</artifactId>
-        <version>0.0.1</version>
+        <version>0.1.0</version>
     </dependency>
     ```
 
