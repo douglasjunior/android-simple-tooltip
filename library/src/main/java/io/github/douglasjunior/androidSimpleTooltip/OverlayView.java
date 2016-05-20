@@ -49,10 +49,12 @@ public class OverlayView extends View {
 
     private View mAnchorView;
     private Bitmap bitmap;
+    private float offset = 0;
 
     OverlayView(Context context, View anchorView) {
         super(context);
         this.mAnchorView = anchorView;
+        this.offset = context.getResources().getDimension(mDefaultOverlayCircleOffsetRes);
     }
 
     @Override
@@ -67,10 +69,10 @@ public class OverlayView extends View {
     }
 
     private void createWindowFrame() {
-        bitmap = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
+        bitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
         Canvas osCanvas = new Canvas(bitmap);
 
-        RectF outerRectangle = new RectF(0, 0, getWidth(), getHeight());
+        RectF outerRectangle = new RectF(0, 0, getMeasuredWidth(), getMeasuredHeight());
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
@@ -81,10 +83,14 @@ public class OverlayView extends View {
         paint.setColor(Color.TRANSPARENT);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
 
-        RectF rect = SimpleTooltipUtils.calculeRectOnScreen(mAnchorView);
-        float offset = getResources().getDimensionPixelSize(mDefaultOverlayCircleOffsetRes);
-        rect.set(rect.left - offset, rect.top - offset, rect.right + offset, rect.bottom + offset);
-        osCanvas.drawOval(rect, paint);
+        RectF anchorRecr = SimpleTooltipUtils.calculeRectInWindow(mAnchorView);
+        RectF overlayRecr = SimpleTooltipUtils.calculeRectInWindow(this);
+
+        float left = anchorRecr.left - overlayRecr.left;
+        float top = anchorRecr.top - overlayRecr.top;
+        RectF oval = new RectF(left - offset, top - offset, left + mAnchorView.getMeasuredWidth() + offset, top + mAnchorView.getMeasuredHeight() + offset);
+
+        osCanvas.drawOval(oval, paint);
     }
 
     @Override

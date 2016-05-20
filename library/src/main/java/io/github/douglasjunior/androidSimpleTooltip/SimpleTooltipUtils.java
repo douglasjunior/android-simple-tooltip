@@ -49,13 +49,13 @@ public final class SimpleTooltipUtils {
     public static RectF calculeRectOnScreen(View view) {
         int[] location = new int[2];
         view.getLocationOnScreen(location);
-        return new RectF(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
+        return new RectF(location[0], location[1], location[0] + view.getMeasuredWidth(), location[1] + view.getMeasuredHeight());
     }
 
     public static RectF calculeRectInWindow(View view) {
         int[] location = new int[2];
         view.getLocationInWindow(location);
-        return new RectF(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
+        return new RectF(location[0], location[1], location[0] + view.getMeasuredWidth(), location[1] + view.getMeasuredHeight());
     }
 
     public static float dpFromPx(float px) {

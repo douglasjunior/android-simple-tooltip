@@ -227,6 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             .text(getString(R.string.btn_in_dialog))
                             .gravity(Gravity.BOTTOM)
                             .animated(true)
+                            .transparentOverlay(false)
                             .build()
                             .show();
                 }

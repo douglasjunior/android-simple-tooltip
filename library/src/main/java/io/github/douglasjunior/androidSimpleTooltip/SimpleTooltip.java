@@ -159,8 +159,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     public void show() {
         verifyDismissed();
 
-        createOverlay();
-
         mContentLayout.getViewTreeObserver().addOnGlobalLayoutListener(mLocationLayoutListener);
         mContentLayout.getViewTreeObserver().addOnGlobalLayoutListener(mAutoDismissLayoutListener);
 
@@ -180,7 +178,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
     private void createOverlay() {
         mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView);
-        mOverlay.setLayoutParams(new ViewGroup.LayoutParams(mRootView.getMeasuredWidth(), mRootView.getMeasuredHeight()));
+        mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mOverlay.setOnTouchListener(mOverlayTouchListener);
         mRootView.addView(mOverlay);
     }
@@ -363,6 +361,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             mPopupWindow.setClippingEnabled(true);
             mPopupWindow.update((int) location.x, (int) location.y, mPopupWindow.getWidth(), mPopupWindow.getHeight());
             mPopupWindow.getContentView().requestLayout();
+            createOverlay();
         }
     };
 
