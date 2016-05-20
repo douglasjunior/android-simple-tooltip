@@ -42,6 +42,7 @@ new SimpleTooltip.Builder(this)
 ```
 
 ### Resources
+
 ```xml
 <color name="simpletooltip_background">@color/colorAccent</color>
 <color name="simpletooltip_text">@android:color/primary_text_light</color>
@@ -131,6 +132,12 @@ or
     <version>master-SNAPSHOT</version>
 </dependency>
 ```
+
+## Known issues
+
+1. If you close the `Dialog/Activity` without the Tooltip is closed, there may be the exception `java.lang.IllegalArgumentException: Could not lock surface`. This error occurs because the animation continue for a while after closing the `Dialog/Activity`. (This error does not impact the operation of the program)
+
+2. If you call `tooltip.show()` after `Activity/Dialog` is closed, there may be the exception `android.view.WindowLeaked: Activity has leaked window android.widget.PopupWindow$PopupViewContainer that was originally added here`. (This error does not impact the operation of the program)
 
 ## Contributions
 

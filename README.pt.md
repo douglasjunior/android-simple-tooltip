@@ -133,6 +133,12 @@ ou
 </dependency>
 ```
 
+## Problemas conhecidos
+
+1. Se fechar a `Dialog/Activity` sem que a Tooltip seja encerrada, pode ocorrer o erro `java.lang.IllegalArgumentException: Could not lock surface`. Este erro ocorre devido a animação continuar após o fechamento da `Dialog/Activity`. (Este erro não afeta no funcionamento do programa.)
+
+2. Se chamar `tooltip.show()` após a `Activity/Dialog` ser encerrada, pode ocorrer o erro `android.view.WindowLeaked: Activity has leaked window android.widget.PopupWindow$PopupViewContainer that was originally added here`. (Este erro não afeta no funcionamento do programa.)
+
 ## Contribuições
 
 Novas funcionalidades, correções de bug e melhorias na tradução serão bem vindas! Para dúvidas e sugestões utilize as [issues](https://github.com/douglasjunior/android-simple-tooltip/issues).

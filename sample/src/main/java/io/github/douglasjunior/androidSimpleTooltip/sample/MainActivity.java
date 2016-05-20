@@ -24,12 +24,15 @@
 
 package io.github.douglasjunior.androidSimpleTooltip.sample;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.Button;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
@@ -61,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_modal_custom).setOnClickListener(this);
         findViewById(R.id.btn_no_arrow).setOnClickListener(this);
         findViewById(R.id.btn_custom_arrow).setOnClickListener(this);
+        findViewById(R.id.btn_dialog).setOnClickListener(this);
     }
 
     @Override
@@ -203,6 +207,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .build()
                     .show();
 
+        } else if (v.getId() == R.id.btn_dialog) {
+            final Dialog dialog = new Dialog(this);
+            dialog.setContentView(R.layout.dialog);
+            dialog.show();
+
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(dialog.getWindow().getAttributes());
+            lp.width = (int) SimpleTooltipUtils.pxFromDp(300);
+            lp.height = (int) SimpleTooltipUtils.pxFromDp(300);
+            dialog.getWindow().setAttributes(lp);
+
+            final Button btnInDialog = (Button) dialog.findViewById(R.id.btn_in_dialog);
+            btnInDialog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new SimpleTooltip.Builder(MainActivity.this)
+                            .anchorView(btnInDialog)
+                            .text(getString(R.string.btn_in_dialog))
+                            .gravity(Gravity.BOTTOM)
+                            .animated(true)
+                            .build()
+                            .show();
+                }
+            });
+            final Button btnClose = (Button) dialog.findViewById(R.id.btn_close);
+            btnClose.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
         }
     }
 }

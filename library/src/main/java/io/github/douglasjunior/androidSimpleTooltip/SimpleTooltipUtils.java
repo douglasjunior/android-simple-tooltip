@@ -31,6 +31,7 @@ import android.support.annotation.StyleRes;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
@@ -48,6 +49,12 @@ public final class SimpleTooltipUtils {
     public static RectF calculeRectOnScreen(View view) {
         int[] location = new int[2];
         view.getLocationOnScreen(location);
+        return new RectF(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
+    }
+
+    public static RectF calculeRectInWindow(View view) {
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
         return new RectF(location[0], location[1], location[0] + view.getWidth(), location[1] + view.getHeight());
     }
 
@@ -133,5 +140,19 @@ public final class SimpleTooltipUtils {
             //noinspection deprecation
             tv.setTextAppearance(tv.getContext(), textAppearanceRes);
         }
+    }
+
+    public static boolean isShown(View mContentLayout) {
+        if (!mContentLayout.isShown())
+            return false;
+        ViewParent parent = mContentLayout.getParent();
+        do {
+            if (parent instanceof View && !((View) parent).isShown())
+                return false;
+            else
+                System.out.println(parent.getClass());
+
+        } while ((parent = parent.getParent()) != null);
+        return true;
     }
 }

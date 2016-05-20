@@ -98,6 +98,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:text="@string/btn_custom_arrow" />
+
+            <Button
+                android:id="@+id/btn_dialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/btn_dialog" />
         </LinearLayout>
     </ScrollView>
 
