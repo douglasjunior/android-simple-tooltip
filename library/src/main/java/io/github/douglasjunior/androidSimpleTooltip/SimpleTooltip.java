@@ -433,33 +433,37 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             if (dismissed)
                 return;
 
-            if (mAnimated && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-                final String property = mGravity == Gravity.TOP || mGravity == Gravity.BOTTOM ? "translationY" : "translationX";
-
-                final ObjectAnimator anim1 = ObjectAnimator.ofFloat(mContentLayout, property, -mAnimationPadding, mAnimationPadding);
-                anim1.setDuration(mAnimationDuration);
-                anim1.setInterpolator(new AccelerateDecelerateInterpolator());
-
-                final ObjectAnimator anim2 = ObjectAnimator.ofFloat(mContentLayout, property, mAnimationPadding, -mAnimationPadding);
-                anim2.setDuration(mAnimationDuration);
-                anim2.setInterpolator(new AccelerateDecelerateInterpolator());
-
-                mAnimator = new AnimatorSet();
-                mAnimator.playSequentially(anim1, anim2);
-                mAnimator.addListener(new AnimatorListenerAdapter() {
-                    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        if (!dismissed && isShowing()) {
-                            animation.start();
-                        }
-                    }
-                });
-                mAnimator.start();
+            if (mAnimated) {
+                startAnimation();
             }
             mPopupWindow.getContentView().requestLayout();
         }
     };
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void startAnimation() {
+        final String property = mGravity == Gravity.TOP || mGravity == Gravity.BOTTOM ? "translationY" : "translationX";
+
+        final ObjectAnimator anim1 = ObjectAnimator.ofFloat(mContentLayout, property, -mAnimationPadding, mAnimationPadding);
+        anim1.setDuration(mAnimationDuration);
+        anim1.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        final ObjectAnimator anim2 = ObjectAnimator.ofFloat(mContentLayout, property, mAnimationPadding, -mAnimationPadding);
+        anim2.setDuration(mAnimationDuration);
+        anim2.setInterpolator(new AccelerateDecelerateInterpolator());
+
+        mAnimator = new AnimatorSet();
+        mAnimator.playSequentially(anim1, anim2);
+        mAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (!dismissed && isShowing()) {
+                    animation.start();
+                }
+            }
+        });
+        mAnimator.start();
+    }
 
     /**
      * <div class="pt">Listener utilizado para chamar o <tt>SimpleTooltip#dismiss()</tt> quando a <tt>View</tt> root é encerrada sem que a tooltip seja fechada.
