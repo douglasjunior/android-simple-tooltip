@@ -24,14 +24,17 @@
 
 package io.github.douglasjunior.androidSimpleTooltip;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.StyleRes;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
@@ -142,17 +145,21 @@ public final class SimpleTooltipUtils {
         }
     }
 
-    public static boolean isShown(View mContentLayout) {
-        if (!mContentLayout.isShown())
-            return false;
-        ViewParent parent = mContentLayout.getParent();
-        do {
-            if (parent instanceof View && !((View) parent).isShown())
-                return false;
-            else
-                System.out.println(parent.getClass());
+    public static int getColor(Context context, @ColorRes int colorRes) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return context.getColor(colorRes);
+        } else {
+            //noinspection deprecation
+            return context.getResources().getColor(colorRes);
+        }
+    }
 
-        } while ((parent = parent.getParent()) != null);
-        return true;
+    public static Drawable getDrawable(Context context, @DrawableRes int drawableRes) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return context.getDrawable(drawableRes);
+        } else {
+            //noinspection deprecation
+            return context.getResources().getDrawable(drawableRes);
+        }
     }
 }

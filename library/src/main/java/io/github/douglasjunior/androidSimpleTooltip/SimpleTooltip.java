@@ -41,9 +41,6 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatPopupWindow;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -52,6 +49,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
@@ -82,7 +80,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final Context mContext;
     private final OnDismissListener mOnDismissListener;
     private final OnShowListener mOnShowListener;
-    private AppCompatPopupWindow mPopupWindow;
+    private PopupWindow mPopupWindow;
     private final int mGravity;
     private final boolean mDismissOnInsideTouch;
     private final boolean mDismissOnOutsideTouch;
@@ -145,7 +143,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void configPopupWindow() {
-        mPopupWindow = new AppCompatPopupWindow(mContext, null, mDefaultPopupWindowStyleRes);
+        mPopupWindow = new PopupWindow(mContext, null, mDefaultPopupWindowStyleRes);
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -228,16 +226,16 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         if (mShowArrow) {
             mArrowView = new ImageView(mContext);
             mArrowView.setImageDrawable(mArrowDrawable);
-            LinearLayoutCompat.LayoutParams arrowLayoutParams;
+            LinearLayout.LayoutParams arrowLayoutParams;
             if (mGravity == Gravity.TOP || mGravity == Gravity.BOTTOM) {
-                arrowLayoutParams = new LinearLayoutCompat.LayoutParams((int) mArrowWidth, (int) mArrowHeight, 0);
+                arrowLayoutParams = new LinearLayout.LayoutParams((int) mArrowWidth, (int) mArrowHeight, 0);
             } else {
-                arrowLayoutParams = new LinearLayoutCompat.LayoutParams((int) mArrowHeight, (int) mArrowWidth, 0);
+                arrowLayoutParams = new LinearLayout.LayoutParams((int) mArrowHeight, (int) mArrowWidth, 0);
             }
             mArrowView.setLayoutParams(arrowLayoutParams);
-            LinearLayoutCompat linearLayout = new LinearLayoutCompat(mContext);
+            LinearLayout linearLayout = new LinearLayout(mContext);
             linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            linearLayout.setOrientation(mGravity == Gravity.START || mGravity == Gravity.END ? LinearLayoutCompat.HORIZONTAL : LinearLayoutCompat.VERTICAL);
+            linearLayout.setOrientation(mGravity == Gravity.START || mGravity == Gravity.END ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
             int padding = mAnimated ? mAnimationPadding : (int) SimpleTooltipUtils.pxFromDp(4);
             linearLayout.setPadding(padding, padding, padding, padding);
 
@@ -249,7 +247,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 linearLayout.addView(mContentView);
             }
 
-            LinearLayoutCompat.LayoutParams contentViewParams = new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+            LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
             contentViewParams.gravity = Gravity.CENTER;
             mContentView.setLayoutParams(contentViewParams);
 
@@ -530,10 +528,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         public SimpleTooltip build() throws IllegalArgumentException {
             validateArguments();
             if (backgroundColor == 0) {
-                backgroundColor = ContextCompat.getColor(context, mDefaultBackgroundColorRes);
+                backgroundColor = SimpleTooltipUtils.getColor(context, mDefaultBackgroundColorRes);
             }
             if (textColor == 0) {
-                textColor = ContextCompat.getColor(context, mDefaultTextColorRes);
+                textColor = SimpleTooltipUtils.getColor(context, mDefaultTextColorRes);
             }
             if (contentView == null) {
                 TextView tv = new TextView(context);
@@ -543,7 +541,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 contentView = tv;
             }
             if (arrowColor == 0) {
-                arrowColor = ContextCompat.getColor(context, mDefaultArrowColorRes);
+                arrowColor = SimpleTooltipUtils.getColor(context, mDefaultArrowColorRes);
             }
             if (arrowDrawable == null) {
                 int arrowDirection = SimpleTooltipUtils.tooltipGravityToArrowDirection(gravity);
@@ -857,7 +855,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         public Builder arrowDrawable(@DrawableRes int drawableRes) {
-            this.arrowDrawable = ContextCompat.getDrawable(context, drawableRes);
+            this.arrowDrawable = SimpleTooltipUtils.getDrawable(context, drawableRes);
             return this;
         }
 
