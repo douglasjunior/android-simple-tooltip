@@ -149,8 +149,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mPopupWindow.setClippingEnabled(false);
-        if (mDismissOnInsideTouch || mDismissOnOutsideTouch)
-            mPopupWindow.setTouchInterceptor(mPopupWindowsTouchListener);
     }
 
 
@@ -223,6 +221,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         mContentView.setPadding((int) mPadding, (int) mPadding, (int) mPadding, (int) mPadding);
 
+        LinearLayout linearLayout = new LinearLayout(mContext);
+        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        linearLayout.setOrientation(mGravity == Gravity.START || mGravity == Gravity.END ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
+        int layoutPadding = mAnimated ? mAnimationPadding : 0;
+        linearLayout.setPadding(layoutPadding, layoutPadding, layoutPadding, layoutPadding);
+
         if (mShowArrow) {
             mArrowView = new ImageView(mContext);
             mArrowView.setImageDrawable(mArrowDrawable);
@@ -232,12 +236,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             } else {
                 arrowLayoutParams = new LinearLayout.LayoutParams((int) mArrowHeight, (int) mArrowWidth, 0);
             }
+            arrowLayoutParams.gravity = Gravity.CENTER;
             mArrowView.setLayoutParams(arrowLayoutParams);
-            LinearLayout linearLayout = new LinearLayout(mContext);
-            linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            linearLayout.setOrientation(mGravity == Gravity.START || mGravity == Gravity.END ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
-            int padding = mAnimated ? mAnimationPadding : (int) SimpleTooltipUtils.pxFromDp(4);
-            linearLayout.setPadding(padding, padding, padding, padding);
 
             if (mGravity == Gravity.TOP || mGravity == Gravity.START) {
                 linearLayout.addView(mContentView);
@@ -246,16 +246,18 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 linearLayout.addView(mArrowView);
                 linearLayout.addView(mContentView);
             }
-
-            LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
-            contentViewParams.gravity = Gravity.CENTER;
-            mContentView.setLayoutParams(contentViewParams);
-
-            mContentLayout = linearLayout;
         } else {
-            mContentLayout = mContentView;
-            mContentView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            linearLayout.addView(mContentView);
         }
+
+        LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+        contentViewParams.gravity = Gravity.CENTER;
+        mContentView.setLayoutParams(contentViewParams);
+
+        if (mDismissOnInsideTouch || mDismissOnOutsideTouch)
+            mContentView.setOnTouchListener(mPopupWindowTouchListener);
+
+        mContentLayout = linearLayout;
         mContentLayout.setVisibility(View.INVISIBLE);
         mPopupWindow.setContentView(mContentLayout);
     }
@@ -308,7 +310,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mPopupWindow = null;
     }
 
-    private final View.OnTouchListener mPopupWindowsTouchListener = new View.OnTouchListener() {
+    private final View.OnTouchListener mPopupWindowTouchListener = new View.OnTouchListener() {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {

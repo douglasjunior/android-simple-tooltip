@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .gravity(Gravity.START)
                     .showArrow(false)
                     .modal(true)
+                    .animated(true)
                     .build()
                     .show();
 
