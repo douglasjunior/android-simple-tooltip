@@ -25,7 +25,7 @@ A simple library based on [PopupWindow](http://developer.android.com/intl/pt-br/
 
 ![Demo](https://raw.githubusercontent.com/douglasjunior/android-simple-tooltip/master/screenshots/demo.gif)
 
-## Usege
+## Usage
 ### Basic
 
 ```java
@@ -151,4 +151,4 @@ The MIT License (MIT)
 Copyright (c) 2016 Douglas Nassif Roma Junior
 ```
 
-See complete on [licence file](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE).
+See the full [licence file](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE).
