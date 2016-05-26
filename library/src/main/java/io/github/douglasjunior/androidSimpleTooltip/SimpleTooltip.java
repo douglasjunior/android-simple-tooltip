@@ -89,7 +89,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private View mContentLayout;
     @IdRes
     private final int mTextViewId;
-    private final String mText;
+    private final CharSequence mText;
     private final View mAnchorView;
     private final boolean mTransparentOverlay;
     private final float mMaxWidth;
@@ -503,7 +503,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private View contentView;
         @IdRes
         private int textViewId = android.R.id.text1;
-        private String text = "";
+        private CharSequence text = "";
         private View anchorView;
         private int gravity = Gravity.BOTTOM;
         private boolean transparentOverlay = true;
@@ -691,7 +691,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * @param text <div class="pt">texto que sera exibido.</div>
          * @return this
          */
-        public Builder text(String text) {
+        public Builder text(CharSequence text) {
             this.text = text;
             return this;
         }
