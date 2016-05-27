@@ -49,10 +49,12 @@ public class OverlayView extends View {
 
     private View mAnchorView;
     private Bitmap bitmap;
+    private boolean exactRectPortal;
 
-    OverlayView(Context context, View anchorView) {
+    OverlayView(Context context, View anchorView, boolean exactRectPortal) {
         super(context);
         this.mAnchorView = anchorView;
+        this.exactRectPortal = exactRectPortal;
     }
 
     @Override
@@ -82,9 +84,13 @@ public class OverlayView extends View {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
 
         RectF rect = SimpleTooltipUtils.calculeRectOnScreen(mAnchorView);
-        float offset = getResources().getDimensionPixelSize(mDefaultOverlayCircleOffsetRes);
+        float offset = exactRectPortal ? 0 : getResources().getDimensionPixelSize(mDefaultOverlayCircleOffsetRes);
         rect.set(rect.left - offset, rect.top - offset, rect.right + offset, rect.bottom + offset);
-        osCanvas.drawOval(rect, paint);
+        if (exactRectPortal) {
+            osCanvas.drawRect(rect, paint);
+        } else {
+            osCanvas.drawOval(rect, paint);
+        }
     }
 
     @Override

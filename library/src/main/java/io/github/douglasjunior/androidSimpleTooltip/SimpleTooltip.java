@@ -107,6 +107,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final long mAnimationDuration;
     private final float mArrowWidth;
     private final float mArrowHeight;
+    private final boolean mExactRectPortal;
     private boolean dismissed = false;
 
     private SimpleTooltip(Builder builder) {
@@ -132,6 +133,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mAnimationDuration = builder.animationDuration;
         mOnDismissListener = builder.onDismissListener;
         mOnShowListener = builder.onShowListener;
+        mExactRectPortal = builder.exactRectPortal;
 
         init();
     }
@@ -177,7 +179,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void createOverlay(final ViewGroup rootView) {
-        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView);
+        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mExactRectPortal);
         mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mOverlay.setOnTouchListener(mOverlayTouchListener);
         rootView.addView(mOverlay);
@@ -500,6 +502,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int animationPadding;
         private OnDismissListener onDismissListener;
         private OnShowListener onShowListener;
+        private boolean exactRectPortal;
         private long animationDuration;
         private int backgroundColor;
         private int textColor;
@@ -814,6 +817,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         public Builder onShowListener(OnShowListener onShowListener) {
             this.onShowListener = onShowListener;
+            return this;
+        }
+
+        public Builder exactRectPortal(boolean exactRectPortal) {
+            this.exactRectPortal = exactRectPortal;
             return this;
         }
     }
