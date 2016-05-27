@@ -164,6 +164,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         rootView.post(new Runnable() {
             @Override
             public void run() {
+                mPopupWindow.setAnimationStyle(R.style.popupAnimation);
                 mPopupWindow.showAtLocation(rootView, Gravity.NO_GRAVITY, rootView.getWidth(), rootView.getHeight());
             }
         });
