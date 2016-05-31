@@ -78,8 +78,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private static final int mDefaultArrowHeightRes = R.dimen.simpletooltip_arrow_height;
 
     private final Context mContext;
-    private final OnDismissListener mOnDismissListener;
-    private final OnShowListener mOnShowListener;
+    private OnDismissListener mOnDismissListener;
+    private OnShowListener mOnShowListener;
     private PopupWindow mPopupWindow;
     private final int mGravity;
     private final boolean mDismissOnInsideTouch;
@@ -94,7 +94,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final boolean mTransparentOverlay;
     private final float mMaxWidth;
     private View mOverlay;
-    private final ViewGroup mRootView;
+    private ViewGroup mRootView;
     private final boolean mShowArrow;
     private ImageView mArrowView;
     private final Drawable mArrowDrawable;
@@ -297,15 +297,19 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 mAnimator.removeAllListeners();
                 mAnimator.end();
                 mAnimator.cancel();
+                mAnimator = null;
             }
         }
 
         if (mRootView != null && mOverlay != null) {
             mRootView.removeView(mOverlay);
         }
+        mRootView = null;
+        mOverlay = null;
 
         if (mOnDismissListener != null)
             mOnDismissListener.onDismiss(this);
+        mOnDismissListener = null;
 
         mPopupWindow = null;
     }
@@ -346,8 +350,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final ViewTreeObserver.OnGlobalLayoutListener mLocationLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
-            if (dismissed)
+            if (dismissed) {
+                SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
                 return;
+            }
 
             if (mMaxWidth > 0 && mContentView.getWidth() > mMaxWidth) {
                 SimpleTooltipUtils.setWidth(mContentView, mMaxWidth);
@@ -368,10 +374,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final ViewTreeObserver.OnGlobalLayoutListener mArrowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
+            SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
             if (dismissed)
                 return;
 
-            SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
             mPopupWindow.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mAnimationLayoutListener);
             mPopupWindow.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mShowLayoutListener);
             if (mShowArrow) {
@@ -415,12 +421,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final ViewTreeObserver.OnGlobalLayoutListener mShowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
+            SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
             if (dismissed)
                 return;
 
-            SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
             if (mOnShowListener != null)
                 mOnShowListener.onShow(SimpleTooltip.this);
+            mOnShowListener = null;
+
             mContentLayout.setVisibility(View.VISIBLE);
         }
     };
@@ -471,8 +479,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final ViewTreeObserver.OnGlobalLayoutListener mAutoDismissLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
-            if (dismissed)
+            if (dismissed) {
+                SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), this);
                 return;
+            }
 
             if (!mRootView.isShown())
                 dismiss();
