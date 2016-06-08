@@ -102,7 +102,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private AnimatorSet mAnimator;
     private final float mMargin;
     private final float mPadding;
-    private final int mAnimationPadding;
+    private final float mAnimationPadding;
     private final long mAnimationDuration;
     private final float mArrowWidth;
     private final float mArrowHeight;
@@ -224,7 +224,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         LinearLayout linearLayout = new LinearLayout(mContext);
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.setOrientation(mGravity == Gravity.START || mGravity == Gravity.END ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
-        int layoutPadding = mAnimated ? mAnimationPadding : 0;
+        int layoutPadding = (int) (mAnimated ? mAnimationPadding : 0);
         linearLayout.setPadding(layoutPadding, layoutPadding, layoutPadding, layoutPadding);
 
         if (mShowArrow) {
@@ -523,7 +523,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private boolean animated = false;
         private float margin = -1;
         private float padding = -1;
-        private int animationPadding;
+        private float animationPadding = -1;
         private OnDismissListener onDismissListener;
         private OnShowListener onShowListener;
         private long animationDuration;
@@ -563,10 +563,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 margin = context.getResources().getDimension(mDefaultMarginRes);
             }
             if (padding < 0) {
-                padding = context.getResources().getDimensionPixelSize(mDefaultPaddingRes);
+                padding = context.getResources().getDimension(mDefaultPaddingRes);
             }
-            if (animationPadding == 0) {
-                animationPadding = context.getResources().getDimensionPixelSize(mDefaultAnimationPaddingRes);
+            if (animationPadding < 0) {
+                animationPadding = context.getResources().getDimension(mDefaultAnimationPaddingRes);
             }
             if (animationDuration == 0) {
                 animationDuration = context.getResources().getInteger(mDefaultAnimationDurationRes);
@@ -777,9 +777,29 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
+        /**
+         * <div class="pt">Define o tamanho do deslocamento durante a animação. Padrão é <tt>resources.getDimension(R.dimen.simpletooltip_animation_padding)</tt>.</div>
+         *
+         * @param animationPadding <div class="pt">tamanho do deslocamento em pixels.</div>
+         * @return <tt>this</tt>
+         * @see Builder#animationPadding(int)
+         */
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-        public Builder animationPadding(int animationPadding) {
+        public Builder animationPadding(float animationPadding) {
             this.animationPadding = animationPadding;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Define o tamanho do deslocamento durante a animação. Padrão é <tt>R.dimen.simpletooltip_animation_padding</tt>.</div>
+         *
+         * @param animationPaddingRes <div class="pt">resId do tamanho do deslocamento.</div>
+         * @return <tt>this</tt>
+         * @see Builder#animationPadding(float)
+         */
+        @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+        public Builder animationPadding(@DimenRes int animationPaddingRes) {
+            this.animationPadding = context.getResources().getDimension(animationPaddingRes);
             return this;
         }
 
