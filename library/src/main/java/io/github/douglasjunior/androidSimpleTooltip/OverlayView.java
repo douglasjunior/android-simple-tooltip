@@ -50,6 +50,7 @@ public class OverlayView extends View {
     private View mAnchorView;
     private Bitmap bitmap;
     private float offset = 0;
+    private boolean invalidated = true;
 
     OverlayView(Context context, View anchorView) {
         super(context);
@@ -59,20 +60,24 @@ public class OverlayView extends View {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        super.dispatchDraw(canvas);
-
-        if (bitmap == null) {
+        if (invalidated)
             createWindowFrame();
-        }
 
         canvas.drawBitmap(bitmap, 0, 0, null);
     }
 
     private void createWindowFrame() {
-        bitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        final int width = getMeasuredWidth(), height = getMeasuredHeight();
+        if (width <= 0 || height <= 0)
+            return;
+
+        if (bitmap != null && !bitmap.isRecycled())
+            bitmap.recycle();
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
         Canvas osCanvas = new Canvas(bitmap);
 
-        RectF outerRectangle = new RectF(0, 0, getMeasuredWidth(), getMeasuredHeight());
+        RectF outerRectangle = new RectF(0, 0, width, height);
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
@@ -91,6 +96,8 @@ public class OverlayView extends View {
         RectF oval = new RectF(left - offset, top - offset, left + mAnchorView.getMeasuredWidth() + offset, top + mAnchorView.getMeasuredHeight() + offset);
 
         osCanvas.drawOval(oval, paint);
+
+        invalidated = false;
     }
 
     @Override
@@ -101,9 +108,7 @@ public class OverlayView extends View {
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        if (bitmap != null && !bitmap.isRecycled())
-            bitmap.recycle();
-        bitmap = null;
+        invalidated = true;
     }
 
     public View getAnchorView() {
