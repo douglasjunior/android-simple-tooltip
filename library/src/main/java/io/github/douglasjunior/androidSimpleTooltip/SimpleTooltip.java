@@ -41,6 +41,7 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -63,6 +64,8 @@ import android.widget.TextView;
  */
 @SuppressWarnings("SameParameterValue")
 public class SimpleTooltip implements PopupWindow.OnDismissListener {
+
+    private static final String TAG = SimpleTooltip.class.getSimpleName();
 
     // Default Resources
     private static final int mDefaultPopupWindowStyleRes = android.R.attr.popupWindowStyle;
@@ -161,7 +164,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mRootView.post(new Runnable() {
             @Override
             public void run() {
-                mPopupWindow.showAtLocation(mRootView, Gravity.NO_GRAVITY, mRootView.getWidth(), mRootView.getHeight());
+                if (mRootView.isShown())
+                    mPopupWindow.showAtLocation(mRootView, Gravity.NO_GRAVITY, mRootView.getWidth(), mRootView.getHeight());
+                else
+                    Log.e(TAG, "Tooltip cannot be shown, root view is invalid or has been closed.");
             }
         });
     }

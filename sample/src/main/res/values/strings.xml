@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">Android Simple Tooltip</string>
+    <string name="app_name" translatable="false">Android Simple Tooltip</string>
 
     <string name="btn_simple">Simples</string>
     <string name="btn_animated">Animado</string>
-    <string name="btn_overlay">Overlay</string>
+    <string name="btn_overlay" translatable="false">Overlay</string>
     <string name="btn_outside">Clica fora</string>
     <string name="btn_inside">Clica dentro</string>
     <string name="btn_inside_modal">Clica dentro (Modal)</string>
@@ -16,4 +16,5 @@
     <string name="btn_in_dialog">Tooltip em Dialog</string>
     <string name="btn_close">Fechar</string>
     <string name="btn_dialog">Em dialog</string>
+    <string name="btn_other_activity">Outra Activity</string>
 </resources>

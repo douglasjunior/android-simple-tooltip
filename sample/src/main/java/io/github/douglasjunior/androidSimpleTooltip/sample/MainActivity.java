@@ -25,8 +25,10 @@
 package io.github.douglasjunior.androidSimpleTooltip.sample;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
@@ -51,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
 
         findViewById(R.id.btn_simple).setOnClickListener(this);
@@ -65,6 +67,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_no_arrow).setOnClickListener(this);
         findViewById(R.id.btn_custom_arrow).setOnClickListener(this);
         findViewById(R.id.btn_dialog).setOnClickListener(this);
+        findViewById(R.id.btn_other_activity).setOnClickListener(this);
+
+        NestedScrollView scroll = (NestedScrollView) findViewById(R.id.scroll);
+        scroll.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                int diff = oldScrollY - scrollY;
+                if (diff < 0) {
+                    fab.hide();
+                } else {
+                    fab.show();
+                }
+            }
+        });
     }
 
     @Override
@@ -240,6 +256,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     dialog.dismiss();
                 }
             });
+
+        } else if (v.getId() == R.id.btn_other_activity) {
+            startActivity(new Intent(this, OtherActivity.class));
         }
     }
 }
