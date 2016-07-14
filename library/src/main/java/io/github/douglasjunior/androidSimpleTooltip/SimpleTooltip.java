@@ -310,8 +310,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         if (mOnDismissListener != null)
             mOnDismissListener.onDismiss(this);
         mOnDismissListener = null;
-
-        mPopupWindow = null;
     }
 
     private final View.OnTouchListener mPopupWindowTouchListener = new View.OnTouchListener() {
