@@ -42,7 +42,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.AppCompatPopupWindow;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -82,7 +81,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final Context mContext;
     private final OnDismissListener mOnDismissListener;
     private final OnShowListener mOnShowListener;
-    private AppCompatPopupWindow mPopupWindow;
+    private PopupWindow mPopupWindow;
     private final int mGravity;
     private final boolean mDismissOnInsideTouch;
     private final boolean mDismissOnOutsideTouch;
@@ -144,7 +143,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void configPopupWindow() {
-        mPopupWindow = new AppCompatPopupWindow(mContext, null, mDefaultPopupWindowStyleRes);
+        mPopupWindow = new PopupWindow(mContext, null, mDefaultPopupWindowStyleRes);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
