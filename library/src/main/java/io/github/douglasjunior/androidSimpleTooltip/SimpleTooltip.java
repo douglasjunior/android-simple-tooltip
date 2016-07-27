@@ -310,6 +310,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         if (mOnDismissListener != null)
             mOnDismissListener.onDismiss(this);
         mOnDismissListener = null;
+
+        SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mLocationLayoutListener);
+        SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mArrowLayoutListener);
+        SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mShowLayoutListener);
+        SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mAnimationLayoutListener);
+        SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mAutoDismissLayoutListener);
+
+        mPopupWindow = null;
     }
 
     private final View.OnTouchListener mPopupWindowTouchListener = new View.OnTouchListener() {
