@@ -143,7 +143,7 @@ or
 
 New features, bug fixes and improvements in the translation are welcome! For questions and suggestions use the [issues](https://github.com/douglasjunior/android-simple-tooltip/issues).
 
-Before submit yout PR, run the gradle check.
+Before submit your PR, run the gradle check.
 ```bash
 ./gradlew build connectedCheck
 ```

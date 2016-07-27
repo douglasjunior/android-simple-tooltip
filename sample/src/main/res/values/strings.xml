@@ -1,20 +1,20 @@
 <resources>
     <string name="app_name">Android Simple Tooltip</string>
 
-    <string name="btn_simple">Simples</string>
-    <string name="btn_animated">Animado</string>
+    <string name="btn_simple">Simple</string>
+    <string name="btn_animated">Animated</string>
     <string name="btn_overlay">Overlay</string>
-    <string name="btn_outside">Clica fora</string>
-    <string name="btn_inside">Clica dentro</string>
-    <string name="btn_inside_modal">Clica dentro (Modal)</string>
+    <string name="btn_outside">Click outside</string>
+    <string name="btn_inside">Click inside</string>
+    <string name="btn_inside_modal">Click inside (Modal)</string>
     <string name="btn_modal_custom">Modal custom.</string>
-    <string name="btn_no_arrow">Sem arrow</string>
+    <string name="btn_no_arrow">No arrow</string>
     <string name="btn_custom_arrow">Arrow custom.</string>
-    <string name="btn_next">PRÓXIMO</string>
-    <string name="btn_maxwidth">Largura max.</string>
+    <string name="btn_next">NEXT</string>
+    <string name="btn_maxwidth">Max. width</string>
     <string name="demo">Demo</string>
-    <string name="btn_in_dialog">Tooltip em Dialog</string>
-    <string name="btn_close">Fechar</string>
-    <string name="btn_dialog">Em dialog</string>
-    <string name="btn_center">Center</string>
+    <string name="btn_in_dialog">Inside dialog</string>
+    <string name="btn_close">Close</string>
+    <string name="btn_dialog">Inside dialog</string>
+    <string name="btn_center">Screen center</string>
 </resources>
