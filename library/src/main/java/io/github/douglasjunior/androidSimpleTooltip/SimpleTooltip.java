@@ -82,6 +82,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private OnShowListener mOnShowListener;
     private PopupWindow mPopupWindow;
     private final int mGravity;
+    private final int mArrowDirection;
     private final boolean mDismissOnInsideTouch;
     private final boolean mDismissOnOutsideTouch;
     private final boolean mModal;
@@ -112,6 +113,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private SimpleTooltip(Builder builder) {
         mContext = builder.context;
         mGravity = builder.gravity;
+        mArrowDirection = builder.arrowDirection;
         mDismissOnInsideTouch = builder.dismissOnInsideTouch;
         mDismissOnOutsideTouch = builder.dismissOnOutsideTouch;
         mModal = builder.modal;
@@ -227,7 +229,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         LinearLayout linearLayout = new LinearLayout(mContext);
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        linearLayout.setOrientation(mGravity == Gravity.START || mGravity == Gravity.END ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
+        linearLayout.setOrientation(mArrowDirection == ArrowDrawable.LEFT || mArrowDirection == ArrowDrawable.RIGHT ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
         int layoutPadding = (int) (mAnimated ? mAnimationPadding : 0);
         linearLayout.setPadding(layoutPadding, layoutPadding, layoutPadding, layoutPadding);
 
@@ -235,15 +237,17 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             mArrowView = new ImageView(mContext);
             mArrowView.setImageDrawable(mArrowDrawable);
             LinearLayout.LayoutParams arrowLayoutParams;
-            if (mGravity == Gravity.TOP || mGravity == Gravity.BOTTOM) {
+
+            if (mArrowDirection == ArrowDrawable.TOP || mArrowDirection == ArrowDrawable.BOTTOM) {
                 arrowLayoutParams = new LinearLayout.LayoutParams((int) mArrowWidth, (int) mArrowHeight, 0);
             } else {
                 arrowLayoutParams = new LinearLayout.LayoutParams((int) mArrowHeight, (int) mArrowWidth, 0);
             }
+
             arrowLayoutParams.gravity = Gravity.CENTER;
             mArrowView.setLayoutParams(arrowLayoutParams);
 
-            if (mGravity == Gravity.TOP || mGravity == Gravity.START) {
+            if (mArrowDirection == ArrowDrawable.BOTTOM || mArrowDirection == ArrowDrawable.RIGHT) {
                 linearLayout.addView(mContentView);
                 linearLayout.addView(mArrowView);
             } else {
@@ -388,7 +392,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 RectF achorRect = SimpleTooltipUtils.calculeRectOnScreen(mAnchorView);
                 RectF contentViewRect = SimpleTooltipUtils.calculeRectOnScreen(mContentLayout);
                 float x, y;
-                if (mGravity == Gravity.BOTTOM || mGravity == Gravity.TOP) {
+                if (mArrowDirection == ArrowDrawable.TOP || mArrowDirection == ArrowDrawable.BOTTOM) {
                     x = mContentLayout.getPaddingLeft() + SimpleTooltipUtils.pxFromDp(2);
                     float centerX = (contentViewRect.width() / 2f) - (mArrowView.getWidth() / 2f);
                     float newX = centerX - (contentViewRect.centerX() - achorRect.centerX());
@@ -400,7 +404,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                         }
                     }
                     y = mArrowView.getTop();
-                    y = y + (mGravity == Gravity.TOP ? -1 : +1);
+                    y = y + (mArrowDirection == ArrowDrawable.BOTTOM ? -1 : +1);
                 } else {
                     y = mContentLayout.getPaddingTop() + SimpleTooltipUtils.pxFromDp(2);
                     float centerY = (contentViewRect.height() / 2f) - (mArrowView.getHeight() / 2f);
@@ -413,7 +417,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                         }
                     }
                     x = mArrowView.getLeft();
-                    x = x + (mGravity == Gravity.START ? -1 : +1);
+                    x = x + (mArrowDirection == ArrowDrawable.RIGHT ? -1 : +1);
                 }
                 SimpleTooltipUtils.setX(mArrowView, (int) x);
                 SimpleTooltipUtils.setY(mArrowView, (int) y);
@@ -519,6 +523,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int textViewId = android.R.id.text1;
         private CharSequence text = "";
         private View anchorView;
+        private int arrowDirection = ArrowDrawable.AUTO;
         private int gravity = Gravity.BOTTOM;
         private boolean transparentOverlay = true;
         private float maxWidth;
@@ -559,10 +564,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             if (arrowColor == 0) {
                 arrowColor = SimpleTooltipUtils.getColor(context, mDefaultArrowColorRes);
             }
-            if (arrowDrawable == null) {
-                int arrowDirection = SimpleTooltipUtils.tooltipGravityToArrowDirection(gravity);
-                arrowDrawable = new ArrowDrawable(arrowColor, arrowDirection);
-            }
             if (margin < 0) {
                 margin = context.getResources().getDimension(mDefaultMarginRes);
             }
@@ -579,6 +580,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 animated = false;
             }
             if (showArrow) {
+                if (arrowDirection == ArrowDrawable.AUTO)
+                    arrowDirection = SimpleTooltipUtils.tooltipGravityToArrowDirection(gravity);
+                if (arrowDrawable == null)
+                    arrowDrawable = new ArrowDrawable(arrowColor, arrowDirection);
                 if (arrowWidth == 0)
                     arrowWidth = context.getResources().getDimension(mDefaultArrowWidthRes);
                 if (arrowHeight == 0)
@@ -731,6 +736,20 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder gravity(int gravity) {
             this.gravity = gravity;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Define a direção em que a seta será criada.
+         * As opções existentes são <tt>ArrowDrawable.LEFT</tt>, <tt>ArrowDrawable.TOP</tt>, <tt>ArrowDrawable.RIGHT</tt>, <tt>ArrowDrawable.BOTTOM</tt> e <tt>ArrowDrawable.AUTO</tt>.
+         * O padrão é <tt>ArrowDrawable.AUTO</tt>. <br>
+         * Esta opção deve ser utilizada em conjunto com  <tt>Builder#showArrow(true)</tt>.</div>
+         *
+         * @param arrowDirection <div class="pt">direção em que a seta será criada.</div>
+         * @return this
+         */
+        public Builder arrowDirection(int arrowDirection) {
+            this.arrowDirection = arrowDirection;
             return this;
         }
 

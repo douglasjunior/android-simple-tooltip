@@ -38,9 +38,9 @@ import android.support.annotation.ColorInt;
  * ArrowDrawable
  * Created by douglas on 09/05/16.
  */
-class ArrowDrawable extends ColorDrawable {
+public class ArrowDrawable extends ColorDrawable {
 
-    public static final int LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3;
+    public static final int LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, AUTO = 4;
 
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final int mBackgroundColor;
