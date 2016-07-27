@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_simple) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_simple))
+                    .text(R.string.btn_simple)
                     .gravity(Gravity.END)
                     .build()
                     .show();
@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_animated) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_animated))
+                    .text(R.string.btn_animated)
                     .gravity(Gravity.TOP)
                     .animated(true)
                     .build()
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_overlay) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_overlay))
+                    .text(R.string.btn_overlay)
                     .gravity(Gravity.START)
                     .animated(true)
                     .transparentOverlay(false)
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_outside) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_outside))
+                    .text(R.string.btn_outside)
                     .gravity(Gravity.BOTTOM)
                     .dismissOnOutsideTouch(true)
                     .dismissOnInsideTouch(false)
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_inside) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_inside))
+                    .text(R.string.btn_inside)
                     .gravity(Gravity.START)
                     .dismissOnOutsideTouch(false)
                     .dismissOnInsideTouch(true)
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_inside_modal) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_inside_modal))
+                    .text(R.string.btn_inside_modal)
                     .gravity(Gravity.END)
                     .dismissOnOutsideTouch(false)
                     .dismissOnInsideTouch(true)
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_modal_custom) {
             final SimpleTooltip tooltip = new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_modal_custom))
+                    .text(R.string.btn_modal_custom)
                     .gravity(Gravity.TOP)
                     .dismissOnOutsideTouch(false)
                     .dismissOnInsideTouch(false)
@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         tooltip.dismiss();
                     new SimpleTooltip.Builder(v.getContext())
                             .anchorView(v)
-                            .text(getString(R.string.btn_next))
+                            .text(R.string.btn_next)
                             .gravity(Gravity.BOTTOM)
                             .build()
                             .show();
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_no_arrow) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_no_arrow))
+                    .text(R.string.btn_no_arrow)
                     .gravity(Gravity.START)
                     .showArrow(false)
                     .modal(true)
@@ -200,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_custom_arrow) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v)
-                    .text(getString(R.string.btn_custom_arrow))
+                    .text(R.string.btn_custom_arrow)
                     .gravity(Gravity.END)
                     .modal(true)
                     .arrowDrawable(android.R.drawable.ic_media_previous)
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onClick(View v) {
                     new SimpleTooltip.Builder(MainActivity.this)
                             .anchorView(btnInDialog)
-                            .text(getString(R.string.btn_in_dialog))
+                            .text(R.string.btn_in_dialog)
                             .gravity(Gravity.BOTTOM)
                             .animated(true)
                             .transparentOverlay(false)
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (v.getId() == R.id.btn_center) {
             new SimpleTooltip.Builder(this)
                     .anchorView(v.getRootView())
-                    .text(getString(R.string.btn_center))
+                    .text(R.string.btn_center)
                     .showArrow(false)
                     .gravity(Gravity.CENTER)
                     .build()

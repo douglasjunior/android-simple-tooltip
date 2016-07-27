@@ -41,6 +41,7 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.StringRes;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -712,6 +713,17 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder text(CharSequence text) {
             this.text = text;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Define o texto que sera exibido no <tt>TextView</tt> dentro do tooltip.</div>
+         *
+         * @param textRes <div class="pt">id do resource da String.</div>
+         * @return this
+         */
+        public Builder text(@StringRes int textRes) {
+            this.text = context.getString(textRes);
             return this;
         }
 
