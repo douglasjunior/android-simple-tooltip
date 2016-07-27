@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_no_arrow).setOnClickListener(this);
         findViewById(R.id.btn_custom_arrow).setOnClickListener(this);
         findViewById(R.id.btn_dialog).setOnClickListener(this);
+        findViewById(R.id.btn_center).setOnClickListener(this);
     }
 
     @Override
@@ -240,6 +241,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     dialog.dismiss();
                 }
             });
+        } else if (v.getId() == R.id.btn_center) {
+            new SimpleTooltip.Builder(this)
+                    .anchorView(v.getRootView())
+                    .text(getString(R.string.btn_center))
+                    .showArrow(false)
+                    .gravity(Gravity.CENTER)
+                    .build()
+                    .show();
         }
     }
 }
