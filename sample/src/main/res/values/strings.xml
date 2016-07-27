@@ -16,4 +16,5 @@
     <string name="btn_in_dialog">Tooltip em Dialog</string>
     <string name="btn_close">Fechar</string>
     <string name="btn_dialog">Em dialog</string>
+    <string name="btn_center">Center</string>
 </resources>

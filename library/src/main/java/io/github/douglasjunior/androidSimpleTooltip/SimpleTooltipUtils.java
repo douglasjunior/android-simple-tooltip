@@ -89,8 +89,10 @@ public final class SimpleTooltipUtils {
                 return ArrowDrawable.BOTTOM;
             case Gravity.BOTTOM:
                 return ArrowDrawable.TOP;
+            case Gravity.CENTER:
+                return ArrowDrawable.TOP;
             default:
-                throw new IllegalArgumentException("Gravity must have be START, END, TOP or BOTTOM.");
+                throw new IllegalArgumentException("Gravity must have be CENTER, START, END, TOP or BOTTOM.");
         }
     }
 
