@@ -202,8 +202,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 location.x = anchorCenter.x - mPopupWindow.getContentView().getWidth() / 2f;
                 location.y = anchorRect.bottom + mMargin;
                 break;
+            case Gravity.CENTER:
+                location.x = anchorCenter.x - mPopupWindow.getContentView().getWidth() / 2f;
+                location.y = anchorCenter.y - mPopupWindow.getContentView().getHeight() / 2f;
+                break;
             default:
-                throw new IllegalArgumentException("Gravity must have be START, END, TOP or BOTTOM.");
+                throw new IllegalArgumentException("Gravity must have be CENTER, START, END, TOP or BOTTOM.");
         }
 
         return location;
