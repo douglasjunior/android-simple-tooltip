@@ -85,7 +85,7 @@ Para mais informações, confira o [projeto de exemplo](https://github.com/dougl
 
     ```javascript
     dependencies {
-        compile 'com.github.douglasjunior:android-simple-tooltip:0.1.1'
+        compile 'com.github.douglasjunior:android-simple-tooltip:0.1.2'
     }
     ```
 
@@ -109,7 +109,7 @@ Para mais informações, confira o [projeto de exemplo](https://github.com/dougl
     <dependency>
         <groupId>com.github.douglasjunior</groupId>
         <artifactId>android-simple-tooltip</artifactId>
-        <version>0.1.1</version>
+        <version>0.1.2</version>
     </dependency>
     ```
 
