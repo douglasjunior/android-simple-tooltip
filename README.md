@@ -133,13 +133,11 @@ or
 </dependency>
 ```
 
-## Known issues
+## Donate
 
-1. If you close the `Dialog/Activity` without the Tooltip is closed, there may be the exception `java.lang.IllegalArgumentException: Could not lock surface`. This error occurs because the animation continue for a while after closing the `Dialog/Activity`. (This error does not impact the execution of the app)
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZJ6TCL3EVUDDL)
 
-2. If you call `tooltip.show()` after `Activity/Dialog` is closed, there may be the exception `android.view.WindowLeaked: Activity has leaked window android.widget.PopupWindow$PopupViewContainer that was originally added here`. [Read more.](http://stackoverflow.com/questions/2850573/activity-has-leaked-window-that-was-originally-added) (This error does not impact the execution of the app)
-
-## Contributions
+## Contribute
 
 New features, bug fixes and improvements in the translation are welcome! For questions and suggestions use the [issues](https://github.com/douglasjunior/android-simple-tooltip/issues).
 
@@ -147,6 +145,12 @@ Before submit your PR, run the gradle check.
 ```bash
 ./gradlew build connectedCheck
 ```
+
+## Known issues
+
+1. If you close the `Dialog/Activity` without the Tooltip is closed, there may be the exception `java.lang.IllegalArgumentException: Could not lock surface`. This error occurs because the animation continue for a while after closing the `Dialog/Activity`. (This error does not impact the execution of the app)
+
+2. If you call `tooltip.show()` after `Activity/Dialog` is closed, there may be the exception `android.view.WindowLeaked: Activity has leaked window android.widget.PopupWindow$PopupViewContainer that was originally added here`. [Read more.](http://stackoverflow.com/questions/2850573/activity-has-leaked-window-that-was-originally-added) (This error does not impact the execution of the app)
 
 ## Licence
 
