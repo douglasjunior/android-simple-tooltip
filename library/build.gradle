@@ -29,11 +29,9 @@ buildscript {
     repositories {
         jcenter()
         mavenCentral()
-        maven { url "https://jitpack.io" }
-        mavenLocal()
     }
     dependencies {
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.3'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
 
