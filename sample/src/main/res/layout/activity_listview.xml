@@ -20,38 +20,11 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
+    <fragment
+        android:id="@+id/fragment"
+        android:name="io.github.douglasjunior.androidSimpleTooltip.sample.ListViewFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/btn_tooltip1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Tooltip 1" />
-
-        <Button
-            android:id="@+id/btn_tooltip2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Tooltip 2" />
-
-        <Button
-            android:id="@+id/btn_tooltip3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Tooltip 3" />
-    </LinearLayout>
-
-    <ListView
-        android:id="@+id/listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1">
-
-    </ListView>
+        android:layout_height="0dp"
+        android:layout_weight="1" />
 
 </LinearLayout>
