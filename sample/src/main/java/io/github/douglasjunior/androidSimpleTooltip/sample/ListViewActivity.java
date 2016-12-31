@@ -31,7 +31,11 @@ public class ListViewActivity extends AppCompatActivity implements View.OnClickL
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, 0,
-                Arrays.asList("Iron Man", "Spider Man", "Captain America", "Ant Man", "Hulk", "Thor"));
+                Arrays.asList("Iron Man", "Spider Man", "Captain America", "Ant Man", "Hulk", "Thor",
+                        "Iron Man", "Spider Man", "Captain America", "Ant Man", "Hulk", "Thor",
+                        "Iron Man", "Spider Man", "Captain America", "Ant Man", "Hulk", "Thor",
+                        "Iron Man", "Spider Man", "Captain America", "Ant Man", "Hulk", "Thor",
+                        "Iron Man", "Spider Man", "Captain America", "Ant Man", "Hulk", "Thor"));
 
         listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
