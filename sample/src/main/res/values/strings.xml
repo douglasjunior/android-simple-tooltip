@@ -17,4 +17,5 @@
     <string name="btn_close">Close</string>
     <string name="btn_dialog">Inside dialog</string>
     <string name="btn_center">Screen center</string>
+    <string name="btn_listview">List View</string>
 </resources>

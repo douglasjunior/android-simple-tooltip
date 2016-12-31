@@ -25,6 +25,7 @@
 package io.github.douglasjunior.androidSimpleTooltip.sample;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_custom_arrow).setOnClickListener(this);
         findViewById(R.id.btn_dialog).setOnClickListener(this);
         findViewById(R.id.btn_center).setOnClickListener(this);
+        findViewById(R.id.btn_listview).setOnClickListener(this);
     }
 
     @Override
@@ -249,6 +251,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .gravity(Gravity.CENTER)
                     .build()
                     .show();
+        } else if (v.getId() == R.id.btn_listview) {
+            startActivity(new Intent(this, ListViewActivity.class));
         }
     }
 }
