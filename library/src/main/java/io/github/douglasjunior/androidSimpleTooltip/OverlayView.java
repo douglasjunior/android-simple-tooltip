@@ -51,11 +51,13 @@ public class OverlayView extends View {
     private Bitmap bitmap;
     private float offset = 0;
     private boolean invalidated = true;
+    private int highlightShape;
 
-    OverlayView(Context context, View anchorView) {
+    OverlayView(Context context, View anchorView, int highlightShape) {
         super(context);
         this.mAnchorView = anchorView;
         this.offset = context.getResources().getDimension(mDefaultOverlayCircleOffsetRes);
+        this.highlightShape = highlightShape;
     }
 
     @Override
@@ -95,7 +97,11 @@ public class OverlayView extends View {
         float top = anchorRecr.top - overlayRecr.top;
         RectF oval = new RectF(left - offset, top - offset, left + mAnchorView.getMeasuredWidth() + offset, top + mAnchorView.getMeasuredHeight() + offset);
 
-        osCanvas.drawOval(oval, paint);
+        if (highlightShape == SimpleTooltip.Builder.HIGHLIGHT_SHAPE_RECTANGULAR) {
+            osCanvas.drawRect(oval, paint);
+        } else {
+            osCanvas.drawOval(oval, paint);
+        }
 
         invalidated = false;
     }
