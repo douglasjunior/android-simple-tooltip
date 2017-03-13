@@ -32,7 +32,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
+import android.graphics.RadialGradient;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.view.View;
 
 /**
@@ -85,7 +87,7 @@ public class OverlayView extends View {
         paint.setAlpha(getResources().getInteger(mDefaultOverlayAlphaRes));
         osCanvas.drawRect(outerRectangle, paint);
 
-        paint.setColor(Color.TRANSPARENT);
+        paint.setColor(Color.argb(60,255,255,255));
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
 
         RectF anchorRecr = SimpleTooltipUtils.calculeRectInWindow(mAnchorView);
@@ -93,7 +95,9 @@ public class OverlayView extends View {
 
         float left = anchorRecr.left - overlayRecr.left;
         float top = anchorRecr.top - overlayRecr.top;
-        RectF oval = new RectF(left - offset, top - offset, left + mAnchorView.getMeasuredWidth() + offset, top + mAnchorView.getMeasuredHeight() + offset);
+
+        int shrinkSize = mAnchorView.getMeasuredWidth() / 4;
+        RectF oval = new RectF(left - offset + shrinkSize, top - offset + shrinkSize, left + mAnchorView.getMeasuredWidth() + offset - shrinkSize, top + mAnchorView.getMeasuredHeight() + offset - shrinkSize);
 
         osCanvas.drawOval(oval, paint);
 

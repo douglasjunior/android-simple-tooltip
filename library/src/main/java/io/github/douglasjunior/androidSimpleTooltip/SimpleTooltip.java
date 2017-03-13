@@ -112,6 +112,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final float mArrowWidth;
     private final float mArrowHeight;
     private boolean dismissed = false;
+    private final int mXOffset;
+    private final int mYOffset;
 
 
     private SimpleTooltip(Builder builder) {
@@ -139,6 +141,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mOnDismissListener = builder.onDismissListener;
         mOnShowListener = builder.onShowListener;
         mRootView = (ViewGroup) mAnchorView.getRootView();
+        mXOffset = builder.xOffset;
+        mYOffset = builder.yOffset;
 
         init();
     }
@@ -167,9 +171,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mRootView.post(new Runnable() {
             @Override
             public void run() {
-                if (mRootView.isShown())
+                if (mRootView.isShown()) {
                     mPopupWindow.showAtLocation(mRootView, Gravity.NO_GRAVITY, mRootView.getWidth(), mRootView.getHeight());
-                else
+                }else
                     Log.e(TAG, "Tooltip cannot be shown, root view is invalid or has been closed.");
             }
         });
@@ -218,6 +222,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             default:
                 throw new IllegalArgumentException("Gravity must have be CENTER, START, END, TOP or BOTTOM.");
         }
+        location.x = location.x + mXOffset;
+        location.y = location.y + mYOffset;
 
         return location;
     }
@@ -551,6 +557,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int arrowColor;
         private float arrowHeight;
         private float arrowWidth;
+        private int xOffset;
+        private int yOffset;
 
         public Builder(Context context) {
             this.context = context;
@@ -684,6 +692,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder dismissOnInsideTouch(boolean dismissOnInsideTouch) {
             this.dismissOnInsideTouch = dismissOnInsideTouch;
+            return this;
+        }
+
+        public Builder setOffset(int xOffset, int yOffset){
+            this.xOffset = xOffset;
+            this.yOffset = yOffset;
             return this;
         }
 
