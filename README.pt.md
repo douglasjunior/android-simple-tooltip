@@ -68,7 +68,7 @@ new SimpleTooltip.Builder(this)
 Para mais informações, confira o [projeto de exemplo](https://github.com/douglasjunior/android-simple-tooltip/blob/master/sample/src/main/java/io/github/douglasjunior/androidSimpleTooltip/sample/MainActivity.java) e o [javadoc](https://jitpack.io/com/github/douglasjunior/android-simple-tooltip/master-SNAPSHOT/javadoc/).
 
 ## Download
-### Gradle
+### Release
 
 1. Adicione em seu arquivo raiz `build.gradle` ao final dos repositórios:
 
@@ -85,32 +85,8 @@ Para mais informações, confira o [projeto de exemplo](https://github.com/dougl
 
     ```javascript
     dependencies {
-        compile 'com.github.douglasjunior:android-simple-tooltip:0.1.2'
+        compile 'com.github.douglasjunior:android-simple-tooltip:0.1.3'
     }
-    ```
-
-### Maven
-
-1. Adicione em seu arquivo `pom.xml` ao final dos repositórios:
-
-    ```xml
-    <repositories>
-        ...
-    	<repository>
-    	    <id>jitpack.io</id>
-    	    <url>https://jitpack.io</url>
-    	</repository>
-    </repositories>
-    ```
-
-2. Adicione a dependência
-
-    ```xml
-    <dependency>
-        <groupId>com.github.douglasjunior</groupId>
-        <artifactId>android-simple-tooltip</artifactId>
-        <version>0.1.2</version>
-    </dependency>
     ```
 
 ### Snapshot
@@ -123,20 +99,6 @@ dependencies {
 }
 ```
 
-ou
-
-```xml
-<dependency>
-    <groupId>com.github.douglasjunior</groupId>
-    <artifactId>android-simple-tooltip</artifactId>
-    <version>master-SNAPSHOT</version>
-</dependency>
-```
-
-## Faça uma doação
-
-[![Doar](https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TM8BGN6PJF6SS)
-
 ## Contribua
 
 Novas funcionalidades, correções de bug e melhorias na tradução serão bem vindas! Para dúvidas e sugestões utilize as [issues](https://github.com/douglasjunior/android-simple-tooltip/issues).
@@ -145,6 +107,10 @@ Antes de enviar seu PR, execute a checagem do gradle.
 ```bash
 ./gradlew build connectedCheck
 ```
+
+## Faça uma doação
+
+[![Doar](https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TM8BGN6PJF6SS)
 
 ## Problemas conhecidos
 

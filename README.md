@@ -68,7 +68,7 @@ new SimpleTooltip.Builder(this)
 More info on the [sample project](https://github.com/douglasjunior/android-simple-tooltip/blob/master/sample/src/main/java/io/github/douglasjunior/androidSimpleTooltip/sample/MainActivity.java) and [javadoc](https://jitpack.io/com/github/douglasjunior/android-simple-tooltip/master-SNAPSHOT/javadoc/).
 
 ## Download
-### Gradle
+### Release
 
 1. Add it in your root `build.gradle` at the end of repositories:
 
@@ -85,32 +85,8 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
 
     ```javascript
     dependencies {
-        compile 'com.github.douglasjunior:android-simple-tooltip:0.1.2'
+        compile 'com.github.douglasjunior:android-simple-tooltip:0.1.3'
     }
-    ```
-
-### Maven
-
-1. Add it in your `pom.xml` at the end of repositories:
-
-    ```xml
-    <repositories>
-        ...
-    	<repository>
-    	    <id>jitpack.io</id>
-    	    <url>https://jitpack.io</url>
-    	</repository>
-    </repositories>
-    ```
-
-2. Add the dependency
-
-    ```xml
-    <dependency>
-        <groupId>com.github.douglasjunior</groupId>
-        <artifactId>android-simple-tooltip</artifactId>
-        <version>0.1.2</version>
-    </dependency>
     ```
 
 ### Snapshot
@@ -123,20 +99,6 @@ dependencies {
 }
 ```
 
-or
-
-```xml
-<dependency>
-    <groupId>com.github.douglasjunior</groupId>
-    <artifactId>android-simple-tooltip</artifactId>
-    <version>master-SNAPSHOT</version>
-</dependency>
-```
-
-## Donate
-
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZJ6TCL3EVUDDL)
-
 ## Contribute
 
 New features, bug fixes and improvements in the translation are welcome! For questions and suggestions use the [issues](https://github.com/douglasjunior/android-simple-tooltip/issues).
@@ -145,6 +107,10 @@ Before submit your PR, run the gradle check.
 ```bash
 ./gradlew build connectedCheck
 ```
+
+## Donate
+
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZJ6TCL3EVUDDL)
 
 ## Known issues
 
