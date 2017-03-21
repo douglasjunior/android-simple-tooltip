@@ -40,6 +40,7 @@ import android.support.annotation.ColorInt;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.util.Log;
@@ -54,6 +55,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 
 /**
@@ -85,6 +89,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private OnDismissListener mOnDismissListener;
     private OnShowListener mOnShowListener;
     private PopupWindow mPopupWindow;
+    @TooltipGravity
     private final int mGravity;
     private final int mArrowDirection;
     private final boolean mDismissOnInsideTouch;
@@ -537,6 +542,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private CharSequence text = "";
         private View anchorView;
         private int arrowDirection = ArrowDrawable.AUTO;
+        @TooltipGravity
         private int gravity = Gravity.BOTTOM;
         private boolean transparentOverlay = true;
         private float maxWidth;
@@ -759,7 +765,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * @param gravity <div class="pt">lado para qual o tooltip será posicionado.</div>
          * @return this
          */
-        public Builder gravity(int gravity) {
+        public Builder gravity(@TooltipGravity int gravity) {
             this.gravity = gravity;
             return this;
         }
@@ -988,4 +994,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
     }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({Gravity.START, Gravity.END, Gravity.TOP, Gravity.BOTTOM, Gravity.CENTER})
+    public @interface TooltipGravity {}
 }
