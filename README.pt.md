@@ -5,6 +5,7 @@
 [![Licence MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/douglasjunior/android-simple-tooltip.svg?branch=master)](https://travis-ci.org/douglasjunior/android-simple-tooltip)
 [![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip)
+[![Downloads](https://jitpack.io/v/douglasjunior/android-simple-tooltip/month.svg)](#download)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Simple%20Tooltip-yellow.svg?style=flat)](http://android-arsenal.com/details/1/3578)
 
 Uma simples biblioteca baseada no [PopupWindow](http://developer.android.com/intl/pt-br/reference/android/widget/PopupWindow.html) para criação de Tooltips em Android.
