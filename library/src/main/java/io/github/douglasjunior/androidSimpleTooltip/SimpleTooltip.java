@@ -983,6 +983,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
+        /**
+         * <div class="pt">Habilita o foco no conteúdo da tooltip. Padrão é <tt>false</tt>.</div>
+         * <div class="en">Enables focus in the tooltip content. Default is <tt>false</tt>.</div>
+         *
+         * @param focusable <div class="pt">Pode receber o foco.</div>
+         *                  <div class="en">Can receive focus.</div>
+         * @return this
+         */
         public Builder focusable(boolean focusable) {
             this.focusable = focusable;
             return this;
