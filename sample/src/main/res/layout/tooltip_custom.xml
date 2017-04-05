@@ -12,9 +12,18 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@mipmap/ic_launcher"
         android:gravity="center_vertical"
-        android:text="@string/demo"
+        android:text="@string/curtom_tooltip"
         android:textAppearance="@android:style/TextAppearance.Large"
         tools:ignore="RtlHardcoded" />
+
+    <EditText
+        android:id="@+id/ed_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@android:color/white"
+        android:padding="5dp"
+        android:text="@string/edit_text" />
 
     <Button
         android:id="@+id/btn_next"

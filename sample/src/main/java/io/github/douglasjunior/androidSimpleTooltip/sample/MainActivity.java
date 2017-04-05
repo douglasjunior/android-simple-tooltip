@@ -33,6 +33,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
@@ -169,7 +170,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .animationDuration(2000)
                     .animationPadding(SimpleTooltipUtils.pxFromDp(50))
                     .contentView(R.layout.tooltip_custom, R.id.tv_text)
+                    .focusable(true)
                     .build();
+
+            final EditText ed = tooltip.findViewById(R.id.ed_text);
 
             tooltip.findViewById(R.id.btn_next).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -178,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         tooltip.dismiss();
                     new SimpleTooltip.Builder(v.getContext())
                             .anchorView(v)
-                            .text(R.string.btn_next)
+                            .text(ed.getText())
                             .gravity(Gravity.BOTTOM)
                             .build()
                             .show();

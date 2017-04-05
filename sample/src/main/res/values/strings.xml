@@ -1,4 +1,5 @@
 <resources>
+
     <string name="app_name">Android Simple Tooltip</string>
 
     <string name="btn_simple">Simple</string>
@@ -12,9 +13,11 @@
     <string name="btn_custom_arrow">Arrow custom.</string>
     <string name="btn_next">NEXT</string>
     <string name="btn_maxwidth">Max. width</string>
-    <string name="demo">Demo</string>
+    <string name="curtom_tooltip">Custom Tooltip</string>
+    <string name="edit_text">Edit Text</string>
     <string name="btn_in_dialog">Inside dialog</string>
     <string name="btn_close">Close</string>
     <string name="btn_dialog">Inside dialog</string>
     <string name="btn_center">Screen center</string>
+
 </resources>
