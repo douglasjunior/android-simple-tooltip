@@ -44,6 +44,8 @@ import android.view.View;
 @SuppressLint("ViewConstructor")
 public class OverlayView extends View {
 
+    public static final int HIGHLIGHT_SHAPE_OVAL = 0;
+    public static final int HIGHLIGHT_SHAPE_RECTANGULAR = 1;
     private static final int mDefaultOverlayCircleOffsetRes = R.dimen.simpletooltip_overlay_circle_offset;
     private static final int mDefaultOverlayAlphaRes = R.integer.simpletooltip_overlay_alpha;
 
@@ -97,7 +99,7 @@ public class OverlayView extends View {
         float top = anchorRecr.top - overlayRecr.top;
         RectF oval = new RectF(left - offset, top - offset, left + mAnchorView.getMeasuredWidth() + offset, top + mAnchorView.getMeasuredHeight() + offset);
 
-        if (highlightShape == SimpleTooltip.Builder.HIGHLIGHT_SHAPE_RECTANGULAR) {
+        if (highlightShape == HIGHLIGHT_SHAPE_RECTANGULAR) {
             osCanvas.drawRect(oval, paint);
         } else {
             osCanvas.drawOval(oval, paint);

@@ -113,7 +113,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final float mArrowHeight;
     private final boolean mFocusable;
     private boolean dismissed = false;
-    private int mHighlightShape = Builder.HIGHLIGHT_SHAPE_OVAL;
+    private int mHighlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
 
 
     private SimpleTooltip(Builder builder) {
@@ -557,9 +557,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private float arrowHeight;
         private float arrowWidth;
         private boolean focusable;
-        private int highlightShape = HIGHLIGHT_SHAPE_OVAL;
-        public static final int HIGHLIGHT_SHAPE_OVAL = 0;
-        public static final int HIGHLIGHT_SHAPE_RECTANGULAR = 1;
+        private int highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
 
         public Builder(Context context) {
             this.context = context;
@@ -609,8 +607,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                     arrowHeight = context.getResources().getDimension(mDefaultArrowHeightRes);
             }
 
-            if (highlightShape < 0 || highlightShape > HIGHLIGHT_SHAPE_RECTANGULAR) {
-                highlightShape = HIGHLIGHT_SHAPE_OVAL;
+            if (highlightShape < 0 || highlightShape > OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR) {
+                highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
             }
             return new SimpleTooltip(this);
         }
