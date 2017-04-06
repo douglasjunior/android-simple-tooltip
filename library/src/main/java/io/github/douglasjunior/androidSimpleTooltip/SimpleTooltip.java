@@ -113,6 +113,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final float mArrowHeight;
     private final boolean mFocusable;
     private boolean dismissed = false;
+    private int mHighlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
 
 
     private SimpleTooltip(Builder builder) {
@@ -141,6 +142,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mOnShowListener = builder.onShowListener;
         mFocusable = builder.focusable;
         mRootView = (ViewGroup) mAnchorView.getRootView();
+        mHighlightShape = builder.highlightShape;
 
         init();
     }
@@ -185,7 +187,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void createOverlay() {
-        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView);
+        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape);
         mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mOverlay.setOnTouchListener(mOverlayTouchListener);
         mRootView.addView(mOverlay);
@@ -555,6 +557,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private float arrowHeight;
         private float arrowWidth;
         private boolean focusable;
+        private int highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
 
         public Builder(Context context) {
             this.context = context;
@@ -602,6 +605,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                     arrowWidth = context.getResources().getDimension(mDefaultArrowWidthRes);
                 if (arrowHeight == 0)
                     arrowHeight = context.getResources().getDimension(mDefaultArrowHeightRes);
+            }
+
+            if (highlightShape < 0 || highlightShape > OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR) {
+                highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
             }
             return new SimpleTooltip(this);
         }
@@ -993,6 +1000,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder focusable(boolean focusable) {
             this.focusable = focusable;
+            return this;
+        }
+
+        public Builder highlightShape(final int highlightShape) {
+            this.highlightShape = highlightShape;
             return this;
         }
     }
