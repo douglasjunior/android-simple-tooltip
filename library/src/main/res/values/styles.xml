@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- ===============================================================
+     Resources android-simple-tooltip.
+     =============================================================== -->
+    <eat-comment />
+
     <style name="simpletooltip_default" parent="@android:style/TextAppearance.Medium">
 
     </style>

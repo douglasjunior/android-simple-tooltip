@@ -38,6 +38,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DimenRes;
+import android.support.annotation.Dimension;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -80,6 +81,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private static final int mDefaultAnimationDurationRes = R.integer.simpletooltip_animation_duration;
     private static final int mDefaultArrowWidthRes = R.dimen.simpletooltip_arrow_width;
     private static final int mDefaultArrowHeightRes = R.dimen.simpletooltip_arrow_height;
+    private static final int mDefaultOverlayOffsetRes = R.dimen.simpletooltip_overlay_offset;
 
     private final Context mContext;
     private OnDismissListener mOnDismissListener;
@@ -97,6 +99,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final CharSequence mText;
     private final View mAnchorView;
     private final boolean mTransparentOverlay;
+    private final float mOverlayOffset;
     private final float mMaxWidth;
     private View mOverlay;
     private ViewGroup mRootView;
@@ -128,6 +131,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mText = builder.text;
         mAnchorView = builder.anchorView;
         mTransparentOverlay = builder.transparentOverlay;
+        mOverlayOffset = builder.overlayOffset;
         mMaxWidth = builder.maxWidth;
         mShowArrow = builder.showArrow;
         mArrowWidth = builder.arrowWidth;
@@ -187,7 +191,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void createOverlay() {
-        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape);
+        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset);
         mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mOverlay.setOnTouchListener(mOverlayTouchListener);
         mRootView.addView(mOverlay);
@@ -541,6 +545,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int arrowDirection = ArrowDrawable.AUTO;
         private int gravity = Gravity.BOTTOM;
         private boolean transparentOverlay = true;
+        private float overlayOffset = -1;
         private float maxWidth;
         private boolean showArrow = true;
         private Drawable arrowDrawable;
@@ -606,9 +611,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 if (arrowHeight == 0)
                     arrowHeight = context.getResources().getDimension(mDefaultArrowHeightRes);
             }
-
             if (highlightShape < 0 || highlightShape > OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR) {
                 highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
+            }
+            if (overlayOffset < 0) {
+                overlayOffset = context.getResources().getDimension(mDefaultOverlayOffsetRes);
             }
             return new SimpleTooltip(this);
         }
@@ -640,8 +647,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         /**
          * <div class="pt">Define um novo conteúdo customizado para o tooltip.</div>
          *
-         * @param contentView <div class="pt">novo conteúdo para o tooltip, pode ser um <tt>ViewGroup</tt> ou qualquer componente customizado.</div>
-         * @param textViewId  <div class="pt">resId para o <tt>TextView</tt> existente dentro do <tt>contentView</tt>. Padrão é <tt>android.R.id.text1</tt>.</div>
+         * @param contentView <div class="pt">novo conteúdo para o tooltip, pode ser um <tt>{@link ViewGroup}</tt> ou qualquer componente customizado.</div>
+         * @param textViewId  <div class="pt">resId para o <tt>{@link TextView}</tt> existente dentro do <tt>{@link Builder#contentView}</tt>. Padrão é <tt>android.R.id.text1</tt>.</div>
          * @return this
          * @see Builder#contentView(int, int)
          * @see Builder#contentView(TextView)
@@ -657,7 +664,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="pt">Define um novo conteúdo customizado para o tooltip.</div>
          *
          * @param contentViewId <div class="pt">layoutId que será inflado como o novo conteúdo para o tooltip.</div>
-         * @param textViewId    <div class="pt">resId para o <tt>TextView</tt> existente dentro do <tt>contentView</tt>. Padrão é <tt>android.R.id.text1</tt>.</div>
+         * @param textViewId    <div class="pt">resId para o <tt>{@link TextView}</tt> existente dentro do <tt>{@link Builder#contentView}</tt>. Padrão é <tt>android.R.id.text1</tt>.</div>
          * @return this
          * @see Builder#contentView(View, int)
          * @see Builder#contentView(TextView)
@@ -712,7 +719,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         /**
          * <div class="pt">Define se a tela fiacrá bloqueada enquanto o tooltip estiver aberto.
-         * Esse parâmetro deve ser combinado com <tt>Builder#dismissOnInsideTouch(boolean)</tt> e <tt>Builder#dismissOnOutsideTouch(boolean)</tt>.
+         * Esse parâmetro deve ser combinado com <tt>{@link Builder#dismissOnInsideTouch(boolean)}</tt> e <tt>{@link Builder#dismissOnOutsideTouch(boolean)}</tt>.
          * Padrão é <tt>false</tt>.</div>
          *
          * @param modal <div class="pt"><tt>true</tt> para bloquear a tela, <tt>false</tt> caso contrário.</div>
@@ -726,7 +733,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Define o texto que sera exibido no <tt>TextView</tt> dentro do tooltip.</div>
+         * <div class="pt">Define o texto que sera exibido no <tt>{@link TextView}</tt> dentro do tooltip.</div>
          *
          * @param text <div class="pt">texto que sera exibido.</div>
          * @return this
@@ -737,7 +744,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Define o texto que sera exibido no <tt>TextView</tt> dentro do tooltip.</div>
+         * <div class="pt">Define o texto que sera exibido no <tt>{@link TextView}</tt> dentro do tooltip.</div>
          *
          * @param textRes <div class="pt">id do resource da String.</div>
          * @return this
@@ -748,9 +755,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Define para qual <tt>View</tt> o tooltip deve apontar. Importante ter certeza que esta <tt>View</tt> já esteja pronta e exibida na tela.</div>
+         * <div class="pt">Define para qual <tt>{@link View}</tt> o tooltip deve apontar. Importante ter certeza que esta <tt>{@link View}</tt> já esteja pronta e exibida na tela.</div>
+         * <div class="en">Set the target <tt>{@link View}</tt> that the tooltip will point. Make sure that the anchor <tt>{@link View}</tt> shold be showing in the screen.</div>
          *
          * @param anchorView <div class="pt"><tt>View</tt> para qual o tooltip deve apontar</div>
+         *                   <div class="en"><tt>View</tt> that the tooltip will point</div>
          * @return this
          */
         public Builder anchorView(View anchorView) {
@@ -760,8 +769,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         /**
          * <div class="pt">Define a para qual lado o tooltip será posicionado em relação ao <tt>anchorView</tt>.
-         * As opções existentes são <tt>Gravity.START</tt>, <tt>Gravity.END</tt>, <tt>Gravity.TOP</tt> e <tt>Gravity.BOTTOM</tt>.
-         * O padrão é <tt>Gravity.BOTTOM</tt>.</div>
+         * As opções existentes são <tt>{@link Gravity#START}</tt>, <tt>{@link Gravity#END}</tt>, <tt>{@link Gravity#TOP}</tt> e <tt>{@link Gravity#BOTTOM}</tt>.
+         * O padrão é <tt>{@link Gravity#BOTTOM}</tt>.</div>
          *
          * @param gravity <div class="pt">lado para qual o tooltip será posicionado.</div>
          * @return this
@@ -773,8 +782,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         /**
          * <div class="pt">Define a direção em que a seta será criada.
-         * As opções existentes são <tt>ArrowDrawable.LEFT</tt>, <tt>ArrowDrawable.TOP</tt>, <tt>ArrowDrawable.RIGHT</tt>, <tt>ArrowDrawable.BOTTOM</tt> e <tt>ArrowDrawable.AUTO</tt>.
-         * O padrão é <tt>ArrowDrawable.AUTO</tt>. <br>
+         * As opções existentes são <tt>{@link ArrowDrawable#LEFT}</tt>, <tt>{@link ArrowDrawable#TOP}</tt>, <tt>{@link ArrowDrawable#RIGHT}</tt>,
+         * <tt>{@link ArrowDrawable#BOTTOM}</tt> e <tt>{@link ArrowDrawable#AUTO}</tt>.
+         * O padrão é <tt>{@link ArrowDrawable#AUTO}</tt>. <br>
          * Esta opção deve ser utilizada em conjunto com  <tt>Builder#showArrow(true)</tt>.</div>
          *
          * @param arrowDirection <div class="pt">direção em que a seta será criada.</div>
@@ -833,7 +843,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Define o tamanho do deslocamento durante a animação. Padrão é <tt>resources.getDimension(R.dimen.simpletooltip_animation_padding)</tt>.</div>
+         * <div class="pt">Define o tamanho do deslocamento durante a animação. Padrão é o valor de <tt>{@link R.dimen.simpletooltip_animation_padding}</tt>.</div>
          *
          * @param animationPadding <div class="pt">tamanho do deslocamento em pixels.</div>
          * @return <tt>this</tt>
@@ -846,7 +856,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Define o tamanho do deslocamento durante a animação. Padrão é <tt>R.dimen.simpletooltip_animation_padding</tt>.</div>
+         * <div class="pt">Define o tamanho do deslocamento durante a animação. Padrão é <tt>{@link R.dimen.simpletooltip_animation_padding}</tt>.</div>
          *
          * @param animationPaddingRes <div class="pt">resId do tamanho do deslocamento.</div>
          * @return <tt>this</tt>
@@ -865,7 +875,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Define o padding entre a borda do Tooltip e seu conteúdo. Padrão é <tt>resources.getDimension(R.dimen.simpletooltip_padding)</tt>.</div>
+         * <div class="pt">Define o padding entre a borda do Tooltip e seu conteúdo. Padrão é o valor <tt>{@link R.dimen.simpletooltip_padding}</tt>.</div>
          *
          * @param padding <div class="pt">tamanho do padding em pixels.</div>
          * @return <tt>this</tt>
@@ -877,7 +887,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Define o padding entre a borda do Tooltip e seu conteúdo. Padrão é <tt>R.dimen.simpletooltip_padding</tt>.</div>
+         * <div class="pt">Define o padding entre a borda do Tooltip e seu conteúdo. Padrão é <tt>{@link R.dimen.simpletooltip_padding}</tt>.</div>
          *
          * @param paddingRes <div class="pt">resId do tamanho do padding.</div>
          * @return <tt>this</tt>
@@ -890,7 +900,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
 
         /**
-         * <div class="pt">Define a margem entre o Tooltip e o <tt>anchorView</tt>. Padrão é <tt>resources.getDimension(R.dimen.simpletooltip_margin)</tt>.</div>
+         * <div class="pt">Define a margem entre o Tooltip e o <tt>anchorView</tt>. Padrão é o valor de <tt>{@link R.dimen.simpletooltip_margin}</tt>.</div>
          *
          * @param margin <div class="pt">tamanho da margem em pixels.</div>
          * @return <tt>this</tt>
@@ -902,7 +912,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Define a margem entre o Tooltip e o <tt>anchorView</tt>. Padrão é <tt>R.dimen.simpletooltip_margin</tt>.</div>
+         * <div class="pt">Define a margem entre o Tooltip e o <tt>anchorView</tt>. Padrão é <tt>{@link R.dimen.simpletooltip_margin}</tt>.</div>
          *
          * @param marginRes <div class="pt">resId do tamanho da margem.</div>
          * @return <tt>this</tt>
@@ -952,9 +962,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Altura da seta indicativa. Esse valor é automaticamente definido em Largura ou Altura conforme a <tt>Gravity</tt> configurada.
-         * Este valor sobrescreve <tt>R.dimen.simpletooltip_arrow_height</tt></div>
-         * <div class="en">Height of the arrow. This value is automatically set in the Width or Height as the <tt>Gravity</tt>.</div>
+         * <div class="pt">Altura da seta indicativa. Esse valor é automaticamente definido em Largura ou Altura conforme a <tt>{@link android.view.Gravity}</tt> configurada.
+         * Este valor sobrescreve <tt>{@link R.dimen.simpletooltip_arrow_height}</tt></div>
+         * <div class="en">Height of the arrow. This value is automatically set in the Width or Height as the <tt>{@link android.view.Gravity}</tt>.</div>
          *
          * @param arrowHeight <div class="pt">Altura em pixels.</div>
          *                    <div class="en">Height in pixels.</div>
@@ -967,9 +977,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Largura da seta indicativa. Esse valor é automaticamente definido em Largura ou Altura conforme a <tt>Gravity</tt> configurada.
-         * Este valor sobrescreve <tt>R.dimen.simpletooltip_arrow_width</tt></div>
-         * <div class="en">Width of the arrow. This value is automatically set in the Width or Height as the <tt>Gravity</tt>.</div>
+         * <div class="pt">Largura da seta indicativa. Esse valor é automaticamente definido em Largura ou Altura conforme a <tt>{@link android.view.Gravity}</tt> configurada.
+         * Este valor sobrescreve <tt>{@link R.dimen.simpletooltip_arrow_width}</tt></div>
+         * <div class="en">Width of the arrow. This value is automatically set in the Width or Height as the <tt>{@link android.view.Gravity}</tt>.</div>
          *
          * @param arrowWidth <div class="pt">Largura em pixels.</div>
          *                   <div class="en">Width in pixels.</div>
@@ -1003,8 +1013,43 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
-        public Builder highlightShape(final int highlightShape) {
+        /**
+         * <div class="pt">Configura o formato do Shape em destaque. <br/>
+         * <tt>{@link OverlayView#HIGHLIGHT_SHAPE_OVAL}</tt> - Destaque oval (padrão). <br/>
+         * <tt>{@link OverlayView#HIGHLIGHT_SHAPE_RECTANGULAR}</tt> - Destaque retangular. <br/>
+         * </div>
+         * <p>
+         * <div class="en">Configure the the Shape type. <br/>
+         * <tt>{@link OverlayView#HIGHLIGHT_SHAPE_OVAL}</tt> - Shape oval (default). <br/>
+         * <tt>{@link OverlayView#HIGHLIGHT_SHAPE_RECTANGULAR}</tt> - Shape rectangular. <br/>
+         * </div>
+         *
+         * @param highlightShape <div class="pt">Formato do Shape.</div>
+         *                       <div class="en">Shape type.</div>
+         * @return this
+         * @see OverlayView#HIGHLIGHT_SHAPE_OVAL
+         * @see OverlayView#HIGHLIGHT_SHAPE_RECTANGULAR
+         * @see Builder#transparentOverlay(boolean)
+         */
+        public Builder highlightShape(int highlightShape) {
             this.highlightShape = highlightShape;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Tamanho da margem entre {@link Builder#anchorView(View)} e a borda do Shape de destaque.
+         * Este valor sobrescreve <tt>{@link R.dimen.simpletooltip_overlay_offset}</tt></div>
+         * <div class="en">Margin between {@link Builder#anchorView(View)} and highlight Shape border.
+         * This value override <tt>{@link R.dimen.simpletooltip_overlay_offset}</tt></div>
+         *
+         * @param overlayOffset <div class="pt">Tamanho em pixels.</div>
+         *                      <div class="en">Size in pixels.</div>
+         * @return this
+         * @see Builder#anchorView(View)
+         * @see Builder#transparentOverlay(boolean)
+         */
+        public Builder overlayOffset(@Dimension float overlayOffset) {
+            this.overlayOffset = overlayOffset;
             return this;
         }
     }

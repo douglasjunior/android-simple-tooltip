@@ -51,7 +51,7 @@ new SimpleTooltip.Builder(this)
 ```
 ```xml
 <dimen name="simpletooltip_max_width">150dp</dimen>
-<dimen name="simpletooltip_overlay_circle_offset">10dp</dimen>
+<dimen name="simpletooltip_overlay_offset">10dp</dimen>
 <dimen name="simpletooltip_margin">10dp</dimen>
 <dimen name="simpletooltip_padding">8dp</dimen>
 <dimen name="simpletooltip_arrow_width">30dp</dimen>

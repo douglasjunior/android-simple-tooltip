@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- ===============================================================
+     Resources android-simple-tooltip.
+     =============================================================== -->
+    <eat-comment />
+
     <color name="colorAccent">#ffb20d</color>
 
     <color name="simpletooltip_background">@color/colorAccent</color>
