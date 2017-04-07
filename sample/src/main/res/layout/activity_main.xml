@@ -113,6 +113,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:text="@string/btn_center" />
+
+            <Button
+                android:id="@+id/btn_overlay_rect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/btn_overlay_rect" />
         </LinearLayout>
     </ScrollView>
 
