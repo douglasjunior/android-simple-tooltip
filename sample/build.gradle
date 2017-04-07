@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.0.0'
     compile 'com.android.support:design:24.0.0'
     compile project(':library')
+    //compile 'com.github.douglasjunior:android-simple-tooltip:0.2.0'
 }

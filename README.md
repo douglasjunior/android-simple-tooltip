@@ -86,7 +86,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
 
     ```javascript
     dependencies {
-        compile 'com.github.douglasjunior:android-simple-tooltip:0.1.3'
+        compile 'com.github.douglasjunior:android-simple-tooltip:0.2.0'
     }
     ```
 
