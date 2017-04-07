@@ -6,8 +6,6 @@
      =============================================================== -->
     <eat-comment />
 
-    <!-- {@deprecated Use simpletooltip_overlay_offset instead.} -->
-    <dimen name="simpletooltip_overlay_circle_offset">@dimen/simpletooltip_overlay_offset</dimen>
     <dimen name="simpletooltip_overlay_offset">10dp</dimen>
     <dimen name="simpletooltip_margin">10dp</dimen>
     <dimen name="simpletooltip_padding">8dp</dimen>
