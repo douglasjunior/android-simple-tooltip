@@ -33,6 +33,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltip;
 import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_custom_arrow).setOnClickListener(this);
         findViewById(R.id.btn_dialog).setOnClickListener(this);
         findViewById(R.id.btn_center).setOnClickListener(this);
+        findViewById(R.id.btn_custom_tooltip).setOnClickListener(this);
     }
 
     @Override
@@ -247,8 +249,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .text(R.string.btn_center)
                     .showArrow(false)
                     .gravity(Gravity.CENTER)
+                    .transparentOverlay(true)
                     .build()
                     .show();
+        } else if (v.getId() == R.id.btn_custom_tooltip) {
+            final SimpleTooltip tooltip = new SimpleTooltip.Builder(this)
+                    .anchorView(v)
+                    .text(R.string.btn_modal_custom)
+                    .gravity(Gravity.TOP)
+                    .dismissOnOutsideTouch(false)
+                    .dismissOnInsideTouch(false)
+                    .transparentOverlay(false)
+                    .tooltipPadding(R.dimen.fab_margin)
+                    .arrowColor(getResources().getColor(R.color.white))
+                    .modal(true)
+                    .contentView(R.layout.custom_tooltip_second)
+                    .build();
+
+            tooltip.findViewById(R.id.btn_ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v2) {
+                    if (tooltip.isShowing())
+                        tooltip.dismiss();
+                }
+            });
+
+            tooltip.show();
         }
     }
 }

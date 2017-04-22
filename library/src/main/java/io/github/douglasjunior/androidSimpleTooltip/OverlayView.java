@@ -26,6 +26,7 @@ package io.github.douglasjunior.androidSimpleTooltip;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -33,7 +34,13 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.support.annotation.IntDef;
 import android.view.View;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+import io.github.douglasjunior.androidSimpleTooltip.R;
 
 /**
  * View que faz o efeito de escurecer a tela e dar destaque no ponto de ancoragem.<br>
@@ -47,15 +54,26 @@ public class OverlayView extends View {
     private static final int mDefaultOverlayCircleOffsetRes = R.dimen.simpletooltip_overlay_circle_offset;
     private static final int mDefaultOverlayAlphaRes = R.integer.simpletooltip_overlay_alpha;
 
-    private View mAnchorView;
+    private RectF anchorRect;
     private Bitmap bitmap;
     private float offset = 0;
+    private int alpha = 0;
     private boolean invalidated = true;
+    @OverlayShape
+    private int shape = RECTANGLE;
 
-    OverlayView(Context context, View anchorView) {
+    OverlayView(Context context, RectF anchorRect, Float offset) {
         super(context);
-        this.mAnchorView = anchorView;
-        this.offset = context.getResources().getDimension(mDefaultOverlayCircleOffsetRes);
+        TypedArray a = context.getTheme().obtainStyledAttributes(R.styleable.SimpleTooltipStyle);
+        this.offset = offset == null
+                ? a.getDimension(R.styleable.SimpleTooltipStyle_st_overlay_offset,
+                context.getResources().getDimension(mDefaultOverlayCircleOffsetRes))
+                : offset;
+        alpha = a.getInt(R.styleable.SimpleTooltipStyle_st_overlay_alpha,
+                context.getResources().getInteger(mDefaultOverlayAlphaRes));
+        a.recycle();
+
+        this.anchorRect = anchorRect;
     }
 
     @Override
@@ -82,20 +100,27 @@ public class OverlayView extends View {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
         paint.setAntiAlias(true);
-        paint.setAlpha(getResources().getInteger(mDefaultOverlayAlphaRes));
+        paint.setAlpha(alpha);
         osCanvas.drawRect(outerRectangle, paint);
 
         paint.setColor(Color.TRANSPARENT);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
 
-        RectF anchorRecr = SimpleTooltipUtils.calculeRectInWindow(mAnchorView);
-        RectF overlayRecr = SimpleTooltipUtils.calculeRectInWindow(this);
+        RectF overlayRect = SimpleTooltipUtils.calculeRectInWindow(this);
 
-        float left = anchorRecr.left - overlayRecr.left;
-        float top = anchorRecr.top - overlayRecr.top;
-        RectF oval = new RectF(left - offset, top - offset, left + mAnchorView.getMeasuredWidth() + offset, top + mAnchorView.getMeasuredHeight() + offset);
+        float left = anchorRect.left - overlayRect.left;
+        float top = anchorRect.top - overlayRect.top;
+        RectF shapeRect = new RectF(
+                left - offset,
+                top - offset,
+                left + anchorRect.width() + offset,
+                top + anchorRect.height() + offset);
 
-        osCanvas.drawOval(oval, paint);
+        if (shape == RECTANGLE) {
+            osCanvas.drawRoundRect(shapeRect, 5, 5, paint);
+        } else if (shape == OVAL) {
+            osCanvas.drawOval(shapeRect, paint);
+        }
 
         invalidated = false;
     }
@@ -111,12 +136,33 @@ public class OverlayView extends View {
         invalidated = true;
     }
 
-    public View getAnchorView() {
-        return mAnchorView;
+    public static class Builder {
+        private final Context context;
+        private int color = Color.BLACK;
+        private float offset;
+        private int shape;
+
+        public Builder(Context context) {
+            this.context = context;
+        }
+
+        public void color(int color) {
+            this.color = color;
+        }
+
+        public void offset(float offset) {
+            this.offset = offset;
+        }
+
+        public void shape(int shape) {
+            this.shape = shape;
+        }
     }
 
-    public void setAnchorView(View anchorView) {
-        this.mAnchorView = anchorView;
-        invalidate();
-    }
+    public static final int OVAL = 0;
+    public static final int RECTANGLE = 1;
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({OVAL, RECTANGLE})
+    public @interface OverlayShape {}
 }

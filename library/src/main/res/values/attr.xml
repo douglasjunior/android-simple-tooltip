@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SimpleTooltipStyle">
+        <attr name="st_overlay_offset" format="dimension"/>
+        <attr name="st_margin" format="dimension"/>
+        <attr name="st_padding" format="dimension"/>
+
+        <attr name="st_arrow_width" format="dimension"/>
+        <attr name="st_arrow_height" format="dimension"/>
+        <attr name="st_animation_padding" format="dimension"/>
+        <attr name="st_overlay_alpha" format="integer"/>
+
+        <attr name="st_background_color" format="color"/>
+        <attr name="st_text_color" format="color"/>
+        <attr name="st_arrow_color" format="color"/>
+    </declare-styleable>
+</resources>

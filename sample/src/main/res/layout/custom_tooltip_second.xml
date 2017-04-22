@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:minWidth="300dp"
+              android:padding="5dp"
+              android:background="@drawable/bg_tooltip_white"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/Base.TextAppearance.AppCompat.Headline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Congratulation!"
+        android:textColor="@color/blue_blue"/>
+
+    <TextView
+        android:id="@+id/content"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Here is another one custom tooltip, tap 'Got it' to dismiss !!!"
+        android:textColor="@color/black"/>
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"/>
+
+    <Button
+        android:id="@+id/btn_ok"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:text="Got It"
+        android:textColor="@color/blue_blue"/>
+
+</LinearLayout>

@@ -26,6 +26,7 @@ package io.github.douglasjunior.androidSimpleTooltip;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -59,6 +60,18 @@ public final class SimpleTooltipUtils {
         int[] location = new int[2];
         view.getLocationInWindow(location);
         return new RectF(location[0], location[1], location[0] + view.getMeasuredWidth(), location[1] + view.getMeasuredHeight());
+    }
+
+    /**
+     *
+     * @param view
+     * @return Visible rectangle of the <b>view</b>, area that is on the screen and not overlapped
+     * by another views
+     */
+    public static RectF calculeVisibleRectInWindow(View view) {
+        Rect rect = new Rect();
+        view.getGlobalVisibleRect(rect);
+        return new RectF(rect);
     }
 
     public static float dpFromPx(float px) {

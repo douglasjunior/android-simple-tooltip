@@ -30,6 +30,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -37,13 +38,16 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
+import android.support.annotation.Dimension;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,6 +62,8 @@ import android.widget.TextView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import io.github.douglasjunior.androidSimpleTooltip.R;
 
 
 /**
@@ -112,12 +118,15 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private AnimatorSet mAnimator;
     private final float mMargin;
     private final float mPadding;
+    private final float mTooltipPadding;
     private final float mAnimationPadding;
+    private final Float mOverlayOffset;
     private final long mAnimationDuration;
     private final float mArrowWidth;
     private final float mArrowHeight;
     private final boolean mFocusable;
     private boolean dismissed = false;
+    private RectF lastAnchorPlace = new RectF();
 
 
     private SimpleTooltip(Builder builder) {
@@ -140,8 +149,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mAnimated = builder.animated;
         mMargin = builder.margin;
         mPadding = builder.padding;
+        mTooltipPadding = builder.tooltipPadding;
         mAnimationPadding = builder.animationPadding;
         mAnimationDuration = builder.animationDuration;
+        mOverlayOffset = builder.overlayOffset;
         mOnDismissListener = builder.onDismissListener;
         mOnShowListener = builder.onShowListener;
         mFocusable = builder.focusable;
@@ -169,6 +180,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     public void show() {
         verifyDismissed();
 
+        mAnchorView.getViewTreeObserver().addOnGlobalLayoutListener(mAnchorPositionChangeListener);
         mContentLayout.getViewTreeObserver().addOnGlobalLayoutListener(mLocationLayoutListener);
         mContentLayout.getViewTreeObserver().addOnGlobalLayoutListener(mAutoDismissLayoutListener);
 
@@ -190,7 +202,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void createOverlay() {
-        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView);
+        mRootView.removeView(mOverlay);
+        RectF anchorRect = mGravity != Gravity.CENTER
+                ? SimpleTooltipUtils.calculeVisibleRectInWindow(mAnchorView)
+                : new RectF(mAnchorView.getMeasuredWidth() / 2, mAnchorView.getMeasuredHeight() / 2,
+                mAnchorView.getMeasuredWidth() / 2 + 1, mAnchorView.getMeasuredHeight() / 2 + 1);
+        mOverlay = mTransparentOverlay
+                ? new View(mContext)
+                : new OverlayView(mContext, anchorRect,mOverlayOffset);
         mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mOverlay.setOnTouchListener(mOverlayTouchListener);
         mRootView.addView(mOverlay);
@@ -199,25 +218,27 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private PointF calculePopupLocation() {
         PointF location = new PointF();
 
-        final RectF anchorRect = SimpleTooltipUtils.calculeRectInWindow(mAnchorView);
+        final RectF anchorRect = SimpleTooltipUtils.calculeVisibleRectInWindow(mAnchorView);
         final PointF anchorCenter = new PointF(anchorRect.centerX(), anchorRect.centerY());
+
+        final float anchorMargin = mMargin - mTooltipPadding;
 
         switch (mGravity) {
             case Gravity.START:
-                location.x = anchorRect.left - mPopupWindow.getContentView().getWidth() - mMargin;
+                location.x = anchorRect.left - mPopupWindow.getContentView().getWidth() - anchorMargin;
                 location.y = anchorCenter.y - mPopupWindow.getContentView().getHeight() / 2f;
                 break;
             case Gravity.END:
-                location.x = anchorRect.right + mMargin;
+                location.x = anchorRect.right + anchorMargin;
                 location.y = anchorCenter.y - mPopupWindow.getContentView().getHeight() / 2f;
                 break;
             case Gravity.TOP:
                 location.x = anchorCenter.x - mPopupWindow.getContentView().getWidth() / 2f;
-                location.y = anchorRect.top - mPopupWindow.getContentView().getHeight() - mMargin;
+                location.y = anchorRect.top - mPopupWindow.getContentView().getHeight() - anchorMargin;
                 break;
             case Gravity.BOTTOM:
                 location.x = anchorCenter.x - mPopupWindow.getContentView().getWidth() / 2f;
-                location.y = anchorRect.bottom + mMargin;
+                location.y = anchorRect.bottom + anchorMargin;
                 break;
             case Gravity.CENTER:
                 location.x = anchorCenter.x - mPopupWindow.getContentView().getWidth() / 2f;
@@ -243,9 +264,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mContentView.setPadding((int) mPadding, (int) mPadding, (int) mPadding, (int) mPadding);
 
         LinearLayout linearLayout = new LinearLayout(mContext);
-        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        linearLayout.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.setOrientation(mArrowDirection == ArrowDrawable.LEFT || mArrowDirection == ArrowDrawable.RIGHT ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
-        int layoutPadding = (int) (mAnimated ? mAnimationPadding : 0);
+        int layoutPadding = (int) (mAnimated ? mAnimationPadding : mTooltipPadding);
         linearLayout.setPadding(layoutPadding, layoutPadding, layoutPadding, layoutPadding);
 
         if (mShowArrow) {
@@ -273,7 +295,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             linearLayout.addView(mContentView);
         }
 
-        LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+        LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
         contentViewParams.gravity = Gravity.CENTER;
         mContentView.setLayoutParams(contentViewParams);
 
@@ -334,6 +357,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             mOnDismissListener.onDismiss(this);
         mOnDismissListener = null;
 
+        SimpleTooltipUtils.removeOnGlobalLayoutListener(mAnchorView, mAnchorPositionChangeListener);
         SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mLocationLayoutListener);
         SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mArrowLayoutListener);
         SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mShowLayoutListener);
@@ -390,6 +414,47 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
             SimpleTooltipUtils.removeOnGlobalLayoutListener(popup.getContentView(), this);
             popup.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mArrowLayoutListener);
+            PointF location = calculePopupLocation();
+            popup.setClippingEnabled(true);
+            popup.update((int) location.x, (int) location.y, popup.getWidth(), popup.getHeight());
+            popup.getContentView().requestLayout();
+            createOverlay();
+        }
+    };
+
+    /**
+     * If position of the anchor has been changed after popup was shown, we will track it here and update
+     * popup location and overlay
+     */
+    private final ViewTreeObserver.OnGlobalLayoutListener mAnchorPositionChangeListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            final PopupWindow popup = mPopupWindow;
+            if (popup == null || dismissed) return;
+
+            // if Anchor view becomes invisible then hide popup
+            if (mAnchorView == null || !mAnchorView.isShown()){
+                dismiss();
+                return;
+            }
+
+            if (mMaxWidth > 0 && mContentView.getWidth() > mMaxWidth) {
+                SimpleTooltipUtils.setWidth(mContentView, mMaxWidth);
+                popup.update(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                return;
+            }
+
+
+            // logic in createOverlay() will always trigger this listener callback
+            // to get out of infinite loop return if there were no changes compared with previous
+            // anchor view position
+            RectF anchorPlace = SimpleTooltipUtils.calculeVisibleRectInWindow(mAnchorView);
+            if (anchorPlace.equals(lastAnchorPlace)){
+                return;
+            }else {
+                lastAnchorPlace = anchorPlace;
+            }
+
             PointF location = calculePopupLocation();
             popup.setClippingEnabled(true);
             popup.update((int) location.x, (int) location.y, popup.getWidth(), popup.getHeight());
@@ -551,7 +616,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private boolean animated = false;
         private float margin = -1;
         private float padding = -1;
+        private float tooltipPadding = 0;
         private float animationPadding = -1;
+        private Float overlayOffset = null;
         private OnDismissListener onDismissListener;
         private OnShowListener onShowListener;
         private long animationDuration;
@@ -568,11 +635,15 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         public SimpleTooltip build() throws IllegalArgumentException {
             validateArguments();
+            TypedArray a = context.getTheme().obtainStyledAttributes(R.styleable.SimpleTooltipStyle);
+
             if (backgroundColor == 0) {
-                backgroundColor = SimpleTooltipUtils.getColor(context, mDefaultBackgroundColorRes);
+                backgroundColor = a.getColor(R.styleable.SimpleTooltipStyle_st_background_color,
+                        SimpleTooltipUtils.getColor(context, mDefaultBackgroundColorRes));
             }
             if (textColor == 0) {
-                textColor = SimpleTooltipUtils.getColor(context, mDefaultTextColorRes);
+                textColor = a.getColor(R.styleable.SimpleTooltipStyle_st_text_color,
+                        SimpleTooltipUtils.getColor(context, mDefaultTextColorRes));
             }
             if (contentView == null) {
                 TextView tv = new TextView(context);
@@ -582,13 +653,16 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 contentView = tv;
             }
             if (arrowColor == 0) {
-                arrowColor = SimpleTooltipUtils.getColor(context, mDefaultArrowColorRes);
+                arrowColor = a.getColor(R.styleable.SimpleTooltipStyle_st_arrow_color,
+                        SimpleTooltipUtils.getColor(context, mDefaultArrowColorRes));
             }
             if (margin < 0) {
-                margin = context.getResources().getDimension(mDefaultMarginRes);
+                margin = a.getDimension(R.styleable.SimpleTooltipStyle_st_margin,
+                        context.getResources().getDimension(mDefaultMarginRes));
             }
             if (padding < 0) {
-                padding = context.getResources().getDimension(mDefaultPaddingRes);
+                padding = a.getDimension(R.styleable.SimpleTooltipStyle_st_padding,
+                        context.getResources().getDimension(mDefaultPaddingRes));
             }
             if (animationPadding < 0) {
                 animationPadding = context.getResources().getDimension(mDefaultAnimationPaddingRes);
@@ -609,6 +683,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 if (arrowHeight == 0)
                     arrowHeight = context.getResources().getDimension(mDefaultArrowHeightRes);
             }
+            a.recycle();
             return new SimpleTooltip(this);
         }
 
@@ -887,9 +962,34 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
+        /**
+         * <div class="en">Tooltip padding applied to all sides except the side which contains arrow
+         * if {@link #animationPadding(float)} is set then this field is ignored in favor of {@link #animationPadding(float)}</div>
+         *
+         * @param tooltipPadding
+         * @return <tt>this</tt>
+         * @see Builder#tooltipPadding(int)
+         */
+        public Builder tooltipPadding(float tooltipPadding) {
+            this.tooltipPadding = tooltipPadding;
+            return this;
+        }
+
+        /**
+         * <div class="en">Tooltip padding applied to all sides except the side which contains arrow
+         * if {@link #animationPadding(float)} is set then this field is ignored in favor of {@link #animationPadding(float)}</div>
+         *
+         * @param tooltipPaddingRes dimension resource
+         * @return <tt>this</tt>
+         * @see Builder#tooltipPadding(float)
+         */
+        public Builder tooltipPadding(@DimenRes int tooltipPaddingRes) {
+            return tooltipPadding(context.getResources().getDimension(tooltipPaddingRes));
+        }
 
         /**
          * <div class="pt">Define a margem entre o Tooltip e o <tt>anchorView</tt>. Padrão é <tt>resources.getDimension(R.dimen.simpletooltip_margin)</tt>.</div>
+         * <div class="en">Set margin between tooltip and  <tt>anchorView</tt>. Default is <tt>R.dimen.simpletooltip_margin</tt>.</div>
          *
          * @param margin <div class="pt">tamanho da margem em pixels.</div>
          * @return <tt>this</tt>
@@ -902,6 +1002,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         /**
          * <div class="pt">Define a margem entre o Tooltip e o <tt>anchorView</tt>. Padrão é <tt>R.dimen.simpletooltip_margin</tt>.</div>
+         * <div class="en">Set margin between tooltip and  <tt>anchorView</tt>. Default is <tt>R.dimen.simpletooltip_margin</tt>.</div>
          *
          * @param marginRes <div class="pt">resId do tamanho da margem.</div>
          * @return <tt>this</tt>
@@ -942,6 +1043,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         public Builder arrowDrawable(@DrawableRes int drawableRes) {
             this.arrowDrawable = SimpleTooltipUtils.getDrawable(context, drawableRes);
+            return this;
+        }
+
+        public Builder arrowColorRes(@ColorRes int arrowColorRes) {
+            this.arrowColor = context.getResources().getColor(arrowColorRes);
             return this;
         }
 
@@ -991,6 +1097,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         public Builder focusable(boolean focusable) {
             this.focusable = focusable;
+            return this;
+        }
+
+        public Builder overlayOffset(@Dimension int overlayOffsetDp) {
+            overlayOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, overlayOffsetDp, context.getResources().getDisplayMetrics());
             return this;
         }
     }
