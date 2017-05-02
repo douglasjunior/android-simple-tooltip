@@ -37,6 +37,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
 import android.support.annotation.Dimension;
 import android.support.annotation.DrawableRes;
@@ -44,6 +45,7 @@ import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -68,6 +70,7 @@ import android.widget.TextView;
 public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
     private static final String TAG = SimpleTooltip.class.getSimpleName();
+    private static final int ALPHA_MAX_VALUE = 255;
 
     // Default Resources
     private static final int mDefaultPopupWindowStyleRes = android.R.attr.popupWindowStyle;
@@ -116,7 +119,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final float mArrowHeight;
     private final boolean mFocusable;
     private boolean dismissed = false;
-    private int mHighlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
+    private int mHighlightShape = OverlayView.OVAL;
+    private int mHighlightAlpha;
 
 
     private SimpleTooltip(Builder builder) {
@@ -147,7 +151,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mFocusable = builder.focusable;
         mRootView = (ViewGroup) mAnchorView.getRootView();
         mHighlightShape = builder.highlightShape;
-
+        mHighlightAlpha = builder.highlightAlpha;
         init();
     }
 
@@ -191,7 +195,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void createOverlay() {
-        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset);
+        //If gravity is CENTER then darken whole screen with overlay
+        RectF anchorRect = mGravity != Gravity.CENTER
+                ? SimpleTooltipUtils.calculeRectInWindow(mAnchorView)
+                : new RectF(mAnchorView.getMeasuredWidth() / 2, mAnchorView.getMeasuredHeight() / 2,
+                mAnchorView.getMeasuredWidth() / 2 + 1, mAnchorView.getMeasuredHeight() / 2 + 1);
+        mOverlay = mTransparentOverlay
+                ? new View(mContext)
+                : new OverlayView(mContext, anchorRect,mOverlayOffset,mHighlightShape,mHighlightAlpha);
         mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         mOverlay.setOnTouchListener(mOverlayTouchListener);
         mRootView.addView(mOverlay);
@@ -545,7 +556,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int arrowDirection = ArrowDrawable.AUTO;
         private int gravity = Gravity.BOTTOM;
         private boolean transparentOverlay = true;
-        private float overlayOffset = -1;
+        private Float overlayOffset = null;
         private float maxWidth;
         private boolean showArrow = true;
         private Drawable arrowDrawable;
@@ -562,7 +573,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private float arrowHeight;
         private float arrowWidth;
         private boolean focusable;
-        private int highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
+        private int highlightShape = OverlayView.OVAL;
+        private int highlightAlpha = ALPHA_MAX_VALUE/2;
 
         public Builder(Context context) {
             this.context = context;
@@ -611,10 +623,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 if (arrowHeight == 0)
                     arrowHeight = context.getResources().getDimension(mDefaultArrowHeightRes);
             }
-            if (highlightShape < 0 || highlightShape > OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR) {
-                highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
+            if (highlightShape < 0 || highlightShape > OverlayView.RECTANGLE) {
+                highlightShape = OverlayView.OVAL;
             }
-            if (overlayOffset < 0) {
+            if (overlayOffset == null) {
                 overlayOffset = context.getResources().getDimension(mDefaultOverlayOffsetRes);
             }
             return new SimpleTooltip(this);
@@ -956,6 +968,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
+        public Builder arrowColorRes(@ColorRes int arrowColorRes) {
+            this.arrowColor = context.getResources().getColor(arrowColorRes);
+            return this;
+        }
+
         public Builder arrowColor(@ColorInt int arrowColor) {
             this.arrowColor = arrowColor;
             return this;
@@ -1015,24 +1032,38 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         /**
          * <div class="pt">Configura o formato do Shape em destaque. <br/>
-         * <tt>{@link OverlayView#HIGHLIGHT_SHAPE_OVAL}</tt> - Destaque oval (padrão). <br/>
-         * <tt>{@link OverlayView#HIGHLIGHT_SHAPE_RECTANGULAR}</tt> - Destaque retangular. <br/>
+         * <tt>{@link OverlayView#OVAL}</tt> - Destaque oval (padrão). <br/>
+         * <tt>{@link OverlayView#RECTANGLE}</tt> - Destaque retangular. <br/>
          * </div>
          * <p>
          * <div class="en">Configure the the Shape type. <br/>
-         * <tt>{@link OverlayView#HIGHLIGHT_SHAPE_OVAL}</tt> - Shape oval (default). <br/>
-         * <tt>{@link OverlayView#HIGHLIGHT_SHAPE_RECTANGULAR}</tt> - Shape rectangular. <br/>
+         * <tt>{@link OverlayView#OVAL}</tt> - Shape oval (default). <br/>
+         * <tt>{@link OverlayView#RECTANGLE}</tt> - Shape rectangular. <br/>
          * </div>
          *
          * @param highlightShape <div class="pt">Formato do Shape.</div>
          *                       <div class="en">Shape type.</div>
          * @return this
-         * @see OverlayView#HIGHLIGHT_SHAPE_OVAL
-         * @see OverlayView#HIGHLIGHT_SHAPE_RECTANGULAR
+         * @see OverlayView#OVAL
+         * @see OverlayView#RECTANGLE
          * @see Builder#transparentOverlay(boolean)
          */
-        public Builder highlightShape(int highlightShape) {
+        public Builder highlightShape(@OverlayView.OverlayShape int highlightShape) {
             this.highlightShape = highlightShape;
+            return this;
+        }
+
+        /**
+         *
+         * @param highlightAlpha <div class="en">Highlight background alpha
+         *                       should be in range 0 to 255</div>
+         * @return this
+         */
+        public Builder highlightAlpha(int highlightAlpha) {
+            if (highlightAlpha > ALPHA_MAX_VALUE || highlightAlpha < 0){
+                throw new IllegalArgumentException("highlightAlpha should be in range [0,255] but was: " + highlightAlpha);
+            }
+            this.highlightAlpha = highlightAlpha;
             return this;
         }
 
@@ -1042,14 +1073,25 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="en">Margin between {@link Builder#anchorView(View)} and highlight Shape border.
          * This value override <tt>{@link R.dimen.simpletooltip_overlay_offset}</tt></div>
          *
-         * @param overlayOffset <div class="pt">Tamanho em pixels.</div>
-         *                      <div class="en">Size in pixels.</div>
+         * @param overlayOffsetDp <div class="pt">Tamanho em dp.</div>
+         *                      <div class="en">Size in dp.</div>
          * @return this
          * @see Builder#anchorView(View)
          * @see Builder#transparentOverlay(boolean)
          */
-        public Builder overlayOffset(@Dimension float overlayOffset) {
-            this.overlayOffset = overlayOffset;
+        public Builder overlayOffset(@Dimension float overlayOffsetDp) {
+            this.overlayOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, overlayOffsetDp, context.getResources().getDisplayMetrics());
+            return this;
+        }
+
+        /**
+         * @param overlayOffsetDp value in dp that will be converted to pixels
+         * @return this
+         *
+         * @see #overlayOffset(float)
+         */
+        public Builder overlayOffsetDp(@Dimension float overlayOffsetDp) {
+            this.overlayOffset = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, overlayOffsetDp, context.getResources().getDisplayMetrics());
             return this;
         }
     }
