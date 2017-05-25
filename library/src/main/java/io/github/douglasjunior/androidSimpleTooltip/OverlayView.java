@@ -64,7 +64,7 @@ public class OverlayView extends View {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (invalidated)
+        if (invalidated || bitmap == null || bitmap.isRecycled())
             createWindowFrame();
 
         canvas.drawBitmap(bitmap, 0, 0, null);
