@@ -119,6 +119,8 @@ Antes de enviar seu PR, execute a checagem do gradle.
 
 2. Se chamar `tooltip.show()` após a `Activity/Dialog` ser encerrada, pode ocorrer o erro `android.view.WindowLeaked: Activity has leaked window android.widget.PopupWindow$PopupViewContainer that was originally added here`. [Leia mais.](http://stackoverflow.com/questions/2850573/activity-has-leaked-window-that-was-originally-added) (Este erro não afeta no funcionamento do programa.)
 
+3. À partir da API 24 o Android mudou o comportamento da `PopupWindow` em relação a propriedade [`setClippingEnabled`](https://developer.android.com/reference/android/widget/PopupWindow.html#setClippingEnabled(boolean)), isso faz com que a Popup possa ficar cortada se não couber na tela. [Leia mais](https://github.com/douglasjunior/android-simple-tooltip/issues/40).
+
 ## Licença
 
 ```
