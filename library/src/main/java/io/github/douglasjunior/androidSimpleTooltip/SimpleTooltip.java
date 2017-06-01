@@ -88,6 +88,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private OnShowListener mOnShowListener;
     private PopupWindow mPopupWindow;
     private final int mGravity;
+    private final boolean mClippingEnabled;
     private final int mArrowDirection;
     private final boolean mDismissOnInsideTouch;
     private final boolean mDismissOnOutsideTouch;
@@ -147,6 +148,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mFocusable = builder.focusable;
         mRootView = (ViewGroup) mAnchorView.getRootView();
         mHighlightShape = builder.highlightShape;
+        mClippingEnabled = builder.clippingEnabled;
 
         init();
     }
@@ -162,7 +164,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        mPopupWindow.setClippingEnabled(false);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mPopupWindow.setOverlapAnchor(true);
+        }
+        mPopupWindow.setClippingEnabled(mClippingEnabled);
         mPopupWindow.setFocusable(mFocusable);
     }
 
@@ -392,7 +397,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             SimpleTooltipUtils.removeOnGlobalLayoutListener(popup.getContentView(), this);
             popup.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mArrowLayoutListener);
             PointF location = calculePopupLocation();
-            popup.setClippingEnabled(true);
             popup.update((int) location.x, (int) location.y, popup.getWidth(), popup.getHeight());
             popup.getContentView().requestLayout();
             createOverlay();
@@ -544,6 +548,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private View anchorView;
         private int arrowDirection = ArrowDrawable.AUTO;
         private int gravity = Gravity.BOTTOM;
+        private Boolean clippingEnabled;
         private boolean transparentOverlay = true;
         private float overlayOffset = -1;
         private float maxWidth;
@@ -616,6 +621,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             }
             if (overlayOffset < 0) {
                 overlayOffset = context.getResources().getDimension(mDefaultOverlayOffsetRes);
+            }
+            if (clippingEnabled == null) {
+                clippingEnabled = Build.VERSION.SDK_INT < Build.VERSION_CODES.N;
             }
             return new SimpleTooltip(this);
         }
@@ -1050,6 +1058,25 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder overlayOffset(@Dimension float overlayOffset) {
             this.overlayOffset = overlayOffset;
+            return this;
+        }
+
+        /**
+         * <div class="en">Allows the popup window to extend beyond the bounds of the screen. By default the
+         * window is clipped to the screen boundaries. Setting this to false will allow windows to be
+         * accurately positioned.
+         * <br /><br />
+         * Until API 24, this property made PopupWindow re-adjust the position to stay inside the screen.
+         * After API 24, PopupWindow re-adjust the size. See more in issue #40.
+         * <br /><br />
+         * Until API 24, default is true.
+         * After API 24, default is false.
+         * </div>
+         *
+         * @param clippingEnabled false if the window should be allowed to extend outside of the screen
+         */
+        public Builder clippingEnabled(boolean clippingEnabled) {
+            this.clippingEnabled = clippingEnabled;
             return this;
         }
     }
