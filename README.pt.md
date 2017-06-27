@@ -109,8 +109,6 @@ Antes de enviar seu PR, execute a checagem do gradle.
 ./gradlew build connectedCheck
 ```
 
-## Faça uma doação
-
 [![Doar](https://www.paypalobjects.com/pt_BR/BR/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TM8BGN6PJF6SS)
 
 ## Problemas conhecidos
