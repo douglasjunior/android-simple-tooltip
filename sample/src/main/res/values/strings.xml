@@ -20,5 +20,6 @@
     <string name="btn_dialog">Inside dialog</string>
     <string name="btn_center">Screen center</string>
     <string name="btn_overlay_rect">Overlay Rect</string>
+    <string name="btn_centered_highlight">Centered with highlight</string>
 
 </resources>

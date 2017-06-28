@@ -33,7 +33,11 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.support.annotation.IntDef;
 import android.view.View;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * View que faz o efeito de escurecer a tela e dar destaque no ponto de ancoragem.<br>
@@ -44,22 +48,23 @@ import android.view.View;
 @SuppressLint("ViewConstructor")
 public class OverlayView extends View {
 
-    public static final int HIGHLIGHT_SHAPE_OVAL = 0;
-    public static final int HIGHLIGHT_SHAPE_RECTANGULAR = 1;
-    private static final int mDefaultOverlayAlphaRes = R.integer.simpletooltip_overlay_alpha;
-
-    private View mAnchorView;
+    private RectF anchorRect;
     private Bitmap bitmap;
-
     private boolean invalidated = true;
     private final int highlightShape;
-    private final float mOffset;
+    private int alpha = 120;
+    private final float offset;
 
-    OverlayView(Context context, View anchorView, int highlightShape, float offset) {
+    OverlayView(Context context,
+                RectF anchorRect,
+                Float offset,
+                @OverlayShape int highlightShape,
+                int highlightAlpha) {
         super(context);
-        this.mAnchorView = anchorView;
-        this.mOffset = offset;
+        this.anchorRect = anchorRect;
+        this.offset = offset;
         this.highlightShape = highlightShape;
+        alpha = highlightAlpha;
     }
 
     @Override
@@ -86,24 +91,26 @@ public class OverlayView extends View {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setColor(Color.BLACK);
         paint.setAntiAlias(true);
-        paint.setAlpha(getResources().getInteger(mDefaultOverlayAlphaRes));
+        paint.setAlpha(alpha);
         osCanvas.drawRect(outerRectangle, paint);
 
         paint.setColor(Color.TRANSPARENT);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
 
-        RectF anchorRecr = SimpleTooltipUtils.calculeRectInWindow(mAnchorView);
-        RectF overlayRecr = SimpleTooltipUtils.calculeRectInWindow(this);
+        RectF overlayRect = SimpleTooltipUtils.calculeRectInWindow(this);
 
-        float left = anchorRecr.left - overlayRecr.left;
-        float top = anchorRecr.top - overlayRecr.top;
+        float left = anchorRect.left - overlayRect.left;
+        float top = anchorRect.top - overlayRect.top;
+        RectF shapeRect = new RectF(
+                left - offset,
+                top - offset,
+                left + anchorRect.width() + offset,
+                top + anchorRect.height() + offset);
 
-        RectF rect = new RectF(left - mOffset, top - mOffset, left + mAnchorView.getMeasuredWidth() + mOffset, top + mAnchorView.getMeasuredHeight() + mOffset);
-
-        if (highlightShape == HIGHLIGHT_SHAPE_RECTANGULAR) {
-            osCanvas.drawRect(rect, paint);
-        } else {
-            osCanvas.drawOval(rect, paint);
+        if (highlightShape == RECTANGLE) {
+            osCanvas.drawRect(shapeRect, paint);
+        } else if (highlightShape == OVAL) {
+            osCanvas.drawOval(shapeRect, paint);
         }
 
         invalidated = false;
@@ -120,12 +127,10 @@ public class OverlayView extends View {
         invalidated = true;
     }
 
-    public View getAnchorView() {
-        return mAnchorView;
-    }
+    public static final int OVAL = 0;
+    public static final int RECTANGLE = 1;
 
-    public void setAnchorView(View anchorView) {
-        this.mAnchorView = anchorView;
-        invalidate();
-    }
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({OVAL, RECTANGLE})
+    public @interface OverlayShape {}
 }

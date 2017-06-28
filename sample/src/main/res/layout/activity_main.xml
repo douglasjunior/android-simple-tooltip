@@ -25,6 +25,7 @@
         android:layout_marginTop="?attr/actionBarSize">
 
         <LinearLayout
+            android:id="@+id/buttons"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -120,6 +121,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:text="@string/btn_overlay_rect" />
+
+            <Button
+                android:id="@+id/btn_center_with_highlight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/btn_centered_highlight" />
         </LinearLayout>
     </ScrollView>
 
