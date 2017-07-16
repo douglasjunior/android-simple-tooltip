@@ -36,6 +36,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 /**
@@ -163,5 +164,20 @@ public final class SimpleTooltipUtils {
             //noinspection deprecation
             return context.getResources().getDrawable(drawableRes);
         }
+    }
+
+    /**
+     * Verify if the first child of the rootView is a FrameLayout.
+     * Used for cases where the Tooltip is created inside a Dialog or DialogFragment.
+     *
+     * @param anchorView
+     * @return FrameLayout or anchorView.getRootView()
+     */
+    public static ViewGroup findFrameLayout(View anchorView) {
+        ViewGroup rootView = (ViewGroup) anchorView.getRootView();
+        if (rootView.getChildCount() == 1 && rootView.getChildAt(0) instanceof FrameLayout) {
+            rootView = (ViewGroup) rootView.getChildAt(0);
+        }
+        return rootView;
     }
 }

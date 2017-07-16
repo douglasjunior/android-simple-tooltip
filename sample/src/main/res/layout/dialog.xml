@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    android:padding="10dp"
+    android:padding="50dp"
     tools:ignore="Overdraw">
 
     <Button
@@ -24,7 +24,7 @@
         android:id="@+id/btn_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="end"
+        android:layout_gravity="center"
         android:text="@string/btn_close" />
 
 </LinearLayout>
