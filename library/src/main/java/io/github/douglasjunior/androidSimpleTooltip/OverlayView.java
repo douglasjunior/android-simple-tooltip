@@ -64,10 +64,11 @@ public class OverlayView extends View {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
-        if (invalidated)
+        if (invalidated || bitmap == null || bitmap.isRecycled())
             createWindowFrame();
-
-        canvas.drawBitmap(bitmap, 0, 0, null);
+        // The bitmap is checked again because of Android memory cleanup behavior. (See #42)
+        if (bitmap != null && !bitmap.isRecycled())
+            canvas.drawBitmap(bitmap, 0, 0, null);
     }
 
     private void createWindowFrame() {
