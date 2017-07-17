@@ -220,12 +220,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             dialog.setContentView(R.layout.dialog);
             dialog.show();
 
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(dialog.getWindow().getAttributes());
-            lp.width = (int) SimpleTooltipUtils.pxFromDp(300);
-            lp.height = (int) SimpleTooltipUtils.pxFromDp(300);
-            dialog.getWindow().setAttributes(lp);
-
             final Button btnInDialog = (Button) dialog.findViewById(R.id.btn_in_dialog);
             btnInDialog.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -236,6 +230,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             .gravity(Gravity.BOTTOM)
                             .animated(true)
                             .transparentOverlay(false)
+                            .overlayMatchParent(false)
                             .build()
                             .show();
                 }

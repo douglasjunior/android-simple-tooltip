@@ -100,6 +100,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final View mAnchorView;
     private final boolean mTransparentOverlay;
     private final float mOverlayOffset;
+    private final boolean mOverlayMatchParent;
     private final float mMaxWidth;
     private View mOverlay;
     private ViewGroup mRootView;
@@ -132,6 +133,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mAnchorView = builder.anchorView;
         mTransparentOverlay = builder.transparentOverlay;
         mOverlayOffset = builder.overlayOffset;
+        mOverlayMatchParent = builder.overlayMatchParent;
         mMaxWidth = builder.maxWidth;
         mShowArrow = builder.showArrow;
         mArrowWidth = builder.arrowWidth;
@@ -145,7 +147,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mOnDismissListener = builder.onDismissListener;
         mOnShowListener = builder.onShowListener;
         mFocusable = builder.focusable;
-        mRootView = (ViewGroup) mAnchorView.getRootView();
+        mRootView = SimpleTooltipUtils.findFrameLayout(mAnchorView);
         mHighlightShape = builder.highlightShape;
 
         init();
@@ -192,7 +194,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
     private void createOverlay() {
         mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset);
-        mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        if (mOverlayMatchParent)
+            mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        else
+            mOverlay.setLayoutParams(new ViewGroup.LayoutParams(mRootView.getWidth(), mRootView.getHeight()));
         mOverlay.setOnTouchListener(mOverlayTouchListener);
         mRootView.addView(mOverlay);
     }
@@ -546,6 +551,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int gravity = Gravity.BOTTOM;
         private boolean transparentOverlay = true;
         private float overlayOffset = -1;
+        private boolean overlayMatchParent = true;
         private float maxWidth;
         private boolean showArrow = true;
         private Drawable arrowDrawable;
@@ -1050,6 +1056,21 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder overlayOffset(@Dimension float overlayOffset) {
             this.overlayOffset = overlayOffset;
+            return this;
+        }
+
+        /**
+         * <div class="pt">Define o comportamento do overlay. Utilizado para casos onde a view de Overlay não pode ser MATCH_PARENT.
+         * Como em uma Dialog ou DialogFragment.</div>
+         * <div class="en">Sets the behavior of the overlay view. Used for cases where the Overlay view can not be MATCH_PARENT.
+         * Like in a Dialog or DialogFragment.</div>
+         *
+         * @param overlayMatchParent <div class="pt">True se o overlay deve ser MATCH_PARENT. False se ele deve obter o mesmo tamanho do pai.</div>
+         *                           <div class="en">True if the overlay should be MATCH_PARENT. False if it should get the same size as the parent.</div>
+         * @return this
+         */
+        public Builder overlayMatchParent(boolean overlayMatchParent) {
+            this.overlayMatchParent = overlayMatchParent;
             return this;
         }
     }
