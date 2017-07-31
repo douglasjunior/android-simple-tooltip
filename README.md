@@ -109,7 +109,9 @@ Before submit your PR, run the gradle check.
 ./gradlew build connectedCheck
 ```
 
+<a href="https://www.patreon.com/douglasjunior"><img src="http://i.imgur.com/xEO164Z.png" alt="Become a Patron!" width="200" /></a>
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=E32BUP77SVBA2)
+
 
 ## Known issues
 
