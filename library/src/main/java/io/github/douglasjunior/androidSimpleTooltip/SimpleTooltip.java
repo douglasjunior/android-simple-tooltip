@@ -164,6 +164,26 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setTouchable(true);
+        mPopupWindow.setTouchInterceptor(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int x = (int) event.getX();
+                final int y = (int) event.getY();
+
+                if (!mDismissOnOutsideTouch && (event.getAction() == MotionEvent.ACTION_DOWN)
+                        && ((x < 0) || (x >= mContentLayout.getMeasuredWidth()) || (y < 0) || (y >= mContentLayout.getMeasuredHeight()))) {
+                    return true;
+                } else if (!mDismissOnOutsideTouch && event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                    return true;
+                } else if ((event.getAction() == MotionEvent.ACTION_DOWN) && mDismissOnInsideTouch) {
+                    dismiss();
+                    return true;
+                }
+                return false;
+            }
+        });
         mPopupWindow.setClippingEnabled(false);
         mPopupWindow.setFocusable(mFocusable);
     }
@@ -283,9 +303,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         contentViewParams.gravity = Gravity.CENTER;
         mContentView.setLayoutParams(contentViewParams);
 
-        if (mDismissOnInsideTouch || mDismissOnOutsideTouch)
-            mContentView.setOnTouchListener(mPopupWindowTouchListener);
-
         mContentLayout = linearLayout;
         mContentLayout.setVisibility(View.INVISIBLE);
         mPopupWindow.setContentView(mContentLayout);
@@ -349,35 +366,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mPopupWindow = null;
     }
 
-    private final View.OnTouchListener mPopupWindowTouchListener = new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getX() > 0 && event.getX() < v.getWidth() &&
-                    event.getY() > 0 && event.getY() < v.getHeight()) {
-                if (mDismissOnInsideTouch) {
-                    dismiss();
-                    return mModal;
-                }
-                return false;
-            }
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                v.performClick();
-            }
-            return mModal;
-        }
-    };
-
     private final View.OnTouchListener mOverlayTouchListener = new View.OnTouchListener() {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if (mDismissOnOutsideTouch) {
-                dismiss();
-            }
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                v.performClick();
-            }
             return mModal;
         }
     };
