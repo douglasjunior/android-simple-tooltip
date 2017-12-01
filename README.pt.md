@@ -86,7 +86,7 @@ Para mais informações, confira o [projeto de exemplo](https://github.com/dougl
 
     ```javascript
     dependencies {
-        compile 'com.github.douglasjunior:android-simple-tooltip:0.2.1'
+        compile 'com.github.douglasjunior:android-simple-tooltip:0.2.2'
     }
     ```
 
