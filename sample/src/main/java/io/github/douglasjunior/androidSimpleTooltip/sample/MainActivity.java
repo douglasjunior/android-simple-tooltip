@@ -26,6 +26,7 @@ package io.github.douglasjunior.androidSimpleTooltip.sample;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -45,6 +46,8 @@ import io.github.douglasjunior.androidSimpleTooltip.SimpleTooltipUtils;
  */
 @SuppressWarnings("ConstantConditions")
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private Handler mHandler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_dialog).setOnClickListener(this);
         findViewById(R.id.btn_center).setOnClickListener(this);
         findViewById(R.id.btn_overlay_rect).setOnClickListener(this);
+        findViewById(R.id.btn_auto_close).setOnClickListener(this);
     }
 
     @Override
@@ -261,6 +265,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .overlayOffset(0)
                     .build()
                     .show();
+        } else if (v.getId() == R.id.btn_auto_close) {
+            final SimpleTooltip tooltip = new SimpleTooltip.Builder(this)
+                    .anchorView(v)
+                    .text(R.string.btn_auto_close)
+                    .gravity(Gravity.TOP)
+                    .animated(true)
+                    .transparentOverlay(true)
+                    .build();
+            tooltip.show();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    tooltip.dismiss();
+                }
+            }, 3000);
         }
     }
 }
