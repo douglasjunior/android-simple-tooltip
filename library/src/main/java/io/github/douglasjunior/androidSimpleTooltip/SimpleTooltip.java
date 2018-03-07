@@ -151,7 +151,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mFocusable = builder.focusable;
         mRootView = SimpleTooltipUtils.findFrameLayout(mAnchorView);
         mHighlightShape = builder.highlightShape;
-
+        this.width = builder.width;
+        this.height = builder.height;
         init();
     }
 
