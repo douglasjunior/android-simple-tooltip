@@ -118,6 +118,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final boolean mFocusable;
     private boolean dismissed = false;
     private int mHighlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
+    private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
 
     private SimpleTooltip(Builder builder) {
@@ -299,7 +301,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             linearLayout.addView(mContentView);
         }
 
-        LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+//        LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
+        LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(width, height, 0);
         contentViewParams.gravity = Gravity.CENTER;
         mContentView.setLayoutParams(contentViewParams);
 
@@ -561,6 +564,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private float arrowWidth;
         private boolean focusable;
         private int highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
+        private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
+        private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
         public Builder(Context context) {
             this.context = context;
@@ -625,6 +630,16 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             if (anchorView == null) {
                 throw new IllegalArgumentException("Anchor view not specified.");
             }
+        }
+
+        public Builder setWidth(int width){
+            this.width = width;
+            return this;
+        }
+
+        public Builder setHeight(int height){
+            this.height = height;
+            return this;
         }
 
         /**
