@@ -110,7 +110,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final boolean mAnimated;
     private AnimatorSet mAnimator;
     private final float mMargin;
+    private final float mDefaultPadding;
     private final float mPadding;
+    private final float mPaddingLeft;
+    private final float mPaddingRight;
+    private final float mPaddingTop;
+    private final float mPaddingBottom;
     private final float mAnimationPadding;
     private final long mAnimationDuration;
     private final float mArrowWidth;
@@ -143,7 +148,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mArrowDrawable = builder.arrowDrawable;
         mAnimated = builder.animated;
         mMargin = builder.margin;
+        mDefaultPadding = builder.defaultPadding;
         mPadding = builder.padding;
+        mPaddingLeft = builder.paddingLeft;
+        mPaddingRight = builder.paddingRight;
+        mPaddingTop = builder.paddingTop;
+        mPaddingBottom = builder.paddingBottom;
         mAnimationPadding = builder.animationPadding;
         mAnimationDuration = builder.animationDuration;
         mOnDismissListener = builder.onDismissListener;
@@ -269,7 +279,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 tv.setText(mText);
         }
 
-        mContentView.setPadding((int) mPadding, (int) mPadding, (int) mPadding, (int) mPadding);
+        if (mPadding != mDefaultPadding) {
+            mContentView.setPadding((int) mPadding, (int) mPadding, (int) mPadding, (int) mPaddingBottom);
+        } else {
+            mContentView.setPadding((int) mPaddingLeft, (int) mPaddingTop, (int) mPaddingRight, (int) mPaddingBottom);
+        }
 
         LinearLayout linearLayout = new LinearLayout(mContext);
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -553,7 +567,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private Drawable arrowDrawable;
         private boolean animated = false;
         private float margin = -1;
+        private float defaultPadding;
         private float padding = -1;
+        private float paddingLeft = -1;
+        private float paddingRight = -1;
+        private float paddingTop = -1;
+        private float paddingBottom = -1;
         private float animationPadding = -1;
         private OnDismissListener onDismissListener;
         private OnShowListener onShowListener;
@@ -593,8 +612,22 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             if (margin < 0) {
                 margin = context.getResources().getDimension(mDefaultMarginRes);
             }
+
+            defaultPadding = context.getResources().getDimension(mDefaultPaddingRes);
             if (padding < 0) {
-                padding = context.getResources().getDimension(mDefaultPaddingRes);
+                padding = defaultPadding;
+            }
+            if (paddingLeft < 0) {
+                paddingLeft = defaultPadding;
+            }
+            if (paddingRight < 0) {
+                paddingRight = defaultPadding;
+            }
+            if (paddingTop < 0) {
+                paddingTop = defaultPadding;
+            }
+            if (paddingBottom < 0) {
+                paddingBottom = defaultPadding;
             }
             if (animationPadding < 0) {
                 animationPadding = context.getResources().getDimension(mDefaultAnimationPaddingRes);
@@ -900,6 +933,26 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
+        public Builder paddingLeft(float padding) {
+            this.paddingLeft = padding;
+            return this;
+        }
+
+        public Builder paddingRight(float padding) {
+            this.paddingRight = padding;
+            return this;
+        }
+
+        public Builder paddingTop(float padding) {
+            this.paddingTop = padding;
+            return this;
+        }
+
+        public Builder paddingBottom(float padding) {
+            this.paddingBottom = padding;
+            return this;
+        }
+
         /**
          * <div class="pt">Define o padding entre a borda do Tooltip e seu conteúdo. Padrão é <tt>{@link R.dimen.simpletooltip_padding}</tt>.</div>
          *
@@ -909,6 +962,26 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder padding(@DimenRes int paddingRes) {
             this.padding = context.getResources().getDimension(paddingRes);
+            return this;
+        }
+
+        public Builder paddingLeft(@DimenRes int paddingRes) {
+            this.paddingLeft = context.getResources().getDimension(paddingRes);
+            return this;
+        }
+
+        public Builder paddingRight(@DimenRes int paddingRes) {
+            this.paddingRight = context.getResources().getDimension(paddingRes);
+            return this;
+        }
+
+        public Builder paddingTop(@DimenRes int paddingRes) {
+            this.paddingTop = context.getResources().getDimension(paddingRes);
+            return this;
+        }
+
+        public Builder paddingBottom(@DimenRes int paddingRes) {
+            this.paddingBottom = context.getResources().getDimension(paddingRes);
             return this;
         }
 
