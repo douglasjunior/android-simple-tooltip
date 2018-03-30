@@ -222,9 +222,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
         mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset);
         if (mOverlayMatchParent)
-            mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         else
-            mOverlay.setLayoutParams(new ViewGroup.LayoutParams(200, 200));
+            mOverlay.setLayoutParams(new ViewGroup.LayoutParams(mRootView.getWidth(), mRootView.getHeight()));
         mOverlay.setOnTouchListener(mOverlayTouchListener);
         mRootView.addView(mOverlay);
     }
