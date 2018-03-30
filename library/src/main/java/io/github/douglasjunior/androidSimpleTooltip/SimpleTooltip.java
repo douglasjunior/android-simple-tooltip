@@ -120,7 +120,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private int mHighlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
     private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
-    private boolean ignoreOverlay = false;
+    private boolean mIgnoreOverlay;
 
 
     private SimpleTooltip(Builder builder) {
@@ -152,6 +152,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mFocusable = builder.focusable;
         mRootView = SimpleTooltipUtils.findFrameLayout(mAnchorView);
         mHighlightShape = builder.highlightShape;
+        mIgnoreOverlay = builder.ignoreOverlay;
         this.width = builder.width;
         this.height = builder.height;
         init();
@@ -217,7 +218,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void createOverlay() {
-        if (ignoreOverlay) {
+        if (mIgnoreOverlay) {
             return;
         }
         mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset);
