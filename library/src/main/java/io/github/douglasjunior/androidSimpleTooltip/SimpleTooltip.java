@@ -120,6 +120,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private int mHighlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
     private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private boolean mIgnoreOverlay;
 
 
     private SimpleTooltip(Builder builder) {
@@ -151,6 +152,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mFocusable = builder.focusable;
         mRootView = SimpleTooltipUtils.findFrameLayout(mAnchorView);
         mHighlightShape = builder.highlightShape;
+        mIgnoreOverlay = builder.ignoreOverlay;
         this.width = builder.width;
         this.height = builder.height;
         init();
@@ -216,6 +218,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     }
 
     private void createOverlay() {
+        if (mIgnoreOverlay) {
+            return;
+        }
         mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset);
         if (mOverlayMatchParent)
             mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -567,6 +572,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
         private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        private boolean ignoreOverlay = false;
 
         public Builder(Context context) {
             this.context = context;
@@ -1079,6 +1085,16 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder overlayMatchParent(boolean overlayMatchParent) {
             this.overlayMatchParent = overlayMatchParent;
+            return this;
+        }
+
+        /**
+         * As some dialogs have a problem when displaying tooltip (like expand/subtract) container, this ignores overlay adding altogether.
+         * @param ignoreOverlay flag to ignore overlay adding
+         * @return this
+         */
+        public Builder ignoreOverlay(boolean ignoreOverlay) {
+            this.ignoreOverlay = ignoreOverlay;
             return this;
         }
     }
