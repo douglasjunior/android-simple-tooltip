@@ -10,4 +10,7 @@
 
     </style>
 
+    <style name="simpletooltip_default_popup_animation">
+    </style>
+
 </resources>

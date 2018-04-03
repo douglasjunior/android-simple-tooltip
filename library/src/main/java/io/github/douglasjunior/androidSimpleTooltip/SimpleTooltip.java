@@ -43,6 +43,7 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
+import android.support.annotation.StyleRes;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -94,6 +95,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final boolean mModal;
     private final View mContentView;
     private View mContentLayout;
+    @StyleRes
+    private final int mPopupWindowAnimationStyle;
     @IdRes
     private final int mTextViewId;
     private final CharSequence mText;
@@ -154,6 +157,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mPaddingRight = builder.paddingRight;
         mPaddingTop = builder.paddingTop;
         mPaddingBottom = builder.paddingBottom;
+        mPopupWindowAnimationStyle = builder.popupWindowAnimationStyle;
         mAnimationPadding = builder.animationPadding;
         mAnimationDuration = builder.animationDuration;
         mOnDismissListener = builder.onDismissListener;
@@ -211,8 +215,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mRootView.post(new Runnable() {
             @Override
             public void run() {
-                if (mRootView.isShown())
+                if (mRootView.isShown()) {
+                    mPopupWindow.setAnimationStyle(mPopupWindowAnimationStyle);
                     mPopupWindow.showAtLocation(mRootView, Gravity.NO_GRAVITY, mRootView.getWidth(), mRootView.getHeight());
+                }
                 else
                     Log.e(TAG, "Tooltip cannot be shown, root view is invalid or has been closed.");
             }
@@ -577,6 +583,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private OnDismissListener onDismissListener;
         private OnShowListener onShowListener;
         private long animationDuration;
+        @StyleRes
+        private int popupWindowAnimationStyle = -1;
         private int backgroundColor;
         private int textColor;
         private int arrowColor;
@@ -634,6 +642,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             }
             if (animationDuration == 0) {
                 animationDuration = context.getResources().getInteger(mDefaultAnimationDurationRes);
+            }
+            if (popupWindowAnimationStyle < 0) {
+                popupWindowAnimationStyle = R.style.simpletooltip_default_popup_animation;
             }
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
                 animated = false;
@@ -899,6 +910,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         @TargetApi(Build.VERSION_CODES.HONEYCOMB)
         public Builder animationPadding(float animationPadding) {
             this.animationPadding = animationPadding;
+            return this;
+        }
+
+        public Builder setPopupWindowAnimationStyle(@StyleRes int popupWindowAnimationStyle) {
+            this.popupWindowAnimationStyle = popupWindowAnimationStyle;
             return this;
         }
 
