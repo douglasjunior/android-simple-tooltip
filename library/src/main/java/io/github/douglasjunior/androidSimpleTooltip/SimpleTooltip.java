@@ -117,9 +117,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final float mArrowHeight;
     private final boolean mFocusable;
     private boolean dismissed = false;
-    private int mHighlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
-    private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
-    private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+    private int mHighlightShape;
+    private int width;
+    private int height;
     private boolean mIgnoreOverlay;
 
 
@@ -166,8 +166,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private void configPopupWindow() {
         mPopupWindow = new PopupWindow(mContext, null, mDefaultPopupWindowStyleRes);
         mPopupWindow.setOnDismissListener(this);
-        mPopupWindow.setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        mPopupWindow.setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setWidth(width);
+        mPopupWindow.setHeight(height);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setTouchable(true);
@@ -307,7 +307,6 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             linearLayout.addView(mContentView);
         }
 
-//        LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 0);
         LinearLayout.LayoutParams contentViewParams = new LinearLayout.LayoutParams(width, height, 0);
         contentViewParams.gravity = Gravity.CENTER;
         mContentView.setLayoutParams(contentViewParams);
