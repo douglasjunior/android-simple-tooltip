@@ -121,6 +121,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private int width;
     private int height;
     private boolean mIgnoreOverlay;
+    private float elevation;
 
 
     private SimpleTooltip(Builder builder) {
@@ -155,6 +156,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mIgnoreOverlay = builder.ignoreOverlay;
         this.width = builder.width;
         this.height = builder.height;
+        this.elevation = builder.elevation;
         init();
     }
 
@@ -313,6 +315,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         mContentLayout = linearLayout;
         mContentLayout.setVisibility(View.INVISIBLE);
+        mContentLayout.setElevation(elevation);
         mPopupWindow.setContentView(mContentLayout);
     }
 
@@ -572,6 +575,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         private boolean ignoreOverlay = false;
+        private float elevation = 0f;
 
         public Builder(Context context) {
             this.context = context;
@@ -1094,6 +1098,16 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder ignoreOverlay(boolean ignoreOverlay) {
             this.ignoreOverlay = ignoreOverlay;
+            return this;
+        }
+
+        /**
+         * Adds elevation to the tooltip. Only works for 21+
+         * @param elevation
+         * @return this
+         */
+        public Builder setElevation(float elevation) {
+            this.elevation = elevation;
             return this;
         }
     }
