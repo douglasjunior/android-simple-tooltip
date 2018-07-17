@@ -48,18 +48,21 @@ public class OverlayView extends View {
     public static final int HIGHLIGHT_SHAPE_RECTANGULAR = 1;
     private static final int mDefaultOverlayAlphaRes = R.integer.simpletooltip_overlay_alpha;
 
+
     private View mAnchorView;
     private Bitmap bitmap;
 
     private boolean invalidated = true;
     private final int highlightShape;
     private final float mOffset;
+    private final int overlayWindowBackground;
 
-    OverlayView(Context context, View anchorView, int highlightShape, float offset) {
+    OverlayView(Context context, View anchorView, int highlightShape, float offset,int overlayWindowBackground) {
         super(context);
         this.mAnchorView = anchorView;
         this.mOffset = offset;
         this.highlightShape = highlightShape;
+        this.overlayWindowBackground=overlayWindowBackground;
     }
 
     @Override
@@ -85,7 +88,7 @@ public class OverlayView extends View {
         RectF outerRectangle = new RectF(0, 0, width, height);
 
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setColor(Color.BLACK);
+        paint.setColor(overlayWindowBackground);
         paint.setAntiAlias(true);
         paint.setAlpha(getResources().getInteger(mDefaultOverlayAlphaRes));
         osCanvas.drawRect(outerRectangle, paint);
