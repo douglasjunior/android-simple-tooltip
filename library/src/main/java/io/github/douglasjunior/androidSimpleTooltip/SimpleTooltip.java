@@ -362,8 +362,15 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mRootView = null;
         mOverlay = null;
 
-        if (mOnDismissListener != null && dismissedOnClick)
-            mOnDismissListener.onDismiss(this);
+        if (mOnDismissListener != null) {
+            if(mDismissOnInsideTouch){
+                if(dismissedOnClick){
+                    mOnDismissListener.onDismiss(this);
+                }
+            }else{
+                mOnDismissListener.onDismiss(this);
+            }
+        }
         mOnDismissListener = null;
         dismissedOnClick = false;
 
