@@ -116,7 +116,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final float mArrowWidth;
     private final float mArrowHeight;
     private final boolean mFocusable;
-    private boolean dismissed = false;
+    private boolean dismissed = false, dismissedOnClick;
     private int mHighlightShape;
     private int width;
     private int height;
@@ -183,6 +183,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 } else if (!mDismissOnOutsideTouch && event.getAction() == MotionEvent.ACTION_OUTSIDE) {
                     return true;
                 } else if ((event.getAction() == MotionEvent.ACTION_DOWN) && mDismissOnInsideTouch) {
+                    dismissedOnClick = true;
                     dismiss();
                     return true;
                 }
@@ -361,9 +362,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mRootView = null;
         mOverlay = null;
 
-        if (mOnDismissListener != null)
+        if (mOnDismissListener != null && dismissedOnClick)
             mOnDismissListener.onDismiss(this);
         mOnDismissListener = null;
+        dismissedOnClick = false;
 
         SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mLocationLayoutListener);
         SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mArrowLayoutListener);
