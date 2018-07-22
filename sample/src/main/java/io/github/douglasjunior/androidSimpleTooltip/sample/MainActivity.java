@@ -25,6 +25,7 @@
 package io.github.douglasjunior.androidSimpleTooltip.sample;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -117,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .gravity(Gravity.START)
                     .animated(true)
                     .transparentOverlay(false)
+                    .overlayWindowBackgroundColor(Color.BLACK)
                     .build()
                     .show();
 

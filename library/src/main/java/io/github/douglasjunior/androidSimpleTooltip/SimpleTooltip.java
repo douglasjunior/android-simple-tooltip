@@ -96,6 +96,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private View mContentLayout;
     @IdRes
     private final int mTextViewId;
+    private final int mOverlayWindowBackgroundColor;
     private final CharSequence mText;
     private final View mAnchorView;
     private final boolean mTransparentOverlay;
@@ -126,6 +127,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private SimpleTooltip(Builder builder) {
         mContext = builder.context;
         mGravity = builder.gravity;
+        mOverlayWindowBackgroundColor=builder.overlayWindowBackgroundColor;
         mArrowDirection = builder.arrowDirection;
         mDismissOnInsideTouch = builder.dismissOnInsideTouch;
         mDismissOnOutsideTouch = builder.dismissOnOutsideTouch;
@@ -221,7 +223,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         if (mIgnoreOverlay) {
             return;
         }
-        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset);
+        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset,mOverlayWindowBackgroundColor);
         if (mOverlayMatchParent)
             mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         else
@@ -572,6 +574,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         private boolean ignoreOverlay = false;
+        private int overlayWindowBackgroundColor=0;
 
         public Builder(Context context) {
             this.context = context;
@@ -582,6 +585,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             if (backgroundColor == 0) {
                 backgroundColor = SimpleTooltipUtils.getColor(context, mDefaultBackgroundColorRes);
             }
+
+            if (overlayWindowBackgroundColor == 0) {
+                overlayWindowBackgroundColor = Color.BLACK;
+            }
+
             if (textColor == 0) {
                 textColor = SimpleTooltipUtils.getColor(context, mDefaultTextColorRes);
             }
@@ -949,6 +957,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         public Builder backgroundColor(@ColorInt int backgroundColor) {
             this.backgroundColor = backgroundColor;
+            return this;
+        }
+
+        public Builder overlayWindowBackgroundColor(@ColorInt int overlayWindowBackgroundColor) {
+            this.overlayWindowBackgroundColor = overlayWindowBackgroundColor;
             return this;
         }
 
