@@ -357,11 +357,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             }
         }
 
-        if (mRootView != null && mOverlay != null) {
-            mRootView.removeView(mOverlay);
-        }
-        mRootView = null;
-        mOverlay = null;
+
 
         if (mOnDismissListener != null)
             mOnDismissListener.onDismiss(this);
@@ -373,7 +369,18 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mAnimationLayoutListener);
         SimpleTooltipUtils.removeOnGlobalLayoutListener(mPopupWindow.getContentView(), mAutoDismissLayoutListener);
 
-        mPopupWindow = null;
+        mRootView.post(new Runnable() {
+            @Override
+            public void run() {
+                if (mRootView != null && mOverlay != null) {
+                    mRootView.removeView(mOverlay);
+                }
+                mRootView = null;
+                mOverlay = null;
+                mPopupWindow = null;
+            }
+        });
+
     }
 
     private final View.OnTouchListener mOverlayTouchListener = new View.OnTouchListener() {
