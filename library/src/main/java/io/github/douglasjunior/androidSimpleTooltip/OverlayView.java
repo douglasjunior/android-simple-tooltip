@@ -56,13 +56,15 @@ public class OverlayView extends View {
     private final int highlightShape;
     private final float mOffset;
     private final int overlayWindowBackground;
+    private final boolean mShowHighlight;
 
-    OverlayView(Context context, View anchorView, int highlightShape, float offset,int overlayWindowBackground) {
+    OverlayView(Context context, View anchorView, int highlightShape, float offset, int overlayWindowBackground, boolean showHighlight) {
         super(context);
         this.mAnchorView = anchorView;
         this.mOffset = offset;
         this.highlightShape = highlightShape;
         this.overlayWindowBackground=overlayWindowBackground;
+        this.mShowHighlight = showHighlight;
     }
 
     @Override
@@ -96,18 +98,20 @@ public class OverlayView extends View {
         paint.setColor(Color.TRANSPARENT);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_OUT));
 
-        RectF anchorRecr = SimpleTooltipUtils.calculeRectInWindow(mAnchorView);
-        RectF overlayRecr = SimpleTooltipUtils.calculeRectInWindow(this);
+        if(mShowHighlight) {
+            RectF anchorRecr = SimpleTooltipUtils.calculeRectInWindow(mAnchorView);
+            RectF overlayRecr = SimpleTooltipUtils.calculeRectInWindow(this);
 
-        float left = anchorRecr.left - overlayRecr.left;
-        float top = anchorRecr.top - overlayRecr.top;
+            float left = anchorRecr.left - overlayRecr.left;
+            float top = anchorRecr.top - overlayRecr.top;
 
-        RectF rect = new RectF(left - mOffset, top - mOffset, left + mAnchorView.getMeasuredWidth() + mOffset, top + mAnchorView.getMeasuredHeight() + mOffset);
+            RectF rect = new RectF(left - mOffset, top - mOffset, left + mAnchorView.getMeasuredWidth() + mOffset, top + mAnchorView.getMeasuredHeight() + mOffset);
 
-        if (highlightShape == HIGHLIGHT_SHAPE_RECTANGULAR) {
-            osCanvas.drawRect(rect, paint);
-        } else {
-            osCanvas.drawOval(rect, paint);
+            if (highlightShape == HIGHLIGHT_SHAPE_RECTANGULAR) {
+                osCanvas.drawRect(rect, paint);
+            } else {
+                osCanvas.drawOval(rect, paint);
+            }
         }
 
         invalidated = false;

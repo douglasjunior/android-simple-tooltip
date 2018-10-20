@@ -119,6 +119,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private final boolean mFocusable;
     private boolean dismissed = false;
     private int mHighlightShape;
+    private final boolean mShowHighlight;
     private int width;
     private int height;
     private boolean mIgnoreOverlay;
@@ -154,6 +155,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mFocusable = builder.focusable;
         mRootView = SimpleTooltipUtils.findFrameLayout(mAnchorView);
         mHighlightShape = builder.highlightShape;
+        mShowHighlight = builder.showHighlight;
         mIgnoreOverlay = builder.ignoreOverlay;
         this.width = builder.width;
         this.height = builder.height;
@@ -223,7 +225,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         if (mIgnoreOverlay) {
             return;
         }
-        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset,mOverlayWindowBackgroundColor);
+        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset,mOverlayWindowBackgroundColor, mShowHighlight);
         if (mOverlayMatchParent)
             mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         else
@@ -571,6 +573,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private float arrowWidth;
         private boolean focusable;
         private int highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
+        private boolean showHighlight = false;
         private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         private boolean ignoreOverlay = false;
@@ -1065,6 +1068,18 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder highlightShape(int highlightShape) {
             this.highlightShape = highlightShape;
+            return this;
+        }
+
+        /**
+         * <div class="en">Show highlight or not. Default is <tt>true</tt>.</div>
+         *
+         * @param showHighlight <div class="en">Can enable/disable highlighting anchor view.</div>
+         *
+         * @return this
+         */
+        public Builder showHighlight(boolean showHighlight) {
+            this.showHighlight = showHighlight;
             return this;
         }
 
