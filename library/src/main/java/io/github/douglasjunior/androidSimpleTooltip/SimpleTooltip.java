@@ -573,7 +573,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private float arrowWidth;
         private boolean focusable;
         private int highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
-        private boolean showHighlight = false;
+        private boolean showHighlight = true;
         private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         private boolean ignoreOverlay = false;
