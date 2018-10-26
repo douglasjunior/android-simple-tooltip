@@ -215,7 +215,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
     private void verifyDismissed() {
         if (dismissed) {
-            throw new IllegalArgumentException("Tooltip has ben dismissed.");
+            throw new IllegalArgumentException("Tooltip has been dismissed.");
         }
     }
 
