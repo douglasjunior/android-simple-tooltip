@@ -32,7 +32,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -64,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_outside).setOnClickListener(this);
         findViewById(R.id.btn_inside).setOnClickListener(this);
         findViewById(R.id.btn_inside_modal).setOnClickListener(this);
+        findViewById(R.id.btn_absorb).setOnClickListener(this);
         findViewById(R.id.btn_modal_custom).setOnClickListener(this);
         findViewById(R.id.btn_no_arrow).setOnClickListener(this);
         findViewById(R.id.btn_custom_arrow).setOnClickListener(this);
@@ -261,6 +261,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .transparentOverlay(false)
                     .highlightShape(OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR)
                     .overlayOffset(0)
+                    .build()
+                    .show();
+        } else if (v.getId() == R.id.btn_absorb) {
+            new SimpleTooltip.Builder(this)
+                    .anchorView(v)
+                    .text(R.string.btn_absorb)
+                    .gravity(Gravity.TOP)
+                    .dismissOnOutsideTouch(true)
+                    .absorbOutsideTouch(true)
                     .build()
                     .show();
         }

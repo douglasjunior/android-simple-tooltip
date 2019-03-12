@@ -9,6 +9,7 @@
     <string name="btn_inside">Click inside</string>
     <string name="btn_inside_modal">Click inside (Modal)</string>
     <string name="btn_modal_custom">Modal custom.</string>
+    <string name="btn_absorb">Absorb outside touch</string>
     <string name="btn_no_arrow">No arrow</string>
     <string name="btn_custom_arrow">Arrow custom.</string>
     <string name="btn_next">NEXT</string>

@@ -122,6 +122,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private int width;
     private int height;
     private boolean mIgnoreOverlay;
+    private final boolean mAbsorbOutsideTouch;
 
 
     private SimpleTooltip(Builder builder) {
@@ -132,6 +133,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mDismissOnInsideTouch = builder.dismissOnInsideTouch;
         mDismissOnOutsideTouch = builder.dismissOnOutsideTouch;
         mModal = builder.modal;
+        mAbsorbOutsideTouch = builder.absorbOutsideTouch;
         mContentView = builder.contentView;
         mTextViewId = builder.textViewId;
         mText = builder.text;
@@ -179,7 +181,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 final int x = (int) event.getX();
                 final int y = (int) event.getY();
 
-                if (!mDismissOnOutsideTouch && (event.getAction() == MotionEvent.ACTION_DOWN)
+                if (!mModal && mDismissOnOutsideTouch && mAbsorbOutsideTouch && (event.getAction() == MotionEvent.ACTION_OUTSIDE)) {
+                    return true;
+                } else if (!mDismissOnOutsideTouch && (event.getAction() == MotionEvent.ACTION_DOWN)
                         && ((x < 0) || (x >= mContentLayout.getMeasuredWidth()) || (y < 0) || (y >= mContentLayout.getMeasuredHeight()))) {
                     return true;
                 } else if (!mDismissOnOutsideTouch && event.getAction() == MotionEvent.ACTION_OUTSIDE) {
@@ -380,7 +384,20 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            return mModal;
+            if (!mModal && mDismissOnOutsideTouch && mAbsorbOutsideTouch) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    dismiss();
+                } else {
+                    mContentView.setVisibility(View.INVISIBLE);
+                    mArrowView.setVisibility(View.INVISIBLE);
+                    if (mOverlay != null) {
+                        mOverlay.setVisibility(View.INVISIBLE);
+                    }
+                }
+                return true;
+            } else {
+                return mModal;
+            }
         }
     };
 
@@ -556,6 +573,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private boolean overlayMatchParent = true;
         private float maxWidth;
         private boolean showArrow = true;
+        private boolean absorbOutsideTouch = false;
         private Drawable arrowDrawable;
         private boolean animated = false;
         private float margin = -1;
@@ -1107,6 +1125,17 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder ignoreOverlay(boolean ignoreOverlay) {
             this.ignoreOverlay = ignoreOverlay;
+            return this;
+        }
+
+        /**
+         * On outside touch tooltip dismissal, prevents the touch event from propagating to other views. Works only in conjunction
+         * with dismissOnOutsideTouch flag.
+         * @param absorbOutsideTouch flag to indicate absorbing behavior
+         * @return this
+         */
+        public Builder absorbOutsideTouch(boolean absorbOutsideTouch) {
+            this.absorbOutsideTouch = absorbOutsideTouch;
             return this;
         }
     }
