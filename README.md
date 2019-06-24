@@ -86,7 +86,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
 
     ```javascript
     dependencies {
-        compile 'com.github.douglasjunior:android-simple-tooltip:0.2.2'
+        implementation 'com.github.douglasjunior:android-simple-tooltip:0.2.2'
     }
     ```
 
@@ -94,7 +94,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
 
 ```javascript
 dependencies {
-    compile('com.github.douglasjunior:android-simple-tooltip:master-SNAPSHOT') {
+    implementation('com.github.douglasjunior:android-simple-tooltip:master-SNAPSHOT') {
         changing = true // Gradle will then check for updates every 24 hours
     }
 }
