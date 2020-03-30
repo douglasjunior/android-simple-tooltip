@@ -2,7 +2,7 @@
 
 [PT](https://github.com/douglasjunior/android-simple-tooltip/blob/master/README.pt.md)
 
-[![Licence MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE)
+[![License MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE)
 [![Build Status](https://travis-ci.org/douglasjunior/android-simple-tooltip.svg?branch=master)](https://travis-ci.org/douglasjunior/android-simple-tooltip)
 [![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip)
 [![Downloads](https://jitpack.io/v/douglasjunior/android-simple-tooltip/month.svg)](#download)
@@ -42,7 +42,7 @@ new SimpleTooltip.Builder(this)
     .show();
 ```
 
-### Resources
+### Resources 
 
 ```xml
 <color name="simpletooltip_background">@color/colorAccent</color>
@@ -121,7 +121,7 @@ Before submit your PR, run the gradle check.
 
 3. From API 24, Android has changed the behavior of `PopupWindow` in relation to the [`setClippingEnabled`](https://developer.android.com/reference/android/widget/PopupWindow.html#setClippingEnabled(boolean)) property, which causes the Popup to be cut off. [Read more](https://github.com/douglasjunior/android-simple-tooltip/issues/40).
 
-## Licence
+## License
 
 ```
 The MIT License (MIT)
@@ -129,4 +129,4 @@ The MIT License (MIT)
 Copyright (c) 2016 Douglas Nassif Roma Junior
 ```
 
-See the full [licence file](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE).
+See the full [license file](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE).
