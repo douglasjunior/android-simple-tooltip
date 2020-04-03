@@ -36,6 +36,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DimenRes;
 import android.support.annotation.Dimension;
@@ -73,8 +74,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private static final int mDefaultPopupWindowStyleRes = android.R.attr.popupWindowStyle;
     private static final int mDefaultTextAppearanceRes = R.style.simpletooltip_default;
     private static final int mDefaultBackgroundColorRes = R.color.simpletooltip_background;
-    private static final int mDefaultTextColorRes = R.color.simpletooltip_text;
-    private static final int mDefaultArrowColorRes = R.color.simpletooltip_arrow;
+    private static final int mDefaultTextColorRes = R.color.white_e6;
+    private static final int mDefaultArrowColorRes = R.color.black_e6;
+    private static final int mDefaultArrowStrokeColorRes = R.color.white_e6;
+    private static final int mDefaultTextBackGround = R.drawable.bg_nudge_pop_up;
+    private static final int mDefaultTextSize = R.dimen.simpletooltip_text_size;
     private static final int mDefaultMarginRes = R.dimen.simpletooltip_margin;
     private static final int mDefaultPaddingRes = R.dimen.simpletooltip_padding;
     private static final int mDefaultAnimationPaddingRes = R.dimen.simpletooltip_animation_padding;
@@ -122,12 +126,17 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private int width;
     private int height;
     private boolean mIgnoreOverlay;
+    private Drawable mTextBackground;
+    private PopUpActionListener popUpActionListener = null;
+    private int xOffSetPopUp, yOffSetPopUp;
+    private boolean isAnimationDisplayed;
+    private int arrowGravityBasedMargin = (int) (-SimpleTooltipUtils.pxFromDp(1f)) - 2;
 
 
     private SimpleTooltip(Builder builder) {
         mContext = builder.context;
         mGravity = builder.gravity;
-        mOverlayWindowBackgroundColor=builder.overlayWindowBackgroundColor;
+        mOverlayWindowBackgroundColor = builder.overlayWindowBackgroundColor;
         mArrowDirection = builder.arrowDirection;
         mDismissOnInsideTouch = builder.dismissOnInsideTouch;
         mDismissOnOutsideTouch = builder.dismissOnOutsideTouch;
@@ -155,14 +164,18 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mRootView = SimpleTooltipUtils.findFrameLayout(mAnchorView);
         mHighlightShape = builder.highlightShape;
         mIgnoreOverlay = builder.ignoreOverlay;
+        mTextBackground = builder.textBackground;
         this.width = builder.width;
         this.height = builder.height;
+        this.xOffSetPopUp = builder.xOffSetPopUp;
+        this.yOffSetPopUp = builder.yOffSetPopUp;
         init();
     }
 
     private void init() {
         configPopupWindow();
         configContentView();
+        handleAnchorViewTouch();
     }
 
     private void configPopupWindow() {
@@ -269,11 +282,10 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private void configContentView() {
         if (mContentView instanceof TextView) {
             TextView tv = (TextView) mContentView;
+            tv.setBackground(mTextBackground);
+            tv.setTextSize(SimpleTooltipUtils.getDimen(mContext, mDefaultTextSize));
+            tv.setTextColor(SimpleTooltipUtils.getColor(mContext, mDefaultTextColorRes));
             tv.setText(mText);
-        } else {
-            TextView tv = (TextView) mContentView.findViewById(mTextViewId);
-            if (tv != null)
-                tv.setText(mText);
         }
 
         mContentView.setPadding((int) mPadding, (int) mPadding, (int) mPadding, (int) mPadding);
@@ -282,7 +294,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         linearLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         linearLayout.setOrientation(mArrowDirection == ArrowDrawable.LEFT || mArrowDirection == ArrowDrawable.RIGHT ? LinearLayout.HORIZONTAL : LinearLayout.VERTICAL);
         int layoutPadding = (int) (mAnimated ? mAnimationPadding : 0);
-        linearLayout.setPadding(layoutPadding, layoutPadding, layoutPadding, layoutPadding);
+        linearLayout.setPadding(16, layoutPadding, 16, layoutPadding);
 
         if (mShowArrow) {
             mArrowView = new ImageView(mContext);
@@ -296,6 +308,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             }
 
             arrowLayoutParams.gravity = Gravity.CENTER;
+            setArrowMargin(arrowLayoutParams);
             mArrowView.setLayoutParams(arrowLayoutParams);
 
             if (mArrowDirection == ArrowDrawable.BOTTOM || mArrowDirection == ArrowDrawable.RIGHT) {
@@ -316,6 +329,47 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mContentLayout = linearLayout;
         mContentLayout.setVisibility(View.INVISIBLE);
         mPopupWindow.setContentView(mContentLayout);
+    }
+
+    /**
+     * Margin for the arrow to overlap the boundary of the popUp so that
+     * it appears to be emerging out of it.
+     **/
+    private void setArrowMargin(LinearLayout.LayoutParams arrowLayoutParams) {
+        switch (mArrowDirection) {
+            case ArrowDrawable.TOP:
+                arrowLayoutParams.setMargins(0, 0, 0, arrowGravityBasedMargin);
+                break;
+            case ArrowDrawable.BOTTOM:
+                arrowLayoutParams.setMargins(0, arrowGravityBasedMargin, 0, 0);
+                break;
+            case ArrowDrawable.LEFT:
+                arrowLayoutParams.setMargins(0, 0, arrowGravityBasedMargin, 0);
+                break;
+            case ArrowDrawable.RIGHT:
+                arrowLayoutParams.setMargins(arrowGravityBasedMargin, 0, 0, 0);
+                break;
+        }
+    }
+
+    private void handleAnchorViewTouch() {
+        mAnchorView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mAnchorView.performClick();
+                if (popUpActionListener != null) popUpActionListener.onPopUpClicked();
+                return true;
+            }
+        });
+    }
+
+    public void setPopUpActionListener(PopUpActionListener popUpActionListener) {
+        this.popUpActionListener = popUpActionListener;
+    }
+
+    public interface PopUpActionListener {
+        void onPopUpClicked();
+        void onPopUpDismissed();
     }
 
     public void dismiss() {
@@ -347,14 +401,12 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     @Override
     public void onDismiss() {
         dismissed = true;
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            if (mAnimator != null) {
-                mAnimator.removeAllListeners();
-                mAnimator.end();
-                mAnimator.cancel();
-                mAnimator = null;
-            }
+        if (popUpActionListener != null) popUpActionListener.onPopUpDismissed();
+        if (mAnimator != null) {
+            mAnimator.removeAllListeners();
+            mAnimator.end();
+            mAnimator.cancel();
+            mAnimator = null;
         }
 
         if (mRootView != null && mOverlay != null) {
@@ -398,13 +450,25 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
             SimpleTooltipUtils.removeOnGlobalLayoutListener(popup.getContentView(), this);
             popup.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mArrowLayoutListener);
-            PointF location = calculePopupLocation();
-            popup.setClippingEnabled(true);
-            popup.update((int) location.x, (int) location.y, popup.getWidth(), popup.getHeight());
-            popup.getContentView().requestLayout();
+            updatePopUpLocation();
             createOverlay();
         }
     };
+
+    private void updatePopUpLocation() {
+        if (isAnchorViewRemoved()) {
+            dismiss();
+            return;
+        }
+        PointF location = calculePopupLocation();
+        mPopupWindow.setClippingEnabled(true);
+        mPopupWindow.update((int) location.x + xOffSetPopUp, (int) location.y + yOffSetPopUp, mPopupWindow.getWidth(), mPopupWindow.getHeight());
+        mPopupWindow.getContentView().requestLayout();
+    }
+
+    private boolean isAnchorViewRemoved() {
+        return mRootView.findViewById(mAnchorView.getId()) == null;
+    }
 
     private final ViewTreeObserver.OnGlobalLayoutListener mArrowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
@@ -416,43 +480,45 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
             popup.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mAnimationLayoutListener);
             popup.getContentView().getViewTreeObserver().addOnGlobalLayoutListener(mShowLayoutListener);
-            if (mShowArrow) {
-                RectF achorRect = SimpleTooltipUtils.calculeRectOnScreen(mAnchorView);
-                RectF contentViewRect = SimpleTooltipUtils.calculeRectOnScreen(mContentLayout);
-                float x, y;
-                if (mArrowDirection == ArrowDrawable.TOP || mArrowDirection == ArrowDrawable.BOTTOM) {
-                    x = mContentLayout.getPaddingLeft() + SimpleTooltipUtils.pxFromDp(2);
-                    float centerX = (contentViewRect.width() / 2f) - (mArrowView.getWidth() / 2f);
-                    float newX = centerX - (contentViewRect.centerX() - achorRect.centerX());
-                    if (newX > x) {
-                        if (newX + mArrowView.getWidth() + x > contentViewRect.width()) {
-                            x = contentViewRect.width() - mArrowView.getWidth() - x;
-                        } else {
-                            x = newX;
-                        }
-                    }
-                    y = mArrowView.getTop();
-                    y = y + (mArrowDirection == ArrowDrawable.BOTTOM ? -1 : +1);
-                } else {
-                    y = mContentLayout.getPaddingTop() + SimpleTooltipUtils.pxFromDp(2);
-                    float centerY = (contentViewRect.height() / 2f) - (mArrowView.getHeight() / 2f);
-                    float newY = centerY - (contentViewRect.centerY() - achorRect.centerY());
-                    if (newY > y) {
-                        if (newY + mArrowView.getHeight() + y > contentViewRect.height()) {
-                            y = contentViewRect.height() - mArrowView.getHeight() - y;
-                        } else {
-                            y = newY;
-                        }
-                    }
-                    x = mArrowView.getLeft();
-                    x = x + (mArrowDirection == ArrowDrawable.RIGHT ? -1 : +1);
-                }
-                SimpleTooltipUtils.setX(mArrowView, (int) x);
-                SimpleTooltipUtils.setY(mArrowView, (int) y);
-            }
-            popup.getContentView().requestLayout();
+            if (mShowArrow) updateArrowLocation();
         }
     };
+
+    private void updateArrowLocation() {
+        RectF achorRect = SimpleTooltipUtils.calculeRectOnScreen(mAnchorView);
+        RectF contentViewRect = SimpleTooltipUtils.calculeRectOnScreen(mContentLayout);
+        float x, y;
+        if (mArrowDirection == ArrowDrawable.TOP || mArrowDirection == ArrowDrawable.BOTTOM) {
+            x = mContentLayout.getPaddingLeft() + SimpleTooltipUtils.pxFromDp(2);
+            float centerX = (contentViewRect.width() / 2f) - (mArrowView.getWidth() / 2f);
+            float newX = centerX - (contentViewRect.centerX() - achorRect.centerX());
+            if (newX > x) {
+                if (newX + mArrowView.getWidth() + x > contentViewRect.width()) {
+                    x = contentViewRect.width() - mArrowView.getWidth() - x;
+                } else {
+                    x = newX;
+                }
+            }
+            y = mArrowView.getTop();
+            y = y + (mArrowDirection == ArrowDrawable.BOTTOM ? -1 : +1);
+        } else {
+            y = mContentLayout.getPaddingTop() + SimpleTooltipUtils.pxFromDp(2);
+            float centerY = (contentViewRect.height() / 2f) - (mArrowView.getHeight() / 2f);
+            float newY = centerY - (contentViewRect.centerY() - achorRect.centerY());
+            if (newY > y) {
+                if (newY + mArrowView.getHeight() + y > contentViewRect.height()) {
+                    y = contentViewRect.height() - mArrowView.getHeight() - y;
+                } else {
+                    y = newY;
+                }
+            }
+            x = mArrowView.getLeft();
+            x = x + (mArrowDirection == ArrowDrawable.RIGHT ? -1 : +1);
+        }
+        SimpleTooltipUtils.setX(mArrowView, (int) x);
+        SimpleTooltipUtils.setY(mArrowView, (int) y);
+        mPopupWindow.getContentView().requestLayout();
+    }
 
     private final ViewTreeObserver.OnGlobalLayoutListener mShowLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
@@ -467,8 +533,30 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             mOnShowListener = null;
 
             mContentLayout.setVisibility(View.VISIBLE);
+            waitAndRenderArrow();
         }
     };
+
+    /**
+     * waiting for the position of the popUp to be fixed so that the arrow
+     * is attached at the right coordinate.
+     */
+    private void waitAndRenderArrow() {
+
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updatePopUpLocation();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mShowArrow) updateArrowLocation();
+                    }
+                }, 100);
+            }
+        }, 300);
+    }
 
     private final ViewTreeObserver.OnGlobalLayoutListener mAnimationLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
@@ -478,7 +566,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
             SimpleTooltipUtils.removeOnGlobalLayoutListener(popup.getContentView(), this);
 
-            if (mAnimated) startAnimation();
+            if (mAnimated && !isAnimationDisplayed) startAnimation();
 
             popup.getContentView().requestLayout();
         }
@@ -506,6 +594,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 }
             }
         });
+        isAnimationDisplayed = true;
         mAnimator.start();
     }
 
@@ -567,6 +656,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int backgroundColor;
         private int textColor;
         private int arrowColor;
+        private int arrowStrokeColor;
         private float arrowHeight;
         private float arrowWidth;
         private boolean focusable;
@@ -574,7 +664,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         private boolean ignoreOverlay = false;
-        private int overlayWindowBackgroundColor=0;
+        private int overlayWindowBackgroundColor = 0;
+        private Drawable textBackground = null;
+        private int xOffSetPopUp, yOffSetPopUp;
 
         public Builder(Context context) {
             this.context = context;
@@ -603,11 +695,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             if (arrowColor == 0) {
                 arrowColor = SimpleTooltipUtils.getColor(context, mDefaultArrowColorRes);
             }
+            if (arrowStrokeColor == 0) {
+                arrowStrokeColor = SimpleTooltipUtils.getColor(context, mDefaultArrowStrokeColorRes);
+            }
             if (margin < 0) {
                 margin = context.getResources().getDimension(mDefaultMarginRes);
             }
             if (padding < 0) {
-                padding = context.getResources().getDimension(mDefaultPaddingRes);
+                padding = SimpleTooltipUtils.getDimen(context, mDefaultPaddingRes);
             }
             if (animationPadding < 0) {
                 animationPadding = context.getResources().getDimension(mDefaultAnimationPaddingRes);
@@ -615,14 +710,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             if (animationDuration == 0) {
                 animationDuration = context.getResources().getInteger(mDefaultAnimationDurationRes);
             }
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-                animated = false;
-            }
             if (showArrow) {
                 if (arrowDirection == ArrowDrawable.AUTO)
                     arrowDirection = SimpleTooltipUtils.tooltipGravityToArrowDirection(gravity);
                 if (arrowDrawable == null)
-                    arrowDrawable = new ArrowDrawable(arrowColor, arrowDirection);
+                    arrowDrawable = new ArrowDrawable(arrowColor, arrowStrokeColor, arrowDirection);
                 if (arrowWidth == 0)
                     arrowWidth = context.getResources().getDimension(mDefaultArrowWidthRes);
                 if (arrowHeight == 0)
@@ -633,6 +725,9 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             }
             if (overlayOffset < 0) {
                 overlayOffset = context.getResources().getDimension(mDefaultOverlayOffsetRes);
+            }
+            if (textBackground == null) {
+                textBackground = SimpleTooltipUtils.getDrawable(context, mDefaultTextBackGround);
             }
             return new SimpleTooltip(this);
         }
@@ -1107,6 +1202,21 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder ignoreOverlay(boolean ignoreOverlay) {
             this.ignoreOverlay = ignoreOverlay;
+            return this;
+        }
+
+        public Builder textBackground(Drawable textBackground) {
+            this.textBackground = textBackground;
+            return this;
+        }
+
+        public Builder xOffSetPopUp(int xOffSetPopUp) {
+            this.xOffSetPopUp = xOffSetPopUp;
+            return this;
+        }
+
+        public Builder yOffSetPopUp(int yOffSetPopUp) {
+            this.yOffSetPopUp = yOffSetPopUp;
             return this;
         }
     }

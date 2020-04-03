@@ -43,13 +43,17 @@ public class ArrowDrawable extends ColorDrawable {
     public static final int LEFT = 0, TOP = 1, RIGHT = 2, BOTTOM = 3, AUTO = 4;
 
     private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint mPaintStroke = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final int mBackgroundColor;
-    private Path mPath;
+    private Path mPath, mStrokePath;
     private final int mDirection;
 
-    ArrowDrawable(@ColorInt int foregroundColor, int direction) {
+    ArrowDrawable(@ColorInt int foregroundColor, int strokeColor, int direction) {
         this.mBackgroundColor = Color.TRANSPARENT;
         this.mPaint.setColor(foregroundColor);
+        this.mPaintStroke.setColor(strokeColor);
+        this.mPaintStroke.setStyle(Paint.Style.STROKE);
+        this.mPaintStroke.setStrokeWidth(SimpleTooltipUtils.pxFromDp(1));
         this.mDirection = direction;
     }
 
@@ -61,34 +65,47 @@ public class ArrowDrawable extends ColorDrawable {
 
     private synchronized void updatePath(Rect bounds) {
         mPath = new Path();
+        mStrokePath = new Path();
 
         switch (mDirection) {
             case LEFT:
                 mPath.moveTo(bounds.width(), bounds.height());
+                mStrokePath.moveTo(bounds.width(), bounds.height());
                 mPath.lineTo(0, bounds.height() / 2);
+                mStrokePath.lineTo(0, bounds.height() / 2);
                 mPath.lineTo(bounds.width(), 0);
+                mStrokePath.lineTo(bounds.width(), 0);
                 mPath.lineTo(bounds.width(), bounds.height());
                 break;
             case TOP:
                 mPath.moveTo(0, bounds.height());
+                mStrokePath.moveTo(0, bounds.height());
                 mPath.lineTo(bounds.width() / 2, 0);
+                mStrokePath.lineTo(bounds.width() / 2, 0);
                 mPath.lineTo(bounds.width(), bounds.height());
+                mStrokePath.lineTo(bounds.width(), bounds.height());
                 mPath.lineTo(0, bounds.height());
                 break;
             case RIGHT:
                 mPath.moveTo(0, 0);
+                mStrokePath.moveTo(0,0);
                 mPath.lineTo(bounds.width(), bounds.height() / 2);
+                mStrokePath.lineTo(bounds.width(), bounds.height() / 2);
                 mPath.lineTo(0, bounds.height());
+                mStrokePath.lineTo(0, bounds.height());
                 mPath.lineTo(0, 0);
                 break;
             case BOTTOM:
                 mPath.moveTo(0, 0);
+                mStrokePath.moveTo(0, 0);
                 mPath.lineTo(bounds.width() / 2, bounds.height());
+                mStrokePath.lineTo(bounds.width() / 2, bounds.height());
                 mPath.lineTo(bounds.width(), 0);
+                mStrokePath.lineTo(bounds.width(), 0);
                 mPath.lineTo(0, 0);
                 break;
         }
-
+        mStrokePath.close();
         mPath.close();
     }
 
@@ -98,6 +115,7 @@ public class ArrowDrawable extends ColorDrawable {
         if (mPath == null)
             updatePath(getBounds());
         canvas.drawPath(mPath, mPaint);
+        canvas.drawPath(mStrokePath, mPaintStroke);
     }
 
     @Override

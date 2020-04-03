@@ -30,7 +30,9 @@ import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntegerRes;
 import android.support.annotation.StyleRes;
 import android.view.Gravity;
 import android.view.View;
@@ -155,6 +157,14 @@ public final class SimpleTooltipUtils {
             //noinspection deprecation
             return context.getResources().getColor(colorRes);
         }
+    }
+
+    public static float getDimen(Context context, @DimenRes int dimenRes) {
+        return context.getResources().getDimension(dimenRes);
+    }
+
+    public static int getInteger(Context context, @IntegerRes int integerRes) {
+        return context.getResources().getInteger(integerRes);
     }
 
     public static Drawable getDrawable(Context context, @DrawableRes int drawableRes) {

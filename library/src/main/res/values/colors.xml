@@ -11,5 +11,7 @@
     <color name="simpletooltip_background">@color/colorAccent</color>
     <color name="simpletooltip_text">@android:color/primary_text_light</color>
     <color name="simpletooltip_arrow">@color/colorAccent</color>
+    <color name="white_e6">#e6ffffff</color>
+    <color name="black_e6">#e6000000</color>
 
 </resources>

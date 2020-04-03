@@ -1,15 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 
-group = 'com.github.douglasjunior'
-
 android {
-    compileSdkVersion 24
+    compileSdkVersion 28
     buildToolsVersion '25.0.0'
 
     defaultConfig {
-        minSdkVersion 7
-        targetSdkVersion 24
+        minSdkVersion 19
+        targetSdkVersion 28
         versionCode 9
         versionName "0.2.3"
     }
