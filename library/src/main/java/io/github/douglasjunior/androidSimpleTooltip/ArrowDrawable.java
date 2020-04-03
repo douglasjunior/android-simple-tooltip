@@ -105,7 +105,6 @@ public class ArrowDrawable extends ColorDrawable {
                 mPath.lineTo(0, 0);
                 break;
         }
-        mStrokePath.close();
         mPath.close();
     }
 
