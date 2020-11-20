@@ -30,6 +30,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -38,6 +39,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -316,6 +318,24 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         mContentLayout = linearLayout;
         mContentLayout.setVisibility(View.INVISIBLE);
+
+        if (mFocusable)
+        {
+            mContentLayout.setFocusableInTouchMode(true);
+            mContentLayout.setOnKeyListener(new View.OnKeyListener()
+            {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event)
+                {
+                    if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) && event.getAction() == KeyEvent.ACTION_UP) {
+                        dismiss();
+                        return true;
+                    }
+                    return false;
+                }
+            });
+        }
+
         mPopupWindow.setContentView(mContentLayout);
     }
 
@@ -579,6 +599,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         public Builder(Context context) {
             this.context = context;
+            this.focusable = !(context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN));
         }
 
         public SimpleTooltip build() throws IllegalArgumentException {
@@ -1034,8 +1055,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Habilita o foco no conteúdo da tooltip. Padrão é <tt>false</tt>.</div>
-         * <div class="en">Enables focus in the tooltip content. Default is <tt>false</tt>.</div>
+         * <div class="pt">Habilita o foco no conteúdo da tooltip. Padrão é <tt>false</tt> em dispositivos sensíveis ao toque e <tt>true</tt> em dispositivos não sensíveis ao toque.</div>
+         * <div class="en">Enables focus in the tooltip content. Default is <tt>false</tt> on touch devices, and <tt>true</tt> on non-touch devices.</div>
          *
          * @param focusable <div class="pt">Pode receber o foco.</div>
          *                  <div class="en">Can receive focus.</div>
