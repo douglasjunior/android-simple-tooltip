@@ -208,10 +208,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mRootView.post(new Runnable() {
             @Override
             public void run() {
-                if (mRootView.isShown())
+                if (mRootView.isShown()) {
                     mPopupWindow.showAtLocation(mRootView, Gravity.NO_GRAVITY, mRootView.getWidth(), mRootView.getHeight());
-                else
+                    if (mFocusable)
+                        mContentLayout.requestFocus();
+                }
+                else {
                     Log.e(TAG, "Tooltip cannot be shown, root view is invalid or has been closed.");
+                }
             }
         });
     }
@@ -327,9 +331,16 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event)
                 {
-                    if ((keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_DPAD_CENTER) && event.getAction() == KeyEvent.ACTION_UP) {
-                        dismiss();
-                        return true;
+                    if (event.getAction() == KeyEvent.ACTION_UP) {
+                        switch (keyCode) {
+                            // The following are taken from the KeyEvent.isConfirmKey() function
+                            case KeyEvent.KEYCODE_DPAD_CENTER:
+                            case KeyEvent.KEYCODE_ENTER:
+                            case KeyEvent.KEYCODE_SPACE:
+                            case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                                dismiss();
+                                return true;
+                        }
                     }
                     return false;
                 }
