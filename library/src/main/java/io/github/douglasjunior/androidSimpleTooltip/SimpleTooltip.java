@@ -577,8 +577,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
         private boolean ignoreOverlay = false;
         private int overlayWindowBackgroundColor = 0;
-        private String fontPath;
-        private int fontSize;
+        private Typeface typeface;
+        private int textSize = 0;
 
 
         public Builder(Context context) {
@@ -603,8 +603,13 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 SimpleTooltipUtils.setTextAppearance(tv, mDefaultTextAppearanceRes);
                 tv.setBackgroundColor(backgroundColor);
                 tv.setTextColor(textColor);
-                tv.setTypeface(Typeface.createFromAsset(context.getAssets(), fontPath));
-                tv.setText(fontSize);
+
+                if (typeface != null)
+                    tv.setTypeface(typeface);
+
+                if (textSize != 0)
+                    tv.setTextSize(textSize);
+
                 contentView = tv;
             }
             if (arrowColor == 0) {
@@ -793,7 +798,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="en">Set the target <tt>{@link View}</tt> that the tooltip will point. Make sure that the anchor <tt>{@link View}</tt> shold be showing in the screen.</div>
          *
          * @param anchorView <div class="pt"><tt>View</tt> para qual o tooltip deve apontar</div>
-         *                                     <div class="en"><tt>View</tt> that the tooltip will point</div>
+         *                                                       <div class="en"><tt>View</tt> that the tooltip will point</div>
          * @return this
          */
         public Builder anchorView(View anchorView) {
@@ -962,12 +967,13 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
             return this;
         }
 
-        public Builder typeFace(String fontPath) {
-            this.fontPath = fontPath;
-            return this;
+        public Builder typeface(Typeface typeface) {
+            this.typeface = typeface;
+            return  this;
         }
-        public Builder fontSize(int fontSize) {
-            this.fontSize = fontSize;
+
+        public Builder fontSize(int textSize) {
+            this.textSize = textSize;
             return this;
         }
 
@@ -986,7 +992,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="en">Indicates whether to be generated indicative arrow. Default is <tt>true</tt>.</div>
          *
          * @param showArrow <div class="pt"><tt>true</tt> para exibir a seta, <tt>false</tt> caso contrário.</div>
-         *                                   <div class="en"><tt>true</tt> to show arrow, <tt>false</tt> otherwise.</div>
+         *                                                    <div class="en"><tt>true</tt> to show arrow, <tt>false</tt> otherwise.</div>
          * @return this
          */
         public Builder showArrow(boolean showArrow) {
@@ -1015,7 +1021,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="en">Height of the arrow. This value is automatically set in the Width or Height as the <tt>{@link android.view.Gravity}</tt>.</div>
          *
          * @param arrowHeight <div class="pt">Altura em pixels.</div>
-         *                                       <div class="en">Height in pixels.</div>
+         *                                                          <div class="en">Height in pixels.</div>
          * @return this
          * @see Builder#arrowWidth(float)
          */
@@ -1030,7 +1036,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="en">Width of the arrow. This value is automatically set in the Width or Height as the <tt>{@link android.view.Gravity}</tt>.</div>
          *
          * @param arrowWidth <div class="pt">Largura em pixels.</div>
-         *                                     <div class="en">Width in pixels.</div>
+         *                                                       <div class="en">Width in pixels.</div>
          * @return this
          */
         public Builder arrowWidth(float arrowWidth) {
@@ -1053,7 +1059,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * <div class="en">Enables focus in the tooltip content. Default is <tt>false</tt>.</div>
          *
          * @param focusable <div class="pt">Pode receber o foco.</div>
-         *                                   <div class="en">Can receive focus.</div>
+         *                                                    <div class="en">Can receive focus.</div>
          * @return this
          */
         public Builder focusable(boolean focusable) {
@@ -1073,7 +1079,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * </div>
          *
          * @param highlightShape <div class="pt">Formato do Shape.</div>
-         *                                             <div class="en">Shape type.</div>
+         *                                                                   <div class="en">Shape type.</div>
          * @return this
          * @see OverlayView#HIGHLIGHT_SHAPE_OVAL
          * @see OverlayView#HIGHLIGHT_SHAPE_RECTANGULAR
@@ -1091,7 +1097,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * This value override <tt>{@link R.dimen.simpletooltip_overlay_offset}</tt></div>
          *
          * @param overlayOffset <div class="pt">Tamanho em pixels.</div>
-         *                                           <div class="en">Size in pixels.</div>
+         *                                                                <div class="en">Size in pixels.</div>
          * @return this
          * @see Builder#anchorView(View)
          * @see Builder#transparentOverlay(boolean)
@@ -1108,7 +1114,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          * Like in a Dialog or DialogFragment.</div>
          *
          * @param overlayMatchParent <div class="pt">True se o overlay deve ser MATCH_PARENT. False se ele deve obter o mesmo tamanho do pai.</div>
-         *                                                     <div class="en">True if the overlay should be MATCH_PARENT. False if it should get the same size as the parent.</div>
+         *                                                                               <div class="en">True if the overlay should be MATCH_PARENT. False if it should get the same size as the parent.</div>
          * @return this
          */
         public Builder overlayMatchParent(boolean overlayMatchParent) {
