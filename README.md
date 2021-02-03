@@ -82,7 +82,7 @@ More info on the [sample project](https://github.com/douglasjunior/android-simpl
     }
     ```
 
-2. Add the dependency
+2. Add the dependency in your `app/build.gradle`:
 
     ```javascript
     dependencies {
