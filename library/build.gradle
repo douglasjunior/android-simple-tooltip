@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
 
 group = 'com.github.douglasjunior'
 
@@ -22,16 +21,15 @@ android {
 
 buildscript {
     repositories {
-        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
 dependencies {
-    api 'androidx.annotation:annotation:1.1.0'
+    api 'androidx.annotation:annotation:1.2.0'
 }
 
 // build a jar with source files
@@ -46,7 +44,7 @@ task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.sourceFiles
     //noinspection GroovyAssignabilityCheck
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    classpath += configurations.compile
+    classpath += configurations.implementation
 }
 
 // build a jar with javadoc
