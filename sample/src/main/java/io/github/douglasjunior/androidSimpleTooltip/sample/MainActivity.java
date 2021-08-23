@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_dialog).setOnClickListener(this);
         findViewById(R.id.btn_center).setOnClickListener(this);
         findViewById(R.id.btn_overlay_rect).setOnClickListener(this);
+        findViewById(R.id.btn_overlay_rect_rounded).setOnClickListener(this);
     }
 
     @Override
@@ -261,6 +262,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .animated(true)
                     .transparentOverlay(false)
                     .highlightShape(OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR)
+                    .cornerRadius(20)
+                    .overlayOffset(0)
+                    .build()
+                    .show();
+        } else if (v.getId() == R.id.btn_overlay_rect_rounded) {
+            new SimpleTooltip.Builder(this)
+                    .anchorView(v)
+                    .text(R.string.btn_overlay_rect_rounded)
+                    .gravity(Gravity.END)
+                    .animated(true)
+                    .transparentOverlay(false)
+                    .highlightShape(OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR_ROUNDED)
+                    .cornerRadius(20)
                     .overlayOffset(0)
                     .build()
                     .show();
