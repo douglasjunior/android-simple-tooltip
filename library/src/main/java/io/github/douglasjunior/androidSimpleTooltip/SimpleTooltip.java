@@ -125,6 +125,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
     private int width;
     private int height;
     private boolean mIgnoreOverlay;
+    private float cornerRadius;
 
 
     private SimpleTooltip(Builder builder) {
@@ -160,6 +161,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mIgnoreOverlay = builder.ignoreOverlay;
         this.width = builder.width;
         this.height = builder.height;
+        this.cornerRadius = builder.cornerRadius;
         init();
     }
 
@@ -230,7 +232,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         if (mIgnoreOverlay) {
             return;
         }
-        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset,mOverlayWindowBackgroundColor);
+        mOverlay = mTransparentOverlay ? new View(mContext) : new OverlayView(mContext, mAnchorView, mHighlightShape, mOverlayOffset,mOverlayWindowBackgroundColor, cornerRadius);
         if (mOverlayMatchParent)
             mOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         else
@@ -602,6 +604,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         private float arrowHeight;
         private float arrowWidth;
         private boolean focusable;
+        private float cornerRadius;
         private int highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
         private int width = ViewGroup.LayoutParams.WRAP_CONTENT;
         private int height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -661,7 +664,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
                 if (arrowHeight == 0)
                     arrowHeight = context.getResources().getDimension(mDefaultArrowHeightRes);
             }
-            if (highlightShape < 0 || highlightShape > OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR) {
+            if (highlightShape < 0 || highlightShape > OverlayView.HIGHLIGHT_SHAPE_RECTANGULAR_ROUNDED) {
                 highlightShape = OverlayView.HIGHLIGHT_SHAPE_OVAL;
             }
             if (overlayOffset < 0) {
@@ -1098,6 +1101,11 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
          */
         public Builder highlightShape(int highlightShape) {
             this.highlightShape = highlightShape;
+            return this;
+        }
+
+        public Builder cornerRadius(float radius) {
+            this.cornerRadius = radius;
             return this;
         }
 

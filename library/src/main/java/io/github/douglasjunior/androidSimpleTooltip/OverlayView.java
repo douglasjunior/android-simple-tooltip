@@ -46,6 +46,7 @@ public class OverlayView extends View {
 
     public static final int HIGHLIGHT_SHAPE_OVAL = 0;
     public static final int HIGHLIGHT_SHAPE_RECTANGULAR = 1;
+    public static final int HIGHLIGHT_SHAPE_RECTANGULAR_ROUNDED = 2;
     private static final int mDefaultOverlayAlphaRes = R.integer.simpletooltip_overlay_alpha;
 
 
@@ -56,13 +57,15 @@ public class OverlayView extends View {
     private final int highlightShape;
     private final float mOffset;
     private final int overlayWindowBackground;
+    private final float cornerRadius;
 
-    OverlayView(Context context, View anchorView, int highlightShape, float offset,int overlayWindowBackground) {
+    OverlayView(Context context, View anchorView, int highlightShape, float offset,int overlayWindowBackground, float cornerRadius) {
         super(context);
         this.mAnchorView = anchorView;
         this.mOffset = offset;
         this.highlightShape = highlightShape;
         this.overlayWindowBackground=overlayWindowBackground;
+        this.cornerRadius = cornerRadius;
     }
 
     @Override
@@ -106,6 +109,8 @@ public class OverlayView extends View {
 
         if (highlightShape == HIGHLIGHT_SHAPE_RECTANGULAR) {
             osCanvas.drawRect(rect, paint);
+        } else if (highlightShape == HIGHLIGHT_SHAPE_RECTANGULAR_ROUNDED) {
+            osCanvas.drawRoundRect(rect, cornerRadius, cornerRadius, paint);
         } else {
             osCanvas.drawOval(rect, paint);
         }

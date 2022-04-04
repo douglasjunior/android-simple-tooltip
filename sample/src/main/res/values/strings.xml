@@ -20,5 +20,6 @@
     <string name="btn_dialog">Inside dialog</string>
     <string name="btn_center">Screen center</string>
     <string name="btn_overlay_rect">Overlay Rect</string>
+    <string name="btn_overlay_rect_rounded">Overlay Rect Rounded</string>
 
 </resources>
