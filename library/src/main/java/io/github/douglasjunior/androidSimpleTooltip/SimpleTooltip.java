@@ -30,6 +30,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -38,6 +39,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -206,10 +208,14 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         mRootView.post(new Runnable() {
             @Override
             public void run() {
-                if (mRootView.isShown())
+                if (mRootView.isShown()) {
                     mPopupWindow.showAtLocation(mRootView, Gravity.NO_GRAVITY, mRootView.getWidth(), mRootView.getHeight());
-                else
+                    if (mFocusable)
+                        mContentLayout.requestFocus();
+                }
+                else {
                     Log.e(TAG, "Tooltip cannot be shown, root view is invalid or has been closed.");
+                }
             }
         });
     }
@@ -316,6 +322,31 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         mContentLayout = linearLayout;
         mContentLayout.setVisibility(View.INVISIBLE);
+
+        if (mFocusable)
+        {
+            mContentLayout.setFocusableInTouchMode(true);
+            mContentLayout.setOnKeyListener(new View.OnKeyListener()
+            {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event)
+                {
+                    if (event.getAction() == KeyEvent.ACTION_UP) {
+                        switch (keyCode) {
+                            // The following are taken from the KeyEvent.isConfirmKey() function
+                            case KeyEvent.KEYCODE_DPAD_CENTER:
+                            case KeyEvent.KEYCODE_ENTER:
+                            case KeyEvent.KEYCODE_SPACE:
+                            case KeyEvent.KEYCODE_NUMPAD_ENTER:
+                                dismiss();
+                                return true;
+                        }
+                    }
+                    return false;
+                }
+            });
+        }
+
         mPopupWindow.setContentView(mContentLayout);
     }
 
@@ -579,6 +610,7 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
 
         public Builder(Context context) {
             this.context = context;
+            this.focusable = !(context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN));
         }
 
         public SimpleTooltip build() throws IllegalArgumentException {
@@ -1034,8 +1066,8 @@ public class SimpleTooltip implements PopupWindow.OnDismissListener {
         }
 
         /**
-         * <div class="pt">Habilita o foco no conteúdo da tooltip. Padrão é <tt>false</tt>.</div>
-         * <div class="en">Enables focus in the tooltip content. Default is <tt>false</tt>.</div>
+         * <div class="pt">Habilita o foco no conteúdo da tooltip. Padrão é <tt>false</tt> em dispositivos sensíveis ao toque e <tt>true</tt> em dispositivos não sensíveis ao toque.</div>
+         * <div class="en">Enables focus in the tooltip content. Default is <tt>false</tt> on touch devices, and <tt>true</tt> on non-touch devices.</div>
          *
          * @param focusable <div class="pt">Pode receber o foco.</div>
          *                  <div class="en">Can receive focus.</div>
