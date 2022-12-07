@@ -121,6 +121,10 @@ Before submit your PR, run the gradle check.
 
 3. From API 24, Android has changed the behavior of `PopupWindow` in relation to the [`setClippingEnabled`](https://developer.android.com/reference/android/widget/PopupWindow.html#setClippingEnabled(boolean)) property, which causes the Popup to be cut off. [Read more](https://github.com/douglasjunior/android-simple-tooltip/issues/40).
 
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=douglasjunior/android-simple-tooltip&type=Date)](https://star-history.com/#douglasjunior/android-simple-tooltip&Date)
+
 ## Licence
 
 ```
