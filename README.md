@@ -3,7 +3,7 @@
 [PT](https://github.com/douglasjunior/android-simple-tooltip/blob/master/README.pt.md)
 
 [![Licence MIT](https://img.shields.io/badge/licence-MIT-blue.svg)](https://github.com/douglasjunior/android-simple-tooltip/blob/master/LICENSE)
-[![Build Status](https://travis-ci.org/douglasjunior/android-simple-tooltip.svg?branch=master)](https://travis-ci.org/douglasjunior/android-simple-tooltip)
+[![Build Status](https://app.travis-ci.com/douglasjunior/android-simple-tooltip.svg?branch=master)](https://app.travis-ci.com/douglasjunior/android-simple-tooltip)
 [![Release](https://jitpack.io/v/douglasjunior/android-simple-tooltip.svg)](https://jitpack.io/#douglasjunior/android-simple-tooltip)
 [![Downloads](https://jitpack.io/v/douglasjunior/android-simple-tooltip/month.svg)](#download)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20Simple%20Tooltip-yellow.svg?style=flat)](http://android-arsenal.com/details/1/3578)
