@@ -30,7 +30,7 @@
   <a href="#-usage--examples">Usage</a> ·
   <a href="#-customization--resources">Resources</a> ·
   <a href="#-api-reference">API Reference</a> ·
-  <a href="#-platform-notes--known-issues">Known Issues</a> ·
+  <a href="#platform-notes--known-issues">Known Issues</a> ·
   <a href="#-contributing">Contributing</a>
 </p>
 
@@ -310,7 +310,6 @@ You can override default styling globally across your app by defining these reso
 
 ```xml
 <resources>
-    <dimen name="simpletooltip_max_width">150dp</dimen>
     <dimen name="simpletooltip_overlay_offset">10dp</dimen>
     <dimen name="simpletooltip_margin">10dp</dimen>
     <dimen name="simpletooltip_padding">8dp</dimen>
@@ -333,9 +332,12 @@ You can override default styling globally across your app by defining these reso
 
 ### Styles (`res/values/styles.xml`)
 
+Override `simpletooltip_default` in your app to customize default text appearance (the library style inherits `@android:style/TextAppearance.Medium`):
+
 ```xml
 <resources>
     <style name="simpletooltip_default" parent="@android:style/TextAppearance.Medium">
+        <!-- Example text appearance customizations -->
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/simpletooltip_text</item>
     </style>
@@ -360,7 +362,7 @@ You can override default styling globally across your app by defining these reso
 | `transparentOverlay(boolean)` | `boolean` | `true` | When `false`, darkens the screen backdrop with a spotlight. |
 | `highlightShape(int)` | `OverlayView.HIGHLIGHT_SHAPE_*` | `OVAL` | Shape of the spotlight cutout (`OVAL`, `RECTANGULAR`, `RECTANGULAR_ROUNDED`). |
 | `cornerRadius(float)` | `float` | `0` | Corner radius for rounded rectangular spotlight cutouts. |
-| `overlayOffset(float)` | `float` / `@DimenRes int` | `10dp` | Extra spacing between the anchor view and the spotlight cutout edge. |
+| `overlayOffset(float)` | `float` (px) | `10dp` | Extra spacing between the anchor view and the spotlight cutout edge. |
 | `overlayWindowBackgroundColor(int)` | `@ColorInt int` | `Color.BLACK` | Base color of the darkened backdrop overlay. |
 | `overlayMatchParent(boolean)` | `boolean` | `true` | Set to `false` for dialogs/fragments so the overlay fits the dialog bounds. |
 | `ignoreOverlay(boolean)` | `boolean` | `false` | Completely skips adding the overlay view to the root view hierarchy. |
@@ -398,7 +400,7 @@ Check the [Javadoc documentation](https://jitpack.io/com/github/douglasjunior/an
 
 ---
 
-## ⚠️ Platform Notes & Known Issues
+## Platform Notes & Known Issues
 
 1. **`IllegalArgumentException: Could not lock surface`**
    - **Cause:** Occurs if a hosting `Activity` or `Dialog` is closed while the tooltip's floating animation is still running.
@@ -424,8 +426,7 @@ Contributions, bug reports, and pull requests are warmly welcomed!
    ```bash
    ./gradlew build connectedCheck
    ```
-4. Follow [Conventional Commits](https://www.conventionalcommits.org/) in English for your commit messages.
-5. Open a pull request describing your improvements.
+4. Open a pull request describing your improvements.
 
 For questions and suggestions, please open an [Issue](https://github.com/douglasjunior/android-simple-tooltip/issues).
 

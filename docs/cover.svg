@@ -82,7 +82,11 @@
 
     <style>
       <![CDATA[
+      .anim-overlay-1 { opacity: .75; }
+      .anim-overlay-2, .anim-tip-2, .anim-ring-1, .anim-ring-2 { display: none; }
+      .anim-tip-1, .anim-tip-2 { transform-box: fill-box; transform-origin: center; }
       @media (prefers-reduced-motion: no-preference) {
+        .anim-overlay-1, .anim-overlay-2, .anim-tip-1, .anim-tip-2, .anim-ring-1, .anim-ring-2 { opacity: 0; display: inline; }
         .anim-star-twinkle {
           animation: twinkle 4s ease-in-out infinite;
         }
@@ -110,8 +114,8 @@
       }
 
       @keyframes twinkle {
-        0%, 100% { opacity: 0.25; transform: scale(0.9); }
-        50% { opacity: 0.85; transform: scale(1.15); }
+        0%, 100% { opacity: 0.25; }
+        50%      { opacity: 0.85; }
       }
 
       /* Tip 1 & Overlay 1: Active 0s - 4.6s */
@@ -310,14 +314,14 @@
       <rect width="100" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)"/>
       <text x="50" y="17" font-family="ui-monospace, monospace" font-size="11.5" fill="#9ba1c7" text-anchor="middle">MIT License</text>
 
-      <rect x="110" width="132" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)"/>
-      <text x="176" y="17" font-family="ui-monospace, monospace" font-size="11.5" fill="#9ba1c7" text-anchor="middle">Android 4.0+ (API 14)</text>
+      <rect x="110" width="152" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)"/>
+      <text x="186" y="17" font-family="ui-monospace, monospace" font-size="11.5" fill="#9ba1c7" text-anchor="middle">Android 4.0+ (API 14)</text>
 
-      <rect x="252" width="118" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)"/>
-      <text x="311" y="17" font-family="ui-monospace, monospace" font-size="11.5" fill="#9ba1c7" text-anchor="middle">JitPack Maven</text>
+      <rect x="272" width="118" height="26" rx="6" fill="rgba(255, 255, 255, 0.05)" stroke="rgba(255, 255, 255, 0.12)"/>
+      <text x="331" y="17" font-family="ui-monospace, monospace" font-size="11.5" fill="#9ba1c7" text-anchor="middle">JitPack Maven</text>
 
-      <rect x="380" width="150" height="26" rx="6" fill="rgba(52, 211, 153, 0.1)" stroke="rgba(52, 211, 153, 0.3)"/>
-      <text x="455" y="17" font-family="ui-monospace, monospace" font-size="11.5" fill="#34d399" text-anchor="middle">PopupWindow Based</text>
+      <rect x="400" width="150" height="26" rx="6" fill="rgba(52, 211, 153, 0.1)" stroke="rgba(52, 211, 153, 0.3)"/>
+      <text x="475" y="17" font-family="ui-monospace, monospace" font-size="11.5" fill="#34d399" text-anchor="middle">PopupWindow Based</text>
     </g>
   </g>
 
@@ -331,7 +335,7 @@
     <rect x="20" y="20" width="360" height="520" rx="44" fill="#0d0f27" stroke="url(#phone-border)" stroke-width="2.5"/>
 
     <!-- Screen Inner Area (Clipped) -->
-    <g clip-path="url(#screen-clip)">
+    <g transform="translate(-720, -40)" clip-path="url(#screen-clip)">
       <!-- App Screen Background -->
       <rect x="752" y="62" width="336" height="516" fill="#080a1c"/>
 
@@ -378,46 +382,50 @@
 
       <!-- ==================== ANIMATED LAYER 1: TIP TOP ==================== -->
       <!-- Overlay Backdrop with Spotlight 1 (Active 0s - 4.6s) -->
-      <rect class="anim-overlay-1" x="752" y="62" width="336" height="516" fill="#04050d" mask="url(#spotlight-mask-1)" opacity="0"/>
+      <rect class="anim-overlay-1" x="752" y="62" width="336" height="516" fill="#04050d" mask="url(#spotlight-mask-1)"/>
 
       <!-- Pulse Ring around Anchor 1 -->
       <g transform="translate(920, 275)">
-        <circle class="anim-ring-1" cx="0" cy="0" r="32" fill="none" stroke="#34d399" stroke-width="2" opacity="0"/>
+        <circle class="anim-ring-1" cx="0" cy="0" r="32" fill="none" stroke="#34d399" stroke-width="2"/>
       </g>
 
       <!-- Tooltip Bubble 1: Above Button (Gravity.TOP) with Arrow pointing DOWN -->
-      <g class="anim-tip-1" transform="translate(796, 150)" opacity="0" filter="url(#shadow-tip)">
-        <!-- Bubble Body -->
-        <rect width="248" height="66" rx="12" fill="url(#tt-bubble-1)" stroke="#8b7bff" stroke-width="1.6"/>
-        <!-- Arrow pointing down at Anchor 1 -->
-        <path d="M116 66 L124 75 L132 66 Z" fill="#121330" stroke="#8b7bff" stroke-width="1.6" stroke-linejoin="round"/>
-        <!-- Inner content -->
-        <circle cx="24" cy="33" r="12" fill="rgba(139, 123, 255, 0.2)"/>
-        <text x="24" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="13" text-anchor="middle">✨</text>
-        <text x="46" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="700" fill="#ffffff">Tap to explore features</text>
-        <text x="46" y="47" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#9ba1c7">Gravity.TOP · animated(true)</text>
+      <g transform="translate(796, 150)">
+        <g class="anim-tip-1" filter="url(#shadow-tip)">
+          <!-- Bubble Body -->
+          <rect width="248" height="66" rx="12" fill="url(#tt-bubble-1)" stroke="#8b7bff" stroke-width="1.6"/>
+          <!-- Arrow pointing down at Anchor 1 -->
+          <path d="M116 66 L124 75 L132 66 Z" fill="#121330" stroke="#8b7bff" stroke-width="1.6" stroke-linejoin="round"/>
+          <!-- Inner content -->
+          <circle cx="24" cy="33" r="12" fill="rgba(139, 123, 255, 0.2)"/>
+          <text x="24" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="13" text-anchor="middle">✨</text>
+          <text x="46" y="28" font-family="system-ui, -apple-system, sans-serif" font-size="12.5" font-weight="700" fill="#ffffff">Tap to explore features</text>
+          <text x="46" y="47" font-family="system-ui, -apple-system, sans-serif" font-size="11" fill="#9ba1c7">Gravity.TOP · animated(true)</text>
+        </g>
       </g>
 
       <!-- ==================== ANIMATED LAYER 2: TIP START ==================== -->
       <!-- Overlay Backdrop with Spotlight 2 (Active 5.0s - 9.6s) -->
-      <rect class="anim-overlay-2" x="752" y="62" width="336" height="516" fill="#04050d" mask="url(#spotlight-mask-2)" opacity="0"/>
+      <rect class="anim-overlay-2" x="752" y="62" width="336" height="516" fill="#04050d" mask="url(#spotlight-mask-2)"/>
 
       <!-- Pulse Ring around Anchor 2 -->
       <g transform="translate(1038, 485)">
-        <circle class="anim-ring-2" cx="0" cy="0" r="26" fill="none" stroke="#ff6a8e" stroke-width="2" opacity="0"/>
+        <circle class="anim-ring-2" cx="0" cy="0" r="26" fill="none" stroke="#ff6a8e" stroke-width="2"/>
       </g>
 
       <!-- Tooltip Bubble 2: Left of FAB (Gravity.START) with Arrow pointing RIGHT -->
-      <g class="anim-tip-2" transform="translate(772, 452)" opacity="0" filter="url(#shadow-tip)">
-        <!-- Bubble Body -->
-        <rect width="224" height="62" rx="12" fill="url(#tt-bubble-2)" stroke="#34d399" stroke-width="1.6"/>
-        <!-- Arrow pointing right to FAB -->
-        <path d="M224 25 L233 31 L224 37 Z" fill="#091b1f" stroke="#34d399" stroke-width="1.6" stroke-linejoin="round"/>
-        <!-- Inner content -->
-        <circle cx="22" cy="31" r="11" fill="rgba(52, 211, 153, 0.2)"/>
-        <text x="22" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="12" text-anchor="middle">🚀</text>
-        <text x="42" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#ffffff">Add new onboarding</text>
-        <text x="42" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#9ba1c7">Gravity.START · overlay</text>
+      <g transform="translate(772, 452)">
+        <g class="anim-tip-2" filter="url(#shadow-tip)">
+          <!-- Bubble Body -->
+          <rect width="224" height="62" rx="12" fill="url(#tt-bubble-2)" stroke="#34d399" stroke-width="1.6"/>
+          <!-- Arrow pointing right to FAB -->
+          <path d="M224 25 L233 31 L224 37 Z" fill="#091b1f" stroke="#34d399" stroke-width="1.6" stroke-linejoin="round"/>
+          <!-- Inner content -->
+          <circle cx="22" cy="31" r="11" fill="rgba(52, 211, 153, 0.2)"/>
+          <text x="22" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="12" text-anchor="middle">🚀</text>
+          <text x="42" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#ffffff">Add new onboarding</text>
+          <text x="42" y="45" font-family="system-ui, -apple-system, sans-serif" font-size="10.5" fill="#9ba1c7">Gravity.START · overlay</text>
+        </g>
       </g>
 
     </g>
